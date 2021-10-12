@@ -1,0 +1,101 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{listings}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{cite}
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+            
+        \Huge
+        \textbf{Ideas para el proyecto final - Informatica II.}
+            
+        \vspace{0.5cm}
+        \LARGE
+            
+        \vspace{1.5cm}
+            
+        \textbf{Luis Miguel Gil Rodriguez.}
+        \\
+        \textbf{Maverick Sosa Tobon.}
+        \vfill
+        \vspace{0.8cm}
+            
+        \Large
+        Despartamento de Ingeniería Electrónica y Telecomunicaciones\\
+        Universidad de Antioquia\\
+        Medellín\\
+        Marzo de 2021
+            
+    \end{center}
+\end{titlepage}
+\tableofcontents
+\newpage
+\section{Sección introductoria} \label{intro}
+En este documento, podremos encontrar el diseño y modelación de objetos para el juego se se va a desarrollar.
+\\
+\\
+Con el objetivo de cumplir co todos los requerimientos, se replantea la idea del juego. Contara con la misma trama, pero ahora, el personaje principal no se movera a lo largo del eje Y de la escena, sino a lo ancho del eje X, para poder facilitar observar con mas detalle los fenomenos fisicos.
+\section{Diseño.}
+\subsection{Modelaminto de Objetos.}
+\subsubsection{Manejo de usuarios.}
+\begin{itemize}
+    \item Clase que se encarga de administrar y controlar el sistema de logueo de usuarios.
+    \item Formulario CRUD:
+    \begin{enumerate}
+        \item Create: Crear usuarios
+        \item Read: Leer usuarios.
+        \item Update: Actualizar la información  de los usuarios cuando pase satisfactoriamente el mundo.
+        \item Delete: Borrar usuarios.
+    \end{enumerate}
+    \item Va a ser la primera interfaz gráfica que aparezca, interactúa con el archivo de texto que contiene la información de los usuarios. En esta especie de menú principal se solicitará un usuario y contraseña, por lo cual, la clase debe estar en capacidad de leer dicho archivo y buscar en el mismo el usuario que se ingresó. Si existe y la contraseña ingresada coincide con la contraseña registrada en la base de datos del juego, se procederá a darle la bienvenida al usuario y enviarlo de inmediato al mundo en el que se encuentra actualmente. 
+\end{itemize}
+
+\subsubsection{Personaje Principal}
+\begin{itemize}
+    \item Genera el personaje principal del juego, se encarga del movimiento del mismo a lo largo del mundo.
+    \item Se encarga de almacenar las posiciones en X e Y del personaje principal.
+    \item Realiza el movimiento del personaje en la escena.
+    \item El jugador principal podrá saltar en la escena para evitar los diferentes obstáculos el cual será modelado por medio del sistema físico denominado  movimiento parabólico.
+    \item Contara con X cantidad de vidas para completar los mapas.
+    \item Contara con un tiempo especifico para que se complete cada mapa.
+\end{itemize}
+\subsubsection{Enemigos.}
+\begin{itemize}
+    \item Genera los enemigos más simples: autos enemigos, obstáculos.
+    \item Los enemigos en general, dependiendo de su tipo, tendrán uno u otro movimiento.
+    \item Sus movimientos serán independientes del personaje, pero podrían verse afectados por algo que haga el personaje como un disparo por ejemplo.
+    \item Dependiendo del nivel el que se encuentre el usuario, los enemigos avanzaran mas rapido.
+    \item Se destruiran cuando un disparo del personaje principal, colisione con un enemigo.
+    \item Cuando el personaje principal destruya uno de los enemigos le dara X cantidad de puntaje.
+\end{itemize}
+\subsubsection{Jefes Finales.}
+\begin{itemize}
+    \item Objeto con movimiento pendular (posiblemete bola de demolición) el cual va a ir mermando sus oscilaciones gradualmente gracias a la constante de fricción del viento.
+    \item Se vencera de dos maneras:
+    \begin{enumerate}
+        \item El péndulo se quede quieto.
+        \item Aguantará X disparos del jugador principal. (Atributo privado del objeto).
+        Conforme el jugador vaya avanzando en los mundos, el jefe final aguantara mas disparos.
+    \end{enumerate}
+    \item Cuando el personaje principal logre destruir al jefe final de cada mundo, este objeto será destruido y se pasará de mundo.
+\end{itemize}
+\subsubsection{Balas.}
+\begin{itemize}
+    \item Son las que usa el personaje para eliminar a los enemigos, deshacerse de los obstáculos y enfrentar a los jefes. 
+    \item Con este objeto se pretende aplicar el concepto de conservación  del momento lineal cuando impacte con los enemigos.
+    \item Tienen una masa (esto para poder aplicar conservación del momento). 
+    \item Tiene una velocidad y posición inicial.
+    \item Tendran un movimiento lineal y tendran una cierta cantidad de rango de daño.
+\end{itemize}
+\subsection{Cronograma.}
+El cronograma se podra econtrar especificamente en el archivo "cronograma.xlsx", el cual se encuentra dentro del repositorio.
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}
+
