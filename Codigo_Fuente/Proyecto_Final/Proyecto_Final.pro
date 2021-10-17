@@ -9,12 +9,14 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    character.cpp \
     gameworld.cpp \
     main.cpp \
     idcatc.cpp \
     profileuser.cpp
 
 HEADERS += \
+    character.h \
     gameworld.h \
     idcatc.h \
     profileuser.h
