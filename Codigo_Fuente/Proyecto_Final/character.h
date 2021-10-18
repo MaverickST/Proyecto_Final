@@ -9,7 +9,8 @@ class Character : public QGraphicsPixmapItem
 {
 public:
     Character();
-    Character(double _posx, double _posy, double _width, double _height, std::string _fileSprite);
+    Character(double _posx, double _posy, double _width, double _height,
+              double _dt, std::string _fileSprite);
 
     QRectF boundingRect() const;
 
@@ -22,9 +23,11 @@ private:
 
     double posx, posy;
     double width, height;
+    double dt;
     std::string spriteCharacter;
     int lastKey;
     QPixmap pixMapChar;
+
 
 };
 

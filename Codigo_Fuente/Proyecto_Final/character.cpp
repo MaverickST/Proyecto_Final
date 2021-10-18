@@ -2,13 +2,14 @@
 
 Character::Character() {}
 
-Character::Character(double _posx, double _posy, double _width, double _height, std::string _fileSprite)
+Character::Character(double _posx, double _posy, double _width, double _height, double _dt, std::string _fileSprite)
 {
     posx = _posx;
     posy = _posy;
     width = _width;
     height = _height;
     spriteCharacter = _fileSprite;
+    dt = _dt;
 
     pixMapChar.load(spriteCharacter.c_str());
     pixMapChar = pixMapChar.scaled(width, height); // Esto se cambia
