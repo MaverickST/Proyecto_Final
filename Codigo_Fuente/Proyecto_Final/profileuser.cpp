@@ -22,7 +22,6 @@ void ProfileUser::startGameLevel1()
     connect(Game, &GameWorld::endGame, this, &ProfileUser::endGameLevel1);
 
     this->setVisible(false);
-
 }
 
 void ProfileUser::endGameLevel1()
