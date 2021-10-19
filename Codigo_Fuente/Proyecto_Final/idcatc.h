@@ -6,7 +6,9 @@
 #include <fstream>
 #include <iostream>
 #include <QString>
+
 #include "profileuser.h"
+#include "createaccount.h"
 
 using namespace std;
 QT_BEGIN_NAMESPACE
@@ -23,13 +25,15 @@ public:
 public slots:
     void openProfileInterfaz();
     void closeProfileInterfaz();
+    void openCreateAccount();
+    void closeCreateAccount();
 private slots:
     void on_pB_Login_clicked();
-
 private:
     Ui::IDCATC *ui;
 
     ProfileUser *Profile;
+    createAccount *Account;
 
     //Declaracion de atributos de usuarios
     string mUsername         = "";
