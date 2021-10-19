@@ -1,0 +1,10 @@
+release/character.o
+release/createaccount.o
+release/gameworld.o
+release/main.o
+release/idcatc.o
+release/profileuser.o
+release/moc_createaccount.o
+release/moc_gameworld.o
+release/moc_idcatc.o
+release/moc_profileuser.o

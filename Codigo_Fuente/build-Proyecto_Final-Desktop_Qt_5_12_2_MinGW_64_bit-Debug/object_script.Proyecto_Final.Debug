@@ -1,0 +1,10 @@
+debug/character.o
+debug/createaccount.o
+debug/gameworld.o
+debug/main.o
+debug/idcatc.o
+debug/profileuser.o
+debug/moc_createaccount.o
+debug/moc_gameworld.o
+debug/moc_idcatc.o
+debug/moc_profileuser.o
