@@ -35,10 +35,10 @@ public:
 
 signals:
     void endGame();
-
+protected:
+    void keyPressEvent(QKeyEvent *event);
 public slots:
     void startQTimer();
-
 private:
     Ui::GameWorld *ui;
     QGraphicsScene *mScene;
@@ -75,6 +75,8 @@ private:
     double wObstacle, hObstacle;
     double velObstacle, probSpawnObst;
 
+    //Atributos para el personaje principal
+    Character *PJ;
 
 //    string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1, double _hDecor1,
 //    string &_nameSpDecor2, double _wDecor2, double _hDecor2, double _velDecor, int _numMaxDecor,
