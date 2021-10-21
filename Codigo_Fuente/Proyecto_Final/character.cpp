@@ -22,12 +22,14 @@ QRectF Character::boundingRect() const
 
 void Character::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->drawPixmap(-width/2, -height/2, pixMapChar);
+//    painter->drawPixmap(-width/2, -height/2, pixMapChar);
+    painter->drawPixmap(posx, posy, pixMapChar);
     setPos(posx, posy);
 }
 
 void Character::moveCharacter(int keyEventChar)
 {
     lastKey = keyEventChar;
+
     // Movimiento del personaje en funcion de la tecla presionada.
 }

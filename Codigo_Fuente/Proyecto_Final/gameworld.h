@@ -9,8 +9,9 @@
 #include <QPixmap>
 #include <time.h>
 
-
 #include "character.h"
+#include "obstacle.h"
+#include "decoration.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWorld; }
@@ -31,6 +32,10 @@ public:
     string &_nameSpObstacle, double _wObstacle, double _hObstacle, double _velObstacle,
     double _probSpawnObst, QWidget *parent = nullptr);
 
+
+    void spawnSceneObject();
+    void deleteWorldObject();
+
     ~GameWorld();
 
 signals:
@@ -38,6 +43,7 @@ signals:
 
 public slots:
     void startQTimer();
+    void onUptade();
 
 private:
     Ui::GameWorld *ui;
@@ -45,12 +51,11 @@ private:
     QTimer *mTimer;
 
     // Contenedores
-    QList<int *> mDecorsWorld;
+    QList<Decoration *> mDecorsWorld;
     QList<int *> mEnemiesWorld;
-    QList<int *> mObstaclesWorld;
+    QList<Obstacle *> mObstaclesWorld;
 
-    int posSpwanAny;
-    int numToTimer;
+
 
     // Dimesiones de la escena
     double widthScene;
@@ -64,6 +69,7 @@ private:
     double wDecor2, hDecor2;
     double velDecor;
     int numMaxDecor;
+    double spaceToPutDecor;
 
     // Atributos para los enemigos
     string nameSpEnemy;
@@ -74,6 +80,12 @@ private:
     string nameSpObstacle;
     double wObstacle, hObstacle;
     double velObstacle, probSpawnObst;
+
+    // Para controlar la generacion de objetos
+    int contTimeToSpawn;
+    int timeToSpawn;
+    int posxSpwanAny; // Posicion en x, no de spawnean los objetos
+    int numToTimer; // Define el startTimer.
 
 
 //    string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1, double _hDecor1,
