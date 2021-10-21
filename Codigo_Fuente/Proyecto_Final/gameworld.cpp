@@ -9,11 +9,21 @@ GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld)
     ui->graphicsView->setScene(mScene);
 
     //Inicializacion del personaje principal
-    PJ = new Character(0,0,55,18,0.1,"../Proyecto_Final/Sprites/auto1.png");
+    //PJ = new Character(0,0,55,18,0.1,"../Proyecto_Final/Sprites/auto1.png");
+    std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
+    PJ = new Character (0,0,55,18,0.1,sprite);
     mScene->addItem(PJ);
 
     ui->graphicsView->setScene(mScene);
     ui->graphicsView->show();
+
+    numToTimer = 50;
+    mTimer = new QTimer;
+    mTimer->start(50);
+
+    //connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
+    //connect(ui->pB_StartGame, &QPushButton::clicked, this, &GameWorld::startQTimer);
+    connect(mTimer, &QTimer::timeout, this, &GameWorld::onUptade);
 }
 
 GameWorld::GameWorld (string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1,
@@ -61,10 +71,6 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
     mScene = new QGraphicsScene(-widthScene/2, -heightScene, widthScene, heightScene);
     ui->graphicsView->setScene(mScene);
 
-    //Inicializacion del personaje principal
-    PJ = new Character(0,0,55,18,0.1,"../Proyecto_Final/Sprites/auto1.png");
-    mScene->addItem(PJ);
-
     // Imagen de fondo
     std::string nameImgBackground = _nameSpBackground;
     QPixmap pixMapBackground(nameImgBackground.c_str());
@@ -80,8 +86,7 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
 
 }
 
-void GameWorld::onUptade()
-{
+void GameWorld::onUptade(){
 
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
@@ -92,9 +97,7 @@ void GameWorld::onUptade()
 
 }
 
-
-void GameWorld::spawnSceneObject()
-{
+void GameWorld::spawnSceneObject(){
 
     // La ultima posicion en y de los obstaculos y autos enemigos.
     // Se usa para evitar que se generen en el mismo lugar y queden pegados
@@ -178,42 +181,11 @@ GameWorld::~GameWorld(){
 }
 
 void GameWorld::keyPressEvent(QKeyEvent *event){
-    int posx, posy;
-    switch (event->key()) {
-    case Qt::Key_A:{
-        //Movimiento hacia la derecha, decrece el eje X
-        posx = PJ->getPosx();
-        PJ->setPosx(posx - 5);
-        PJ->changePosition();
-        break;
+    if(event->key() == Qt::Key_Space){
+        PJ->setJump(true);
+    }else if(!beCollides && !(PJ->getJump())){
+        PJ->moveCharacter(event->key());
     }
-    case Qt::Key_D:{
-        //Movimiento hacia la izquierda, crece el eje X
-        posx = PJ->getPosx();
-        PJ->setPosx(posx + 5);
-        PJ->changePosition();
-        break;
-    }
-    case Qt::Key_S:{
-        //Movimiento hacia abajo, crece el eje Y
-        posy = PJ->getPosy();
-        PJ->setPosy(posy + 5);
-        PJ->changePosition();
-        break;
-    }
-    case Qt::Key_W:{
-        //Movimiento hacia arriba, decrece el eje Y
-        posy = PJ->getPosy();
-        PJ->setPosy(posy - 5);
-        PJ->changePosition();
-        break;
-    }
-    case Qt::Key_Space:{
-        //Salto (Movimiento parabolico)
-        break;
-    }
-    }
-
 }
 
 void GameWorld::startQTimer(){
