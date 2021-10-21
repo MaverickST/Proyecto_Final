@@ -1,2 +1,7 @@
 Miguel.Gil	1001249237	1	5	0	0	0
-MaverickST	Clave	1	5	0	0	0
+MaverickST	Clave	2	5	5000	0	0
+Jeronimo.Rivera   1001249238   1   5   0   0   0
+Diana.Rodriguez   42687692   1   5   0   0   0
+Katerine.Arango   1001249239   1   5   0   0   0
+Adela.Valencia   21683671   1   5   0   0   0
+Pepito82   1234   1   5   0   0   0

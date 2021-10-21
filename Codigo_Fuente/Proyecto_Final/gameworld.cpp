@@ -3,6 +3,17 @@
 
 GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld){
     ui->setupUi(this);
+
+    // Inicializacion de la escena
+    mScene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(mScene);
+
+    //Inicializacion del personaje principal
+    PJ = new Character(0,0,55,18,0.1,"../Proyecto_Final/Sprites/auto1.png");
+    mScene->addItem(PJ);
+
+    ui->graphicsView->setScene(mScene);
+    ui->graphicsView->show();
 }
 
 GameWorld::GameWorld (string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1,
@@ -50,6 +61,10 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
     mScene = new QGraphicsScene(-widthScene/2, -heightScene, widthScene, heightScene);
     ui->graphicsView->setScene(mScene);
 
+    //Inicializacion del personaje principal
+    PJ = new Character(0,0,55,18,0.1,"../Proyecto_Final/Sprites/auto1.png");
+    mScene->addItem(PJ);
+
     // Imagen de fondo
     std::string nameImgBackground = _nameSpBackground;
     QPixmap pixMapBackground(nameImgBackground.c_str());
@@ -75,8 +90,8 @@ void GameWorld::onUptade()
         deleteWorldObject();
     }
 
-
 }
+
 
 void GameWorld::spawnSceneObject()
 {
@@ -158,12 +173,50 @@ void GameWorld::deleteWorldObject()
     }
 }
 
-GameWorld::~GameWorld()
-{
+GameWorld::~GameWorld(){
     delete ui;
 }
 
-void GameWorld::startQTimer()
-{
+void GameWorld::keyPressEvent(QKeyEvent *event){
+    int posx, posy;
+    switch (event->key()) {
+    case Qt::Key_A:{
+        //Movimiento hacia la derecha, decrece el eje X
+        posx = PJ->getPosx();
+        PJ->setPosx(posx - 5);
+        PJ->changePosition();
+        break;
+    }
+    case Qt::Key_D:{
+        //Movimiento hacia la izquierda, crece el eje X
+        posx = PJ->getPosx();
+        PJ->setPosx(posx + 5);
+        PJ->changePosition();
+        break;
+    }
+    case Qt::Key_S:{
+        //Movimiento hacia abajo, crece el eje Y
+        posy = PJ->getPosy();
+        PJ->setPosy(posy + 5);
+        PJ->changePosition();
+        break;
+    }
+    case Qt::Key_W:{
+        //Movimiento hacia arriba, decrece el eje Y
+        posy = PJ->getPosy();
+        PJ->setPosy(posy - 5);
+        PJ->changePosition();
+        break;
+    }
+    case Qt::Key_Space:{
+        //Salto (Movimiento parabolico)
+        break;
+    }
+    }
+
+}
+
+void GameWorld::startQTimer(){
     mTimer->start(numToTimer);
 }
+

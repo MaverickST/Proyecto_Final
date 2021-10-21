@@ -3,6 +3,7 @@
 
 #include <QGraphicsPixmapItem>
 #include <QPainter>
+#include <QKeyEvent>
 
 class Character : public QGraphicsPixmapItem
 {
@@ -15,9 +16,18 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
-    //void moveSprite();
-    void moveCharacter(int keyEventChar);
+    void changePosition();
 
+    //void moveSprite();
+    //void moveCharacter(int keyEventChar);
+    double getPosx() const;
+    void setPosx(double value);
+
+    double getPosy() const;
+    void setPosy(double value);
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
 private:
 
     double posx, posy;

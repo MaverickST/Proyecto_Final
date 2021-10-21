@@ -9,6 +9,8 @@ IDCATC::IDCATC(QWidget *parent): QMainWindow(parent), ui(new Ui::IDCATC){
     ui->pB_Login->setEnabled(true); // false
     ui->progressBar->setRange(0,100);
     ui->progressBar->setValue(0);
+
+    connect(ui->pB_createAccount, &QPushButton::clicked, this, &IDCATC::openCreateAccount);
     //connect(ui->pB_Login, &QPushButton::clicked, this, &IDCATC::openProfileInterfaz);
 
 }
@@ -20,7 +22,7 @@ IDCATC::~IDCATC(){
 void IDCATC::openProfileInterfaz()
 {
     // Se crea y muestra ventana del perfil del usuario
-    Profile = new ProfileUser;
+    Profile = new ProfileUser(mUsername,mPassword,mLevel,mLives,mScoreFirstLevel,mScoreSecondLevel,mScoreThirdLevel);
     Profile->show();
 
     // Conexion para el cierre de la ventana del perfil
@@ -28,6 +30,27 @@ void IDCATC::openProfileInterfaz()
 
     // Se oculta la ventana de inicio
     this->setVisible(false);
+}
+
+void IDCATC::openCreateAccount(){
+    // Se crea y muestra ventana de creacion de usuario.
+    Account = new createAccount;
+    Account->show();
+
+    // Conexion para el cierre de la ventana del perfil
+    connect(Account, &createAccount::closeWindowAccount, this, &IDCATC::closeCreateAccount);
+
+    // Se oculta la ventana de inicio
+    this->setVisible(false);
+}
+
+void IDCATC::closeCreateAccount(){
+    // Se cierra y elimina la ventana de creacion de cuenta
+    Account->close();
+    delete  Account;
+
+    // Ahora se vuelve a la ventana de inicio
+    this->setVisible(true);
 }
 
 void IDCATC::closeProfileInterfaz(){
@@ -96,7 +119,7 @@ void IDCATC::on_pB_Login_clicked(){
             }
         }
     }
-
+    usersFile.close();
     ui->Text_Username->clear();
     ui->Text_Password->clear();
 

@@ -40,10 +40,12 @@ public:
 
 signals:
     void endGame();
-
+protected:
+    void keyPressEvent(QKeyEvent *event);
 public slots:
     void startQTimer();
     void onUptade();
+
 
 private:
     Ui::GameWorld *ui;
@@ -81,11 +83,15 @@ private:
     double wObstacle, hObstacle;
     double velObstacle, probSpawnObst;
 
+
     // Para controlar la generacion de objetos
     int contTimeToSpawn;
     int timeToSpawn;
     int posxSpwanAny; // Posicion en x, no de spawnean los objetos
     int numToTimer; // Define el startTimer.
+
+    //Atributos para el personaje principal
+    Character *PJ;
 
 
 //    string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1, double _hDecor1,
