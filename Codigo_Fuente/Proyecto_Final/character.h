@@ -2,7 +2,6 @@
 #define CHARACTER_H
 
 #include <QGraphicsPixmapItem>
-#include <QPixmap>
 #include <QPainter>
 #include <QKeyEvent>
 

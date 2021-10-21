@@ -124,10 +124,10 @@ void IDCATC::on_pB_Login_clicked(){
     ui->Text_Password->clear();
 
     if(FoundUser == true && FoundPassword == true){
-            cout << "Datos correctos :)" << endl;
-            FoundPassword = false;
-            FoundUser = false;
-            openProfileInterfaz();
+        cout << "Datos correctos :)" << endl;
+        FoundPassword = false;
+        FoundUser = false;
+        openProfileInterfaz();
     }else if(FoundUser == false){
         ui->Label_Status->setText("User not found.");
         FoundPassword = false;

@@ -10,18 +10,26 @@ CONFIG += c++11
 
 SOURCES += \
     character.cpp \
+    decoration.cpp \
     createaccount.cpp \
+
     gameworld.cpp \
     main.cpp \
     idcatc.cpp \
-    profileuser.cpp
+    obstacle.cpp \
+    profileuser.cpp \
+    worldobject.cpp
 
 HEADERS += \
     character.h \
+    decoration.h \
     createaccount.h \
+
     gameworld.h \
     idcatc.h \
-    profileuser.h
+    obstacle.h \
+    profileuser.h \
+    worldobject.h
 
 FORMS += \
     createaccount.ui \

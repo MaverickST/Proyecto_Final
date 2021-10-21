@@ -29,6 +29,7 @@ void Character::changePosition(){
 
 /*void Character::moveCharacter(int keyEventChar){
     lastKey = keyEventChar;
+
     // Movimiento del personaje en funcion de la tecla presionada.
 }*/
 
