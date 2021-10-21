@@ -36,6 +36,9 @@ public:
     void spawnSceneObject();
     void deleteWorldObject();
 
+    bool collisionWithEnemy();
+    bool collisioWithObstacle();
+
     ~GameWorld();
 
 signals:

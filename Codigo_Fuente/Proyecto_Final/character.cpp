@@ -14,6 +14,12 @@ Character::Character(double _posx, double _posy, double _width, double
 
     pixMapObj.load(nameSpObj.c_str());
     pixMapObj = pixMapObj.scaled(width, height);
+
+    double theta = qDegreesToRadians(30.0);
+
+    //Se halla velocidad en ambos ejes
+    Vx = vel * cos(theta);
+    Vy = vel * sin(theta);
 }
 
 QRectF Character::boundingRect() const{
@@ -27,33 +33,50 @@ void Character::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 
 void Character::moveCharacter(int keyEventChar){
     lastKey = keyEventChar;
-    if(keyEventChar != Qt::Key_Up){
-        if(keyEventChar == Qt::Key_A){
-            posx -= 5;
-        }else if (keyEventChar == Qt::Key_D){
-            posx += 5;
-        }else if(keyEventChar == Qt::Key_S){
-            posy += 5;
-        }else if(keyEventChar == Qt::Key_W){
-            posy -= 5;
-        }
+    if(keyEventChar == Qt::Key_A){
+        posx -= 5;
         setPos(posx , posy);
+    }else if (keyEventChar == Qt::Key_D){
+        posx += 5;
+        setPos(posx , posy);
+    }else if(keyEventChar == Qt::Key_S){
+        posy += 5;
+        setPos(posx , posy);
+    }else if(keyEventChar == Qt::Key_W){
+        posy -= 5;
+        setPos(posx , posy);
+    }
+
+    if(jump){
+        lastPosy = posy;
     }
 
     // Movimiento del personaje en funcion de la tecla presionada.
 }
 
 void Character::parabolicMovement(double dt){
-    //Conversion de 45° a radianes
-    double theta = qDegreesToRadians(45.0);
-
-    //Se halla la velocidad en ambos ejes
-    Vx = vel * cos(theta);
-    Vy = vel * sin(theta);
+    Vy += G * dt;
 
     //Se halla la posicion en ambos ejes
     posx += Vx * dt;
     posy += Vy * dt + (G * dt * dt)/2.0f;
 
-    Vy += G * dt;
+    setPos(posx , -posy);
+    cout << "[ " << posx << " , " << posy << " ]" << endl;
+}
+
+bool Character::getJump() const{
+    return jump;
+}
+
+void Character::setJump(bool value){
+    jump = value;
+}
+
+double Character::getLastPosy() const{
+    return lastPosy;
+}
+
+void Character::setLastPosy(double value){
+    lastPosy = value;
 }
