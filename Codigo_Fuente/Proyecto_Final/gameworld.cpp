@@ -11,7 +11,7 @@ GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld)
     //Inicializacion del personaje principal
     //PJ = new Character(0,0,55,18,0.1,"../Proyecto_Final/Sprites/auto1.png");
     std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
-    PJ = new Character (0,0,55,18,0.1,sprite);
+    PJ = new Character (0,0,55,18,30.0f,sprite);
     mScene->addItem(PJ);
 
     ui->graphicsView->setScene(mScene);
@@ -86,8 +86,44 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
 
 }
 
+bool GameWorld::collisionWithEnemy(){
+    for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
+        /*if(PJ->collidesWithItem(*i)){
+            cout << "Colision con " << *i << endl;
+            return true;
+        }*/
+    }
+    return false;
+}
+
+bool GameWorld::collisioWithObstacle(){
+    for(auto i = mObstaclesWorld.begin(); i != mObstaclesWorld.end(); i++){
+        if(PJ->collidesWithItem(*i)){
+            cout << "Colision con " << *i << endl;
+            return true;
+        }
+    }
+    return false;
+}
+
 void GameWorld::onUptade(){
 
+    //Salto con movimiento parabolico
+    if(PJ->getJump() == true){
+        PJ->parabolicMovement(0.1f);
+        beCollides = false;
+    }
+
+    //Evaluacion de colisiones
+    bool Enemy = collisionWithEnemy();
+    bool Obstacle = collisioWithObstacle();
+
+    if(Enemy == true || Obstacle == true){
+        //Se detecto una colision
+        beCollides = true;
+    }else{
+        beCollides = false;
+    }
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
         spawnSceneObject();
@@ -183,7 +219,7 @@ GameWorld::~GameWorld(){
 void GameWorld::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_Space){
         PJ->setJump(true);
-    }else if(!beCollides && !(PJ->getJump())){
+    }else if(!beCollides && (PJ->getJump() == false)){
         PJ->moveCharacter(event->key());
     }
 }

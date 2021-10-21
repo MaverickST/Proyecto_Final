@@ -5,8 +5,9 @@
 #include <QPainter>
 #include <QKeyEvent>
 #include <QtMath>
-
+#include <iostream>
 #include "worldobject.h"
+using namespace std;
 class Character : public WorldObject{
 public:
     Character();
@@ -24,9 +25,13 @@ public:
     bool getJump() const;
     void setJump(bool value);
 
+    double getLastPosy() const;
+    void setLastPosy(double value);
+
 private:
     double dt;
     double Vx, Vy;
+    double lastPosy;
     //std::string spriteCharacter;
     int lastKey;
 
