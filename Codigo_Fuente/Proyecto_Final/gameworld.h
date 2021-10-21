@@ -40,8 +40,10 @@ public:
 
 signals:
     void endGame();
+
 protected:
     void keyPressEvent(QKeyEvent *event);
+
 public slots:
     void startQTimer();
     void onUptade();
@@ -93,7 +95,7 @@ private:
     //Atributos para el personaje principal
     Character *PJ;
 
-
+    bool beCollides = false;
 //    string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1, double _hDecor1,
 //    string &_nameSpDecor2, double _wDecor2, double _hDecor2, double _velDecor, int _numMaxDecor,
 //    string &_nameSpEnemy, double _wEnemy, double _hEnemy, double _velEnemy, double _probSpawnEnemy,

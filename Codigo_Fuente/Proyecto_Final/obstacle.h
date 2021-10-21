@@ -6,8 +6,7 @@
 
 #include "worldobject.h"
 
-class Obstacle : public WorldObject
-{
+class Obstacle : public WorldObject{
 public:
     Obstacle();
     Obstacle(double _posx, double _posy, double _width, double _height,
