@@ -12,7 +12,6 @@ SOURCES += \
     character.cpp \
     decoration.cpp \
     createaccount.cpp \
-
     gameworld.cpp \
     main.cpp \
     idcatc.cpp \
@@ -24,7 +23,6 @@ HEADERS += \
     character.h \
     decoration.h \
     createaccount.h \
-
     gameworld.h \
     idcatc.h \
     obstacle.h \
