@@ -20,6 +20,7 @@ public:
 
     void moveCharacter(int keyEventChar);
 
+    void calculateSpeed();
     void parabolicMovement(double dt);
 
     bool getJump() const;

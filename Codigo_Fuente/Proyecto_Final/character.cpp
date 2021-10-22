@@ -15,11 +15,7 @@ Character::Character(double _posx, double _posy, double _width, double
     //pixMapObj.load(nameSpObj.c_str());
     //pixMapObj = pixMapObj.scaled(width, height);
 
-    double theta = qDegreesToRadians(45.0);
 
-    //Se halla velocidad en ambos ejes
-    Vx = vel * cos(theta);
-    Vy = vel * sin(theta);
 }
 
 QRectF Character::boundingRect() const{
@@ -54,6 +50,14 @@ void Character::moveCharacter(int keyEventChar){
     }
 
     // Movimiento del personaje en funcion de la tecla presionada.
+}
+
+void Character::calculateSpeed(){
+    double theta = qDegreesToRadians(45.0);
+
+    //Se halla velocidad en ambos ejes
+    Vx = vel * cos(theta);
+    Vy = vel * sin(theta);
 }
 
 void Character::parabolicMovement(double dt){

@@ -87,10 +87,10 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
 
 bool GameWorld::collisionWithEnemy(){
     for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
-        /*if(PJ->collidesWithItem(*i)){
+        if(PJ->collidesWithItem(*i)){
             cout << "Colision con " << *i << endl;
             return true;
-        }*/
+        }
     }
     return false;
 }
@@ -215,9 +215,10 @@ GameWorld::~GameWorld(){
 }
 
 void GameWorld::keyPressEvent(QKeyEvent *event){
-    if(event->key() == Qt::Key_Space){
+    if(event->key() == Qt::Key_Space && (PJ->getJump() == false)){
         PJ->setJump(true);
         PJ->moveCharacter(event->key());
+        PJ->calculateSpeed();
     }else if(!beCollides && (PJ->getJump() == false)){
         PJ->moveCharacter(event->key());
     }

@@ -11,6 +11,7 @@
 
 #include "character.h"
 #include "obstacle.h"
+#include "enemy.h"
 #include "decoration.h"
 
 QT_BEGIN_NAMESPACE
@@ -59,7 +60,7 @@ private:
 
     // Contenedores
     QList<Decoration *> mDecorsWorld;
-    QList<int *> mEnemiesWorld;
+    QList<Enemy *> mEnemiesWorld;
     QList<Obstacle *> mObstaclesWorld;
 
 
