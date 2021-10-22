@@ -6,8 +6,7 @@
 
 #include "worldobject.h"
 
-class Decoration : public WorldObject
-{
+class Decoration : public WorldObject{
 public:
     Decoration();
 

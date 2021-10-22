@@ -4,40 +4,39 @@
 #include <QGraphicsPixmapItem>
 #include <QPainter>
 #include <QKeyEvent>
-
-class Character : public QGraphicsPixmapItem
-{
+#include <QtMath>
+#include <iostream>
+#include "worldobject.h"
+using namespace std;
+class Character : public WorldObject{
 public:
     Character();
-    Character(double _posx, double _posy, double _width, double _height,
-              double _dt, std::string _fileSprite);
+    Character(double _posx, double _posy, double _width, double
+              _height, double _velObst, std::string &_nameSpObst);
 
     QRectF boundingRect() const;
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
-    void changePosition();
+    void moveCharacter(int keyEventChar);
 
-    //void moveSprite();
-    //void moveCharacter(int keyEventChar);
-    double getPosx() const;
-    void setPosx(double value);
+    void parabolicMovement(double dt);
 
-    double getPosy() const;
-    void setPosy(double value);
+    bool getJump() const;
+    void setJump(bool value);
 
-protected:
-    void keyPressEvent(QKeyEvent *event);
+    double getLastPosy() const;
+    void setLastPosy(double value);
+
 private:
-
-    double posx, posy;
-    double width, height;
     double dt;
-    std::string spriteCharacter;
+    double Vx, Vy;
+    double lastPosy;
+    //std::string spriteCharacter;
     int lastKey;
-    QPixmap pixMapChar;
 
-
+    bool jump = false;
+    double G = -9.8;
 };
 
 #endif // CHARACTER_H
