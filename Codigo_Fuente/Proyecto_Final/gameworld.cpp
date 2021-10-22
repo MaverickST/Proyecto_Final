@@ -11,7 +11,7 @@ GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld)
     //Inicializacion del personaje principal
     //PJ = new Character(0,0,55,18,0.1,"../Proyecto_Final/Sprites/auto1.png");
     std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
-    PJ = new Character (0,0,55,18,30.0f,sprite);
+    PJ = new Character (0,0,20,20,60.0f,sprite);
     mScene->addItem(PJ);
 
     ui->graphicsView->setScene(mScene);
@@ -219,8 +219,12 @@ GameWorld::~GameWorld(){
 void GameWorld::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_Space){
         PJ->setJump(true);
+        PJ->moveCharacter(event->key());
     }else if(!beCollides && (PJ->getJump() == false)){
         PJ->moveCharacter(event->key());
+    }
+    if(PJ->getJump() == true){
+        cout << "Salto activo" << endl;
     }
 }
 

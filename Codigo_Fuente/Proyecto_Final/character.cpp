@@ -12,10 +12,10 @@ Character::Character(double _posx, double _posy, double _width, double
     vel = _velObst;
     nameSpObj = _nameSpObst;
 
-    pixMapObj.load(nameSpObj.c_str());
-    pixMapObj = pixMapObj.scaled(width, height);
+    //pixMapObj.load(nameSpObj.c_str());
+    //pixMapObj = pixMapObj.scaled(width, height);
 
-    double theta = qDegreesToRadians(30.0);
+    double theta = qDegreesToRadians(45.0);
 
     //Se halla velocidad en ambos ejes
     Vx = vel * cos(theta);
@@ -27,7 +27,9 @@ QRectF Character::boundingRect() const{
 }
 
 void Character::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *){
-    painter->drawPixmap(posx, posy, pixMapObj);
+    //painter->drawPixmap(posx, posy, pixMapObj);
+    painter->setBrush(Qt::blue);
+    painter->drawEllipse(boundingRect());
     setPos(posx, posy);
 }
 
@@ -55,14 +57,20 @@ void Character::moveCharacter(int keyEventChar){
 }
 
 void Character::parabolicMovement(double dt){
-    Vy += G * dt;
+    if(posy >= lastPosy){
+        Vy += G * dt;
 
-    //Se halla la posicion en ambos ejes
-    posx += Vx * dt;
-    posy += Vy * dt + (G * dt * dt)/2.0f;
+        //Se halla la posicion en ambos ejes
+        posx += Vx * dt;
+        posy += Vy * dt + (G * dt * dt)/2.0f;
 
-    setPos(posx , -posy);
-    cout << "[ " << posx << " , " << posy << " ]" << endl;
+        setPos(posx , posy);
+        cout << "[ " << posx << " , " << posy << " ]" << endl;
+    }else{
+        cout << "Maximo alcance" << endl;
+        jump = false;
+    }
+
 }
 
 bool Character::getJump() const{
