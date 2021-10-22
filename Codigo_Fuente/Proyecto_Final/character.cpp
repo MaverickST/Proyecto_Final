@@ -14,8 +14,6 @@ Character::Character(double _posx, double _posy, double _width, double
 
     //pixMapObj.load(nameSpObj.c_str());
     //pixMapObj = pixMapObj.scaled(width, height);
-
-
 }
 
 QRectF Character::boundingRect() const{
@@ -31,6 +29,7 @@ void Character::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 
 void Character::moveCharacter(int keyEventChar){
     lastKey = keyEventChar;
+    // Movimiento del personaje en funcion de la tecla presionada.
     if(keyEventChar == Qt::Key_A){
         posx -= 5;
         setPos(posx , posy);
@@ -45,14 +44,17 @@ void Character::moveCharacter(int keyEventChar){
         setPos(posx , posy);
     }
 
-    if(jump){
+    /*if(jump){
         lastPosy = posy;
-    }
-
-    // Movimiento del personaje en funcion de la tecla presionada.
+        calculateSpeed();
+    }*/
 }
 
-void Character::calculateSpeed(){
+void Character::calculateInitialVelocity(){
+    //Posicion que indicara la parada del movimiento parabolico
+    lastPosy = posy;
+
+    //Se pasa de grados a radianes
     double theta = qDegreesToRadians(45.0);
 
     //Se halla velocidad en ambos ejes
@@ -74,7 +76,6 @@ void Character::parabolicMovement(double dt){
         cout << "Maximo alcance" << endl;
         jump = false;
     }
-
 }
 
 bool Character::getJump() const{
