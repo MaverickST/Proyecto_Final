@@ -18,7 +18,6 @@ public:
     void setVel(double value);
 
 protected:
-
     double posx, posy;
     double width, height;
     double vel;

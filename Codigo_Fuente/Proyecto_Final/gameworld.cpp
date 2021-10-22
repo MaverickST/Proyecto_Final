@@ -47,7 +47,6 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
     // Espacio hábil para poner las decoraciones. Van en la parte superior.
     spaceToPutDecor = (hDecor1 > hDecor2 )? hDecor1*2 + 5 : hDecor2*2 + 5;
 
-
     // Atributos para los enemigos
     nameSpEnemy = _nameSpEnemy;
     wEnemiy = _wEnemy, hEnemiy = _hEnemy;
@@ -130,7 +129,6 @@ void GameWorld::onUptade(){
         contTimeToSpawn = 0;
         deleteWorldObject();
     }
-
 }
 
 void GameWorld::spawnSceneObject(){
@@ -161,7 +159,7 @@ void GameWorld::spawnSceneObject(){
     }
 
     /// [ GENERACION ALEATORIA DEL OBJETO DECORATION PARA LA DECORACION DEL JUEGO ]
-    int randPosyDecor; // Posicion en y aleatoria
+    int randPosyDecor; // Posicion en Y aleatoria
     int randDecorKind; // Como son dos tipos de decoracion, habrá un 50% de spawn para cada uno
     int hMaxDecor = hDecor1 < hDecor2 ? hDecor2 : hDecor1; // Para delimitar la posicion de spawn
 
