@@ -19,10 +19,9 @@ IDCATC::~IDCATC(){
     delete ui;
 }
 
-void IDCATC::openProfileInterfaz()
-{
+void IDCATC::openProfileInterfaz(){
     // Se crea y muestra ventana del perfil del usuario
-    Profile = new ProfileUser(mUsername,mPassword,mLevel,mLives,mScoreFirstLevel,mScoreSecondLevel,mScoreThirdLevel);
+    Profile = new ProfileUser(mUser);
     Profile->show();
 
     // Conexion para el cierre de la ventana del perfil
@@ -104,14 +103,8 @@ void IDCATC::on_pB_Login_clicked(){
 
             //Se procede a verificar que las contraseñas coincidan
             if(ui->Text_Password->text().toStdString() == Password){
-                //**Asignacion de atributos de usuarios**//
-                mUsername         =              Username;
-                mPassword         =              Password;
-                mLevel            =           stoi(Level);
-                mLives            =           stoi(Lives);
-                mScoreFirstLevel  = stoi(ScoreFirstLevel);
-                mScoreSecondLevel = stoi(ScoreFirstLevel);
-                mScoreThirdLevel  = stoi(ScoreThirdLevel);
+                //Creacion del objeto User//
+                mUser = new User(Username,Password,stoi(Level),stoi(Lives),stoi(ScoreFirstLevel),stoi(ScoreSecondLevel),stoi(ScoreThirdLevel));
 
                 ui->progressBar->setValue(100);
                 FoundPassword = true;

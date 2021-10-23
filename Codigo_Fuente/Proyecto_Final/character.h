@@ -29,12 +29,21 @@ public:
     double getLastPosy() const;
     void setLastPosy(double value);
 
+    int getLives() const;
+    void setLives(int value);
+
+    std::string getUsername() const;
+    void setUsername(const std::string &value);
+
 private:
     double dt;
     double Vx, Vy;
     double lastPosy;
-    //std::string spriteCharacter;
+
+    //NOTA MENTAL PARA MIGUEL: AGG ESTOS PARAMETROS AL CONTRUCTOR DEL GAMEWORLD
+    std::string Username;
     int lastKey;
+    int Lives;
 
     bool jump = false;
     double G = -9.8;

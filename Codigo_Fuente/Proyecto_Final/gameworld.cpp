@@ -1,6 +1,11 @@
 #include "gameworld.h"
 #include "ui_gameworld.h"
 
+#define PATH_TO_USERS     "../Proyecto_Final/Users/Users.txt"
+#define PATH_TO_USERS_TMP "../Proyecto_Final/Users/UsersTMP.txt"
+
+GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld){
+    ui->setupUi(this);
 //GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld){
 //    ui->setupUi(this);
 
@@ -21,6 +26,10 @@
 //    mTimer = new QTimer;
 //    mTimer->start(50);
 
+    connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
+    //connect(ui->pB_StartGame, &QPushButton::clicked, this, &GameWorld::startQTimer);
+    connect(mTimer, &QTimer::timeout, this, &GameWorld::onUptade);
+}
 //    //connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
 //    //connect(ui->pB_StartGame, &QPushButton::clicked, this, &GameWorld::startQTimer);
 //    connect(mTimer, &QTimer::timeout, this, &GameWorld::onUptade);
@@ -112,7 +121,37 @@ bool GameWorld::collisioWithObstacle(){
     return false;
 }
 
+void GameWorld::loseAllTheLives(){
+    //Funcion que se va a ejecutar cuando el jugador principal pierda todas las vidas
+    /*endGame();
+    updateUsersInformation();*/
+}
+
+void GameWorld::updateUsersInformation(){
+    /*ifstream inFile;
+    ofstream outFile, Temp;
+
+    inFile.open(PATH_TO_USERS);
+
+    //Atributos de usuario
+    string Username ,Password, Level, Lives, ScoreFirstLevel, ScoreSecondLevel, ScoreThirdLevel;
+    string uodatedUsers = "";
+    while(!inFile.eof()){
+        inFile >> Username >> Password >> Level >> Lives >> ScoreFirstLevel >> ScoreSecondLevel >> ScoreThirdLevel;
+        if(Username == PJ->getUsername()){
+
+        }else{
+
+        }
+    }*/
+}
+
 void GameWorld::onUptade(){
+    //Evaluacion de vidas del personaje
+    /*if(PJ->getLives() == 0){
+        //El personaje principal se ha quedado sin vidas
+        loseAllTheLives();
+    }*/
 
 //    Salto con movimiento parabolico
 //    if(PJ->getJump() == true){

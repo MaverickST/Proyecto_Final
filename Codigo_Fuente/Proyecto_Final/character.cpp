@@ -93,3 +93,23 @@ double Character::getLastPosy() const{
 void Character::setLastPosy(double value){
     lastPosy = value;
 }
+
+int Character::getLives() const
+{
+    return Lives;
+}
+
+void Character::setLives(int value)
+{
+    Lives = value;
+}
+
+std::string Character::getUsername() const
+{
+    return Username;
+}
+
+void Character::setUsername(const std::string &value)
+{
+    Username = value;
+}
