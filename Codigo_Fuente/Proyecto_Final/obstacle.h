@@ -14,8 +14,6 @@ public:
 
     QRectF boundingRect() const;
 
-    void advance(int);
-
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
 private:

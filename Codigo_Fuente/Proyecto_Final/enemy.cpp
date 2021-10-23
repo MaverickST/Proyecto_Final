@@ -20,10 +20,23 @@ Enemy::Enemy(double _posx, double _posy, double _width, double _height,
 
 QRectF Enemy::boundingRect() const
 {
-    return QRectF (-width/2, -height/2, width, height);
+    return QRectF (-width/2, height/2, width, height);
 }
 
-void Enemy::advance(int)
+void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+{
+//    painter->drawEllipse(boundingRect());
+//    painter->drawPixmap(QRectF (0, 0, width, height), pixMapObj, boundingRect());
+    painter->drawPixmap(-width/2, height/2, pixMapObj, 0, 0, width, height);
+    setPos(posx, posy);
+
+    // Dibuja la fuente de la porción rectangular
+    // del mapa  de píxeles dado en el objetivo
+    // dado en el dispositivo de pintura
+
+}
+
+void Enemy::moveEnemy()
 {
     if (isColliding) {
         // Para cuando impacte una bala, despues de un tiempo hay una explosion.
@@ -37,13 +50,6 @@ void Enemy::advance(int)
         setPixmap(pixMapObj);
     }
 }
-
-void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
-{
-    painter->drawPixmap(posx, posy, pixMapObj);
-    setPos(posx, posy);
-}
-
 
 bool Enemy::getIsColliding() const
 {

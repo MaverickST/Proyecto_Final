@@ -1,7 +1,14 @@
 #include "worldobject.h"
 
-WorldObject::WorldObject()
-{}
+WorldObject::WorldObject() {}
+
+void WorldObject::moveObject()
+{
+    posx = posx - vel;
+
+    setPos(posx,posy);
+    setPixmap(pixMapObj);
+}
 
 double WorldObject::getPosx() const
 {

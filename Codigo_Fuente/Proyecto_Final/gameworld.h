@@ -12,6 +12,7 @@
 #include "character.h"
 #include "obstacle.h"
 #include "decoration.h"
+#include "enemy.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWorld; }
@@ -24,7 +25,7 @@ class GameWorld : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit GameWorld(QWidget *parent = nullptr);
+//    explicit GameWorld(QWidget *parent = nullptr);
 
     explicit GameWorld(string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1, double _hDecor1,
     string &_nameSpDecor2, double _wDecor2, double _hDecor2, double _velDecor, int _numMaxDecor,
@@ -35,6 +36,7 @@ public:
 
     void spawnSceneObject();
     void deleteWorldObject();
+    void moveWorldObjects();
 
     bool collisionWithEnemy();
     bool collisioWithObstacle();
@@ -59,7 +61,7 @@ private:
 
     // Contenedores
     QList<Decoration *> mDecorsWorld;
-    QList<int *> mEnemiesWorld;
+    QList<Enemy *> mEnemiesWorld;
     QList<Obstacle *> mObstaclesWorld;
 
 
@@ -80,7 +82,7 @@ private:
 
     // Atributos para los enemigos
     string nameSpEnemy;
-    double wEnemiy, hEnemiy;
+    double wEnemy, hEnemy;
     double velEnemy, probSpawnEnemy;
 
     // Para los obstaculos
