@@ -1,8 +1,21 @@
 #include "profileuser.h"
 #include "ui_profileuser.h"
 
-ProfileUser::ProfileUser(string username, string password, int level, int lives, int score1, int score2, int score3,QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
+ProfileUser::ProfileUser(QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
     ui->setupUi(this);
+}
+
+ProfileUser::ProfileUser(User * User_,QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
+    ui->setupUi(this);
+
+    mUser = User_;
+    showInformation();
+    connect(ui->pB_StartLevel1, &QPushButton::clicked, this, &ProfileUser::startGameLevel1);
+    connect(ui->pB_closeProfile, &QPushButton::clicked, this, &ProfileUser::closeWindowProfile);
+}
+
+/*ProfileUser::ProfileUser(string username, string password, int level, int lives, int score1, int score2, int score3,QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
+
 
     //Inicializacion de atributos de usuario
     mUsername         = username;
@@ -17,7 +30,7 @@ ProfileUser::ProfileUser(string username, string password, int level, int lives,
 
     connect(ui->pB_StartLevel1, &QPushButton::clicked, this, &ProfileUser::startGameLevel1);
     connect(ui->pB_closeProfile, &QPushButton::clicked, this, &ProfileUser::closeWindowProfile);
-}
+}*/
 
 ProfileUser::~ProfileUser(){
     delete ui;
@@ -25,23 +38,23 @@ ProfileUser::~ProfileUser(){
 
 void ProfileUser::showInformation(){
     //Enviamos el nombre de usuario
-    ui->Label_Username->setText(mUsername.c_str());
+    ui->Label_Username->setText((mUser->username()).c_str());
 
     //Envimos en numero de vidas
-    ui->lcd_Lives->display(mLives);
+    ui->lcd_Lives->display(mUser->lives());
 
     //Enviamos el Score de cada nivel
-    ui->Label_Score1->setText(QString::number(mScoreFirstLevel));
-    ui->Label_Score2->setText(QString::number(mScoreSecondLevel));
-    ui->Label_Score3->setText(QString::number(mScoreThirdLevel));
+    ui->Label_Score1->setText(QString::number(mUser->scoreFirstLevel()));
+    ui->Label_Score2->setText(QString::number(mUser->scoreSecondLevel()));
+    ui->Label_Score3->setText(QString::number(mUser->scoreThirdLevel()));
 
-    if(mLevel == 1){
+    if(mUser->level() == 1){
         ui->pB_StartLevel2->setEnabled(false);
         ui->pB_StartLevel3->setEnabled(false);
-    }else if(mLevel == 2){
+    }else if(mUser->level() == 2){
         ui->pB_StartLevel2->setEnabled(true);
         ui->pB_StartLevel3->setEnabled(false);
-    }else if(mLevel == 3){
+    }else if(mUser->level() == 3){
         ui->pB_StartLevel3->setEnabled(true);
     }
 }

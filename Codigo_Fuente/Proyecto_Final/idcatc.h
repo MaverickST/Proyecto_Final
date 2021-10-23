@@ -9,6 +9,7 @@
 
 #include "profileuser.h"
 #include "createaccount.h"
+#include "user.h"
 
 using namespace std;
 QT_BEGIN_NAMESPACE
@@ -34,14 +35,6 @@ private:
 
     ProfileUser *Profile;
     createAccount *Account;
-
-    //Declaracion de atributos de usuarios
-    string mUsername         = "";
-    string mPassword         = "";
-    int    mLevel            =  0;
-    int    mLives            =  0;
-    int    mScoreFirstLevel  =  0;
-    int    mScoreSecondLevel =  0;
-    int    mScoreThirdLevel  =  0;
+    User *mUser;
 };
 #endif // IDCATC_H

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <QPixmap>
 #include <time.h>
+#include <fstream>
 
 #include "character.h"
 #include "obstacle.h"
@@ -20,8 +21,7 @@ QT_END_NAMESPACE
 
 using namespace std;
 
-class GameWorld : public QMainWindow
-{
+class GameWorld : public QMainWindow{
     Q_OBJECT
 
 public:
@@ -39,6 +39,9 @@ public:
 
     bool collisionWithEnemy();
     bool collisioWithObstacle();
+
+    void loseAllTheLives();
+    void updateUsersInformation();
 
     ~GameWorld();
 
@@ -100,14 +103,12 @@ private:
     Character *PJ;
 
     bool beCollides = false;
+    bool win        = false;
 //    string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1, double _hDecor1,
 //    string &_nameSpDecor2, double _wDecor2, double _hDecor2, double _velDecor, int _numMaxDecor,
 //    string &_nameSpEnemy, double _wEnemy, double _hEnemy, double _velEnemy, double _probSpawnEnemy,
 //    string &_nameSpObstacle, double _wObstacle, double _hObstacle, double _velObstacle,
 //    double _probSpawnObst
-
-
-
 };
 
 #endif // GAMEWORLD_H
