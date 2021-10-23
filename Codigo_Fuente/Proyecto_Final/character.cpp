@@ -12,14 +12,8 @@ Character::Character(double _posx, double _posy, double _width, double
     vel = _velObst;
     nameSpObj = _nameSpObst;
 
-    pixMapObj.load(nameSpObj.c_str());
-    pixMapObj = pixMapObj.scaled(width, height);
-
-    double theta = qDegreesToRadians(30.0);
-
-    //Se halla velocidad en ambos ejes
-    Vx = vel * cos(theta);
-    Vy = vel * sin(theta);
+    //pixMapObj.load(nameSpObj.c_str());
+    //pixMapObj = pixMapObj.scaled(width, height);
 }
 
 QRectF Character::boundingRect() const{
@@ -27,12 +21,15 @@ QRectF Character::boundingRect() const{
 }
 
 void Character::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *){
-    painter->drawPixmap(posx, posy, pixMapObj);
+    //painter->drawPixmap(posx, posy, pixMapObj);
+    painter->setBrush(Qt::blue);
+    painter->drawEllipse(boundingRect());
     setPos(posx, posy);
 }
 
 void Character::moveCharacter(int keyEventChar){
     lastKey = keyEventChar;
+    // Movimiento del personaje en funcion de la tecla presionada.
     if(keyEventChar == Qt::Key_A){
         posx -= 5;
         setPos(posx , posy);
@@ -47,22 +44,38 @@ void Character::moveCharacter(int keyEventChar){
         setPos(posx , posy);
     }
 
-    if(jump){
+    /*if(jump){
         lastPosy = posy;
-    }
+        calculateSpeed();
+    }*/
+}
 
-    // Movimiento del personaje en funcion de la tecla presionada.
+void Character::calculateInitialVelocity(){
+    //Posicion que indicara la parada del movimiento parabolico
+    lastPosy = posy;
+
+    //Se pasa de grados a radianes
+    double theta = qDegreesToRadians(45.0);
+
+    //Se halla velocidad en ambos ejes
+    Vx = vel * cos(theta);
+    Vy = vel * sin(theta);
 }
 
 void Character::parabolicMovement(double dt){
-    Vy += G * dt;
+    if(posy >= lastPosy){
+        Vy += G * dt;
 
-    //Se halla la posicion en ambos ejes
-    posx += Vx * dt;
-    posy += Vy * dt + (G * dt * dt)/2.0f;
+        //Se halla la posicion en ambos ejes
+        posx += Vx * dt;
+        posy += Vy * dt + (G * dt * dt)/2.0f;
 
-    setPos(posx , -posy);
-    cout << "[ " << posx << " , " << posy << " ]" << endl;
+        setPos(posx , posy);
+        cout << "[ " << posx << " , " << posy << " ]" << endl;
+    }else{
+        cout << "Maximo alcance" << endl;
+        jump = false;
+    }
 }
 
 bool Character::getJump() const{

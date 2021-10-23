@@ -8,11 +8,11 @@
 //    mScene = new QGraphicsScene(this);
 //    ui->graphicsView->setScene(mScene);
 
-//    //Inicializacion del personaje principal
-//    //PJ = new Character(0,0,55,18,0.1,"../Proyecto_Final/Sprites/auto1.png");
-//    std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
-//    PJ = new Character (0,0,55,18,30.0f,sprite);
-//    mScene->addItem(PJ);
+
+    //Inicializacion del personaje principal
+    std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
+    PJ = new Character (0,0,20,20,60.0f,sprite);
+    mScene->addItem(PJ);
 
 //    ui->graphicsView->setScene(mScene);
 //    ui->graphicsView->show();
@@ -93,10 +93,10 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
 
 bool GameWorld::collisionWithEnemy(){
     for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
-        /*if(PJ->collidesWithItem(*i)){
+        if(PJ->collidesWithItem(*i)){
             cout << "Colision con " << *i << endl;
             return true;
-        }*/
+        }
     }
     return false;
 }
@@ -130,6 +130,14 @@ void GameWorld::onUptade(){
 //    }else{
 //        beCollides = false;
 //    }
+
+    if(Enemy == true || Obstacle == true){
+        //Se detecto una colision
+        beCollides = true;
+    }else{
+        beCollides = false;
+    }
+    //Fin de evaluacion de colisiones
 
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
@@ -294,11 +302,29 @@ GameWorld::~GameWorld(){
 }
 
 void GameWorld::keyPressEvent(QKeyEvent *event){
-//    if(event->key() == Qt::Key_Space){
-//        PJ->setJump(true);
-//    }else if(!beCollides && (PJ->getJump() == false)){
-//        PJ->moveCharacter(event->key());
-//    }
+
+    if(event->key() == Qt::Key_B){
+        ///**************EL PERSONAJE PRINCIPAL DISPARA***************///
+        cout << "Se realiza disparo" << endl;
+    }else if(event->key() == Qt::Key_Space && (PJ->getJump() == false)){
+        ///*******************SALTO DEL PERSONAJE********************///
+        /// Tecla que realiza el salto (Movimiento Parabolico) del personaje
+        /// Mientras el persoanje se encuentre en dicho movimiento, no se podra
+        /// Mover hacia otras direcciones ni tampoco realizar otro salto
+
+        //Se envia true al atributo privado del objeto Character
+        //Para indicar que hay un salto e ejecucion
+        PJ->setJump(true);
+
+        //Se resetea la velocidad inicial
+        PJ->calculateInitialVelocity();
+    }else if(!beCollides && (PJ->getJump() == false)){
+        PJ->moveCharacter(event->key());
+    }
+    /*if(PJ->getJump() == true){
+        cout << "Salto activo" << endl;
+    }*/
+
 }
 
 void GameWorld::startQTimer(){

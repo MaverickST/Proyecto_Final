@@ -11,6 +11,7 @@
 
 #include "character.h"
 #include "obstacle.h"
+#include "enemy.h"
 #include "decoration.h"
 #include "enemy.h"
 
