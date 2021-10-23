@@ -61,7 +61,29 @@ void ProfileUser::showInformation(){
 
 void ProfileUser::startGameLevel1(){
     // Se crea y muestra la partida, el mundo, ya jugar se ha dicho
-    Game = new GameWorld;
+    // Variables del nivel 1
+    string strPath = "../Proyecto_final/:Sprites/";
+
+    string _nameSpBackground = ":/Sprites/carretera2.jpg";
+
+    string _nameSpDecor1 = ":/Sprites/arbol1.png";
+    double _wDecor1 = 40,_hDecor1 = 50;
+    string _nameSpDecor2 = ":/Sprites/arbusto3.png";
+    double _wDecor2 = 30,_hDecor2 = 30;
+    double _velDecor = 3, _numMaxDecor = 56;
+
+    string _nameSpEnemy = ":/Sprites/auto4.png";
+    double _wEnemy = 50, _hEnemy = 30;
+    double _velEnemy = 8, _probSpawnEnemy = 100;
+
+    string _nameSpObstacle = ":/Sprites/cono1.png";
+    double _wObstacle = 20, _hObstacle = 20;
+    double _velObstacle = 3, _probSpawnObst = 180;
+
+    Game = new GameWorld(_nameSpBackground, _nameSpDecor1, _wDecor1, _hDecor1, _nameSpDecor2,
+                         _wDecor2, _hDecor2, _velDecor, _numMaxDecor, _nameSpEnemy, _wEnemy,
+                         _hEnemy, _velEnemy, _probSpawnEnemy, _nameSpObstacle, _wObstacle,
+                         _hObstacle, _velObstacle, _probSpawnObst);
     Game->show();
 
     connect(Game, &GameWorld::endGame, this, &ProfileUser::endGameLevel1);
