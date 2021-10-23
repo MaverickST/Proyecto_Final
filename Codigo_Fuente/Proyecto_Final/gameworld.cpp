@@ -168,12 +168,12 @@ void GameWorld::onUptade(){
 //        beCollides = false;
 //    }
 
-    if(Enemy == true || Obstacle == true){
+    /*if(Enemy == true || Obstacle == true){
         //Se detecto una colision
         beCollides = true;
     }else{
         beCollides = false;
-    }
+    }*/
     //Fin de evaluacion de colisiones
 
     contTimeToSpawn++;
