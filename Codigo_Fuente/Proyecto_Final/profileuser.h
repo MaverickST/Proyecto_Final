@@ -30,6 +30,9 @@ public slots:
 signals:
     void closeWindowProfile();
 
+private slots:
+    void on_pB_closeProfile_clicked();
+
 private:
     Ui::ProfileUser *ui;
 
