@@ -163,7 +163,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Level #2: Good Job.</string>
+     <string>Level #3: Good Job.</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">

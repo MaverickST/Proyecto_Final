@@ -1,14 +1,17 @@
 #include "profileuser.h"
 #include "ui_profileuser.h"
 
+#define PATH_TO_USERS     "../Proyecto_Final/Users/Users.txt"
+#define PATH_TO_USERS_TMP "../Proyecto_Final/Users/UsersTMP.txt"
+
 ProfileUser::ProfileUser(QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
     ui->setupUi(this);
 }
 
-ProfileUser::ProfileUser(User * User_,QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
+ProfileUser::ProfileUser(User &_User,QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
     ui->setupUi(this);
 
-    mUser = User_;
+    mUser = _User;
     showInformation();
     connect(ui->pB_StartLevel1, &QPushButton::clicked, this, &ProfileUser::startGameLevel1);
     connect(ui->pB_closeProfile, &QPushButton::clicked, this, &ProfileUser::closeWindowProfile);
@@ -38,25 +41,75 @@ ProfileUser::~ProfileUser(){
 
 void ProfileUser::showInformation(){
     //Enviamos el nombre de usuario
-    ui->Label_Username->setText((mUser->username()).c_str());
+    ui->Label_Username->setText((mUser.username()).c_str());
+
+    //Evaluamos si las vidas del usuario son igules a 0
+    if(mUser.lives() == 0){
+        //En este caso se reiicia el modo campaña y el usuario perdera todo su avance
+        mUser.setLives(5);
+        mUser.setLevel(1);
+        mUser.setScoreFirstLevel(0);
+        mUser.setScoreSecondLevel(0);
+        mUser.setScoreThirdLevel(0);
+    }
 
     //Envimos en numero de vidas
-    ui->lcd_Lives->display(mUser->lives());
+    ui->lcd_Lives->display(mUser.lives());
 
     //Enviamos el Score de cada nivel
-    ui->Label_Score1->setText(QString::number(mUser->scoreFirstLevel()));
-    ui->Label_Score2->setText(QString::number(mUser->scoreSecondLevel()));
-    ui->Label_Score3->setText(QString::number(mUser->scoreThirdLevel()));
+    ui->Label_Score1->setText(QString::number(mUser.scoreFirstLevel()));
+    ui->Label_Score2->setText(QString::number(mUser.scoreSecondLevel()));
+    ui->Label_Score3->setText(QString::number(mUser.scoreThirdLevel()));
 
-    if(mUser->level() == 1){
+    if(mUser.level() == 1){
         ui->pB_StartLevel2->setEnabled(false);
         ui->pB_StartLevel3->setEnabled(false);
-    }else if(mUser->level() == 2){
+    }else if(mUser.level() == 2){
         ui->pB_StartLevel2->setEnabled(true);
         ui->pB_StartLevel3->setEnabled(false);
-    }else if(mUser->level() == 3){
+    }else if(mUser.level() == 3){
         ui->pB_StartLevel3->setEnabled(true);
+    }   
+}
+
+void ProfileUser::updateUsers(){
+    ifstream inFile;
+    ofstream outFile, Temp;
+
+    inFile.open(PATH_TO_USERS);
+
+    //Atributos de usuario
+    string Username ,Password, Level, Lives, ScoreFirstLevel
+            , ScoreSecondLevel, ScoreThirdLevel;
+    string updatedUsers = "";
+
+    while(!inFile.eof()){
+        inFile >> Username >> Password >> Level >> Lives >> ScoreFirstLevel >> ScoreSecondLevel >> ScoreThirdLevel;
+        //Se evalua si el usuario leido es el usuario con sesion activa
+        if(Username == mUser.username()){
+            //Si es el usuario activo, se actualiza el archivo .txt de usuarios
+            updatedUsers = updatedUsers + Username + "   " + Password + "   " + to_string(mUser.level()) +
+                    "   " + to_string(mUser.lives()) + "   " + to_string(mUser.scoreFirstLevel()) + "   " +
+                    to_string(mUser.scoreSecondLevel()) + "   " +
+                    to_string(mUser.scoreThirdLevel()) + "\n";
+        }else{
+            //Si no lo es, se respeta los datos de los demas usuarios
+            updatedUsers = updatedUsers + Username + "   " + Password + "   " + Level +
+                    "   " + Lives + "   " + ScoreFirstLevel + "   " + ScoreSecondLevel +
+                    "   " + ScoreThirdLevel + "\n";
+        }
     }
+    //Se cierra el archivo de usuarios
+    inFile.close();
+
+    //Se abre el archivo de usuarios temporal
+    Temp.open(PATH_TO_USERS_TMP);
+    Temp << updatedUsers;
+    Temp.close();
+
+    //Se remueve el archivo usuarios.txt y se renombra el archivo UsersTMP.txt por Users.txt
+    remove(PATH_TO_USERS);
+    rename(PATH_TO_USERS_TMP , PATH_TO_USERS);
 }
 
 void ProfileUser::startGameLevel1(){
