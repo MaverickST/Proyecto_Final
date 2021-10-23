@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsPixmapItem>
 #include <string>
+#include <fstream>
 
 #include "gameworld.h"
 #include "user.h"
@@ -18,10 +19,10 @@ class ProfileUser : public QMainWindow{
 
 public:
     explicit ProfileUser(QWidget *parent = nullptr);
-    explicit ProfileUser(User *User_,QWidget *parent = nullptr);
+    explicit ProfileUser(User &_User,QWidget *parent = nullptr);
     ~ProfileUser();
     void showInformation();
-
+    void updateUsers();
 public slots:
     void startGameLevel1();
     void endGameLevel1();
@@ -33,7 +34,7 @@ private:
     Ui::ProfileUser *ui;
 
     GameWorld *Game;
-    User *mUser;
+    User mUser;
 };
 
 #endif // PROFILEUSER_H
