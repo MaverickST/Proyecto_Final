@@ -4,9 +4,7 @@
 #define PATH_TO_USERS     "../Proyecto_Final/Users/Users.txt"
 #define PATH_TO_USERS_TMP "../Proyecto_Final/Users/UsersTMP.txt"
 
-GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld){
-    ui->setupUi(this);
-//GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld){
+/*GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld){
 //    ui->setupUi(this);
 
 //    // Inicializacion de la escena
@@ -33,7 +31,7 @@ GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld)
 //    //connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
 //    //connect(ui->pB_StartGame, &QPushButton::clicked, this, &GameWorld::startQTimer);
 //    connect(mTimer, &QTimer::timeout, this, &GameWorld::onUptade);
-//}
+//}*/
 
 GameWorld::GameWorld (string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1,
 double _hDecor1, string &_nameSpDecor2, double _wDecor2, double _hDecor2,
