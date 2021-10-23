@@ -37,11 +37,14 @@ GameWorld::GameWorld (string &_nameSpBackground, string &_nameSpDecor1, double _
 double _hDecor1, string &_nameSpDecor2, double _wDecor2, double _hDecor2,
 double _velDecor, int _numMaxDecor, string &_nameSpEnemy, double _wEnemy, double _hEnemy,
 double _velEnemy, double _probSpawnEnemy, string &_nameSpObstacle, double _wObstacle,
-double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
+double _hObstacle, double _velObstacle, double _probSpawnObst, User &_User, QWidget *parent)
     : QMainWindow(parent),ui(new Ui::GameWorld)
 {
     ui->setupUi(this);
     // Inicializacion del constructor sobrecargado, solo un poco sobrecargado...
+
+    //Inicualizacion objeto User
+    mUser = _User;
 
     // Atributos para las decoraciones
     nameSpDecor1 = _nameSpDecor1;
@@ -123,25 +126,6 @@ void GameWorld::loseAllTheLives(){
     //Funcion que se va a ejecutar cuando el jugador principal pierda todas las vidas
     /*endGame();
     updateUsersInformation();*/
-}
-
-void GameWorld::updateUsersInformation(){
-    /*ifstream inFile;
-    ofstream outFile, Temp;
-
-    inFile.open(PATH_TO_USERS);
-
-    //Atributos de usuario
-    string Username ,Password, Level, Lives, ScoreFirstLevel, ScoreSecondLevel, ScoreThirdLevel;
-    string uodatedUsers = "";
-    while(!inFile.eof()){
-        inFile >> Username >> Password >> Level >> Lives >> ScoreFirstLevel >> ScoreSecondLevel >> ScoreThirdLevel;
-        if(Username == PJ->getUsername()){
-
-        }else{
-
-        }
-    }*/
 }
 
 void GameWorld::onUptade(){

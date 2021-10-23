@@ -55,7 +55,7 @@ void Character::calculateInitialVelocity(){
     lastPosy = posy;
 
     //Se pasa de grados a radianes
-    double theta = qDegreesToRadians(45.0);
+    double theta = qDegreesToRadians(45.0);//Posiblemente se solucione poniendo el angulo negativo
 
     //Se halla velocidad en ambos ejes
     Vx = vel * cos(theta);
@@ -92,24 +92,4 @@ double Character::getLastPosy() const{
 
 void Character::setLastPosy(double value){
     lastPosy = value;
-}
-
-int Character::getLives() const
-{
-    return Lives;
-}
-
-void Character::setLives(int value)
-{
-    Lives = value;
-}
-
-std::string Character::getUsername() const
-{
-    return Username;
-}
-
-void Character::setUsername(const std::string &value)
-{
-    Username = value;
 }

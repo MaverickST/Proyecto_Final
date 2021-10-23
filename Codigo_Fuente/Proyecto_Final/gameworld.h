@@ -15,6 +15,7 @@
 #include "enemy.h"
 #include "decoration.h"
 #include "enemy.h"
+#include "user.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWorld; }
@@ -32,7 +33,7 @@ public:
     string &_nameSpDecor2, double _wDecor2, double _hDecor2, double _velDecor, int _numMaxDecor,
     string &_nameSpEnemy, double _wEnemy, double _hEnemy, double _velEnemy, double _probSpawnEnemy,
     string &_nameSpObstacle, double _wObstacle, double _hObstacle, double _velObstacle,
-    double _probSpawnObst, QWidget *parent = nullptr);
+    double _probSpawnObst, User &_User, QWidget *parent = nullptr);
 
 
     void spawnSceneObject();
@@ -43,7 +44,6 @@ public:
     bool collisioWithObstacle();
 
     void loseAllTheLives();
-    void updateUsersInformation();
 
     ~GameWorld();
 
@@ -57,11 +57,13 @@ public slots:
     void startQTimer();
     void onUptade();
 
-
 private:
     Ui::GameWorld *ui;
     QGraphicsScene *mScene;
     QTimer *mTimer;
+
+    //Objeto user
+    User mUser;
 
     // Contenedores
     QList<Decoration *> mDecorsWorld;

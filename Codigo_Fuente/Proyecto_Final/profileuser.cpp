@@ -81,26 +81,30 @@ void ProfileUser::updateUsers(){
     //Atributos de usuario
     string Username ,Password, Level, Lives, ScoreFirstLevel
             , ScoreSecondLevel, ScoreThirdLevel;
-    string updatedUsers = "";
+    string updatedUsersTMP = "";
 
     while(!inFile.eof()){
         inFile >> Username >> Password >> Level >> Lives >> ScoreFirstLevel >> ScoreSecondLevel >> ScoreThirdLevel;
         //Se evalua si el usuario leido es el usuario con sesion activa
         if(Username == mUser.username()){
             //Si es el usuario activo, se actualiza el archivo .txt de usuarios
-            updatedUsers = updatedUsers + Username + "   " + Password + "   " + to_string(mUser.level()) +
+            updatedUsersTMP = updatedUsersTMP + Username + "   " + Password + "   " + to_string(mUser.level()) +
                     "   " + to_string(mUser.lives()) + "   " + to_string(mUser.scoreFirstLevel()) + "   " +
                     to_string(mUser.scoreSecondLevel()) + "   " +
                     to_string(mUser.scoreThirdLevel()) + "\n";
         }else{
             //Si no lo es, se respeta los datos de los demas usuarios
-            updatedUsers = updatedUsers + Username + "   " + Password + "   " + Level +
+            updatedUsersTMP = updatedUsersTMP + Username + "   " + Password + "   " + Level +
                     "   " + Lives + "   " + ScoreFirstLevel + "   " + ScoreSecondLevel +
                     "   " + ScoreThirdLevel + "\n";
         }
     }
     //Se cierra el archivo de usuarios
     inFile.close();
+    string updatedUsers = "";
+    for(int i = 0; i < int((updatedUsersTMP.length())-1); i++){
+        updatedUsers += updatedUsersTMP[i];
+    }
 
     //Se abre el archivo de usuarios temporal
     Temp.open(PATH_TO_USERS_TMP);
@@ -113,6 +117,8 @@ void ProfileUser::updateUsers(){
 }
 
 void ProfileUser::startGameLevel1(){
+    int lives = mUser.lives();
+    mUser.setLives(lives - 1);
     // Se crea y muestra la partida, el mundo, ya jugar se ha dicho
     // Variables del nivel 1
     string strPath = "../Proyecto_final/:Sprites/";
@@ -136,7 +142,7 @@ void ProfileUser::startGameLevel1(){
     Game = new GameWorld(_nameSpBackground, _nameSpDecor1, _wDecor1, _hDecor1, _nameSpDecor2,
                          _wDecor2, _hDecor2, _velDecor, _numMaxDecor, _nameSpEnemy, _wEnemy,
                          _hEnemy, _velEnemy, _probSpawnEnemy, _nameSpObstacle, _wObstacle,
-                         _hObstacle, _velObstacle, _probSpawnObst);
+                         _hObstacle, _velObstacle, _probSpawnObst, mUser);
     Game->show();
 
     connect(Game, &GameWorld::endGame, this, &ProfileUser::endGameLevel1);
@@ -149,5 +155,9 @@ void ProfileUser::endGameLevel1(){
     Game->close();
     delete Game;
     this->setVisible(true);
+    showInformation();
 }
 
+void ProfileUser::on_pB_closeProfile_clicked(){
+    updateUsers();
+}
