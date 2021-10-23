@@ -15,9 +15,10 @@ public:
 
     QRectF boundingRect() const;
 
-    void advance(int);
-
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
+
+    void moveEnemy();
+
 
     bool getIsColliding() const;
     void setIsColliding(bool value);

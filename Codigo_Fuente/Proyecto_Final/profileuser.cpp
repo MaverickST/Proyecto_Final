@@ -75,3 +75,4 @@ void ProfileUser::endGameLevel1(){
     delete Game;
     this->setVisible(true);
 }
+
