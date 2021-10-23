@@ -22,16 +22,18 @@ QRectF Decoration::boundingRect() const
     return QRectF (-width/2, -height/2, width, height);
 }
 
-void Decoration::advance(int)
-{
-    posx = posx - vel;
-
-    setPos(posx, posy);
-    setPixmap(pixMapObj);
-}
-
 void Decoration::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->drawPixmap(posx, posy, pixMapObj);
+//    painter->drawEllipse(boundingRect());
+//    painter->drawPixmap(QRectF (0, 0, width, height), pixMapObj, boundingRect());
+    painter->drawPixmap(-width/2, -height/2, pixMapObj, 0, 0, width, height);
     setPos(posx, posy);
 }
+
+//void Decoration::advance(int)
+//{
+//    posx = posx - vel;
+
+//    setPos(posx, posy++);
+//    setPixmap(pixMapObj);
+//}

@@ -8,6 +8,8 @@ class WorldObject : public QGraphicsPixmapItem
 public:
     WorldObject();
 
+    void moveObject();
+
     double getPosx() const;
     void setPosx(double value);
 
