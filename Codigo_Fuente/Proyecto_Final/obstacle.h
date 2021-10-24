@@ -2,7 +2,6 @@
 #define OBSTACLE_H
 
 #include <QGraphicsPixmapItem>
-#include <QPainter>
 
 #include "worldobject.h"
 

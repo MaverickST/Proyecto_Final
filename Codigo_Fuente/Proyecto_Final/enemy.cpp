@@ -3,13 +3,14 @@
 Enemy::Enemy() {}
 
 Enemy::Enemy(double _posx, double _posy, double _width, double _height,
-             double _velEnemy, std::string &_nameSpEnemy)
+             double _velEnemy, double _masaEnemy, std::string &_nameSpEnemy)
 {
     posx = _posx;
     posy = _posy;
     width = _width;
     height = _height;
     vel = _velEnemy;
+    masa = _masaEnemy;
     contTimeToExpl = 0;
     isColliding = false;
 
@@ -25,15 +26,12 @@ QRectF Enemy::boundingRect() const
 
 void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-//    painter->drawEllipse(boundingRect());
-//    painter->drawPixmap(QRectF (0, 0, width, height), pixMapObj, boundingRect());
     painter->drawPixmap(-width/2, height/2, pixMapObj, 0, 0, width, height);
     setPos(posx, posy);
 
     // Dibuja la fuente de la porción rectangular
     // del mapa  de píxeles dado en el objetivo
     // dado en el dispositivo de pintura
-
 }
 
 void Enemy::moveEnemy()

@@ -1,38 +1,21 @@
 #include "gameworld.h"
 #include "ui_gameworld.h"
 
-//GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld){
-//    ui->setupUi(this);
+GameWorld::GameWorld(string &_nameSpBackground,
+    string &_nameSpDecor1, double _wDecor1, double _hDecor1,
+    string &_nameSpDecor2, double _wDecor2, double _hDecor2,
+    double _velDecor, double _probSpawnDecor,
+    string &_nameSpEnemy, double _wEnemy, double _hEnemy,
+    double _velEnemy, double _masaEnemy, double _probSpawnEnemy,
+    string &_nameSpObstacle, double _wObstacle, double _hObstacle,
+    double _velObstacle, double _probSpawnObst,
+    string &_nameSpShot, double _wShot, double _hShot,
+    double _velShot, double _masaShot, double _millisecondsToShot,
+    QWidget *parent)
 
-//    // Inicializacion de la escena
-//    mScene = new QGraphicsScene(this);
-//    ui->graphicsView->setScene(mScene);
-
-
-    //Inicializacion del personaje principal
-    std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
-    PJ = new Character (0,0,20,20,60.0f,sprite);
-    mScene->addItem(PJ);
-
-//    ui->graphicsView->setScene(mScene);
-//    ui->graphicsView->show();
-
-//    numToTimer = 50;
-//    mTimer = new QTimer;
-//    mTimer->start(50);
-
-//    //connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
-//    //connect(ui->pB_StartGame, &QPushButton::clicked, this, &GameWorld::startQTimer);
-//    connect(mTimer, &QTimer::timeout, this, &GameWorld::onUptade);
-//}
-
-GameWorld::GameWorld (string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1,
-double _hDecor1, string &_nameSpDecor2, double _wDecor2, double _hDecor2,
-double _velDecor, int _numMaxDecor, string &_nameSpEnemy, double _wEnemy, double _hEnemy,
-double _velEnemy, double _probSpawnEnemy, string &_nameSpObstacle, double _wObstacle,
-double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
     : QMainWindow(parent),ui(new Ui::GameWorld)
 {
+
     ui->setupUi(this);
     // Inicializacion del constructor sobrecargado, solo un poco sobrecargado...
 
@@ -43,7 +26,7 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
     nameSpDecor2 = _nameSpDecor2;
     wDecor2 = _wDecor2, hDecor2 = _hDecor2;
     velDecor = _velDecor;
-    numMaxDecor = _numMaxDecor;
+    probSpawnDecor = _probSpawnDecor;
     // Espacio hábil para poner las decoraciones. Van en la parte superior.
     spaceToPutDecor = (hDecor1 > hDecor2 )? hDecor1*2 + 5 : hDecor2*2 + 5;
 
@@ -51,35 +34,48 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, QWidget *parent)
     nameSpEnemy = _nameSpEnemy;
     wEnemy = _wEnemy, hEnemy = _hEnemy;
     velEnemy = _velEnemy, probSpawnEnemy = _probSpawnEnemy;
+    masaEnemy = _masaEnemy;
 
     // Para los obstaculos
     nameSpObstacle = _nameSpObstacle;
     wObstacle = _wObstacle, hObstacle = _hObstacle;
     velObstacle = _velObstacle, probSpawnObst = _probSpawnObst;
 
+    // Para los disparos
+    nameSpShot = _nameSpShot;
+    wShot = _wShot, hShot = _hShot;
+    velShot = _velShot, masaShot = _masaShot, millisecondsToShot = _millisecondsToShot;
+
     // Dimesiones de la escena
-    widthScene = ui->graphicsView->width() - 10;
-    heightScene = ui->graphicsView->height() - 10;
+    widthScene = ui->graphicsView->width() - 5;
+    heightScene = ui->graphicsView->height() - 5;
 
     // Para controlar la generacion de objetos
     contTimeToSpawn = 0;
     timeToSpawn = 200; // son milisegundos
     posxSpwanAny = widthScene + 60;
 
+    //Inicializacion del personaje principal
+//    std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
+//    PJ = new Character (0,0,20,20,60.0f,sprite);
+//    mScene->addItem(PJ);
+
     // Inicializacion de la escena
     mScene = new QGraphicsScene(this);
     mScene->setSceneRect(0, 0, widthScene, heightScene);
     ui->graphicsView->setScene(mScene);
 
-//    mScene = new QGraphicsScene(this);
-//    mScene->setSceneRect(0,0,anchoScene,largoScene);
-//    ui->graphicsView->setScene(mScene);
-
     // Imagen de fondo
     std::string nameImgBackground = _nameSpBackground;
     QPixmap pixMapBackground(nameImgBackground.c_str());
     pixMapBackground = pixMapBackground.scaled(widthScene, heightScene);
-//    mScene->addPixmap(pixMapBackground);
+    mScene->addPixmap(pixMapBackground);
+
+    Explosion *e = new Explosion(100, 100, 80, 80);
+    mScene->addItem(e);
+    mExplosionsWorld.push_back(e);
+
+    qDebug() << __LINE__;
 
     numToTimer = 20;
     mTimer = new QTimer;
@@ -114,13 +110,13 @@ bool GameWorld::collisioWithObstacle(){
 
 void GameWorld::onUptade(){
 
-//    Salto con movimiento parabolico
+    // Salto con movimiento parabolico
 //    if(PJ->getJump() == true){
 //        PJ->parabolicMovement(0.1f);
 //        beCollides = false;
 //    }
 
-//    Evaluacion de colisiones
+//    // Evaluacion de colisiones
 //    bool Enemy = collisionWithEnemy();
 //    bool Obstacle = collisioWithObstacle();
 
@@ -131,13 +127,28 @@ void GameWorld::onUptade(){
 //        beCollides = false;
 //    }
 
-    if(Enemy == true || Obstacle == true){
-        //Se detecto una colision
-        beCollides = true;
-    }else{
-        beCollides = false;
-    }
+//    if(Enemy == true || Obstacle == true){
+//        //Se detecto una colision
+//        beCollides = true;
+//    }else{
+//        beCollides = false;
+//    }
     //Fin de evaluacion de colisiones
+
+    for (QList<Enemy *>::iterator it = mEnemiesWorld.begin(); it != mEnemiesWorld.end(); it++) {
+        for (QList<Obstacle *>::iterator it2 = mObstaclesWorld.begin();
+             it2 != mObstaclesWorld.end(); it2++) {
+
+            if ((*it)->collidesWithItem(*it2)) {
+
+                qDebug() << "Colision en: " << (*it)->getPosx() << " " << (*it)->getPosy();
+                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), 80, 80);
+                mScene->addItem(e);
+                mExplosionsWorld.push_back(e);
+            }
+        }
+    }
+
 
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
@@ -156,7 +167,7 @@ void GameWorld::spawnSceneObject(){
     static int lastPosy = 0;
 
     /// [ GENERACION ALEATORIA DE LOS OBSTACULOS/ENEMIGOS SEGUN UNA PROBABILIDAD ]
-    int numRand = rand()%500 + 1; // numero aleatoria entre [1-100]
+    int numRand = rand()%1000 + 1; // numero aleatoria entre [1-1000]
     int randPosyObjec; // Posicion en Y aleatoria de los obstaculos/enemigos
 
 //    qDebug() << "Numero rand: " << numRand;
@@ -176,7 +187,8 @@ void GameWorld::spawnSceneObject(){
         lastPosy = randPosyObjec;
 
         // Se crea y agrega un nuevo enemigo
-        Enemy *newEnemy = new Enemy(posxSpwanAny, randPosyObjec, wEnemy, hEnemy, velEnemy, nameSpEnemy);
+        Enemy *newEnemy = new Enemy(posxSpwanAny, randPosyObjec, wEnemy, hEnemy,
+                                    velEnemy, masaEnemy, nameSpEnemy);
         mEnemiesWorld.push_back(newEnemy);
         mScene->addItem(newEnemy);
 //        qDebug() << "Agrega enemigo en : " << lastPosy << " "<<__LINE__;
@@ -208,8 +220,9 @@ void GameWorld::spawnSceneObject(){
     int randPosyDecor; // Posicion en Y aleatoria
     int randDecorKind; // Como son dos tipos de decoracion, habrá un 50% de spawn para cada uno
     int hMaxDecor = hDecor1 > hDecor2 ? hDecor1 : hDecor2; // Para delimitar la posicion de spawn
+    int randPutDecor = rand()%1000 + 1;
 
-    if (mDecorsWorld.size() < numMaxDecor) { // Se genera un nuevo objeto decoracion.
+    if (randPutDecor < probSpawnDecor) { // Se genera un nuevo objeto decoracion.
 
         // [0, spaceToPutDecor - hMaxDecor/2] -> Numero aleatorio en este intervalo
         randPosyDecor = rand()%(int(spaceToPutDecor - hMaxDecor/2 + 1));
@@ -275,6 +288,18 @@ void GameWorld::deleteWorldObject()
             break; // Que solo se elimine uno en cada ejecucion.
         }
     }
+    // Eliminacion de las explosiones
+    for (int i = 0; i < mExplosionsWorld.size(); i++) {
+        // Se verifica que la explosion terminó
+        if (mExplosionsWorld.at(i)->getEndExplosion()) {
+            mScene->removeItem(mExplosionsWorld.at(i));
+            delete mExplosionsWorld.at(i);
+            mExplosionsWorld.erase(mExplosionsWorld.begin() + i);
+            qDebug() << "Elimina explosion" << __LINE__;
+            break;
+        }
+    }
+
     qDebug() << "Aqui no" <<__LINE__;
 }
 
@@ -294,6 +319,10 @@ void GameWorld::moveWorldObjects()
     // Se mueven los obstaculos
     for (int i = 0; i < mObstaclesWorld.size(); i++) {
         mObstaclesWorld.at(i)->moveObject();
+    }
+    // Animacion de la explosion
+    for (int i = 0; i < mExplosionsWorld.size(); i++) {
+        mExplosionsWorld.at(i)->moveExplosion();
     }
 }
 

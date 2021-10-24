@@ -13,7 +13,9 @@ SOURCES += \
     decoration.cpp \
     createaccount.cpp \
     enemy.cpp \
+    explosion.cpp \
     gameworld.cpp \
+    gunshot.cpp \
     main.cpp \
     idcatc.cpp \
     obstacle.cpp \
@@ -25,7 +27,9 @@ HEADERS += \
     decoration.h \
     createaccount.h \
     enemy.h \
+    explosion.h \
     gameworld.h \
+    gunshot.h \
     idcatc.h \
     obstacle.h \
     profileuser.h \

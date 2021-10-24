@@ -1,8 +1,6 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-
-#include <QPainter>
 #include "worldobject.h"
 
 class Enemy : public WorldObject
@@ -11,7 +9,7 @@ public:
     Enemy();
 
     Enemy(double _posx, double _posy, double _width, double _height,
-             double _velEnemy, std::string &_nameSpEnemy);
+             double _velEnemy, double _masaEnemy, std::string &_nameSpEnemy);
 
     QRectF boundingRect() const;
 
@@ -30,6 +28,7 @@ public:
     void setContTimeToExpl(int value);
 
 private:
+
     bool isColliding;
     double velColliderObject;
     int contTimeToExpl;

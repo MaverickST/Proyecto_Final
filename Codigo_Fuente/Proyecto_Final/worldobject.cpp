@@ -39,3 +39,13 @@ void WorldObject::setVel(double value)
 {
     vel = value;
 }
+
+double WorldObject::getMasa() const
+{
+    return masa;
+}
+
+void WorldObject::setMasa(double value)
+{
+    masa = value;
+}
