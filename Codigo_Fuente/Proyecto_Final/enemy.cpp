@@ -11,8 +11,12 @@ Enemy::Enemy(double _posx, double _posy, double _width, double _height,
     height = _height;
     vel = _velEnemy;
     masa = _masaEnemy;
+
+    // Para el momento en que colisiona con una bala
+    // Y poder aplicar el modelo fisico: conservacion de momentum
     contTimeToExpl = 0;
     isColliding = false;
+    timeMillisecondsToExpl = 2000;
 
     nameSpObj = _nameSpEnemy;
     pixMapObj.load(nameSpObj.c_str());
@@ -38,15 +42,12 @@ void Enemy::moveEnemy()
 {
     if (isColliding) {
         // Para cuando impacte una bala, despues de un tiempo hay una explosion.
-        if (contTimeToExpl == 0) {
-            //velResultOfCollides
-        }
-    }else {
-        posx = posx - vel;
-
-        setPos(posx, posy);
-        setPixmap(pixMapObj);
+        contTimeToExpl++;
     }
+    posx = posx + vel;
+
+    setPos(posx, posy);
+    setPixmap(pixMapObj);
 }
 
 bool Enemy::getIsColliding() const
@@ -59,16 +60,6 @@ void Enemy::setIsColliding(bool value)
     isColliding = value;
 }
 
-double Enemy::getVelColliderObject() const
-{
-    return velColliderObject;
-}
-
-void Enemy::setVelColliderObject(double value)
-{
-    velColliderObject = value;
-}
-
 int Enemy::getContTimeToExpl() const
 {
     return contTimeToExpl;
@@ -77,4 +68,14 @@ int Enemy::getContTimeToExpl() const
 void Enemy::setContTimeToExpl(int value)
 {
     contTimeToExpl = value;
+}
+
+int Enemy::getTimeMillisecondsToExpl() const
+{
+    return timeMillisecondsToExpl;
+}
+
+void Enemy::setTimeMillisecondsToExpl(int value)
+{
+    timeMillisecondsToExpl = value;
 }

@@ -40,12 +40,15 @@ public:
     double _velObstacle, double _probSpawnObst,
     string &_nameSpShot, double _wShot, double _hShot,
     double _velShot, double _masaShot, double _millisecondsToShot,
+    double _wExplosion, double _hExplosion,
     QWidget *parent = nullptr);
 
 
     void spawnSceneObject();
     void deleteWorldObject();
     void moveWorldObjects();
+
+    void collisionEvaluator();
 
     bool collisionWithEnemy();
     bool collisioWithObstacle();
@@ -85,6 +88,7 @@ private:
 
     string nameSpDecor2;
     double wDecor2, hDecor2;
+
     double velDecor;
     int probSpawnDecor;
     double spaceToPutDecor;
@@ -105,6 +109,8 @@ private:
     double wShot, hShot;
     double velShot, masaShot, millisecondsToShot;
 
+    // Para las explosiones
+    double wExplosion, hExplosion;
 
     // Para controlar la generacion de objetos
     int contTimeToSpawn;

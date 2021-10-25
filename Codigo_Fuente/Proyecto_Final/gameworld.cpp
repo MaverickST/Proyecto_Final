@@ -11,6 +11,7 @@ GameWorld::GameWorld(string &_nameSpBackground,
     double _velObstacle, double _probSpawnObst,
     string &_nameSpShot, double _wShot, double _hShot,
     double _velShot, double _masaShot, double _millisecondsToShot,
+    double _wExplosion, double _hExplosion,
     QWidget *parent)
 
     : QMainWindow(parent),ui(new Ui::GameWorld)
@@ -45,6 +46,9 @@ GameWorld::GameWorld(string &_nameSpBackground,
     nameSpShot = _nameSpShot;
     wShot = _wShot, hShot = _hShot;
     velShot = _velShot, masaShot = _masaShot, millisecondsToShot = _millisecondsToShot;
+
+    // Para las explosiones
+    wExplosion = _wExplosion, hExplosion = _hExplosion;
 
     // Dimesiones de la escena
     widthScene = ui->graphicsView->width() - 5;
@@ -110,45 +114,6 @@ bool GameWorld::collisioWithObstacle(){
 
 void GameWorld::onUptade(){
 
-    // Salto con movimiento parabolico
-//    if(PJ->getJump() == true){
-//        PJ->parabolicMovement(0.1f);
-//        beCollides = false;
-//    }
-
-//    // Evaluacion de colisiones
-//    bool Enemy = collisionWithEnemy();
-//    bool Obstacle = collisioWithObstacle();
-
-//    if(Enemy == true || Obstacle == true){
-//        //Se detecto una colision
-//        beCollides = true;
-//    }else{
-//        beCollides = false;
-//    }
-
-//    if(Enemy == true || Obstacle == true){
-//        //Se detecto una colision
-//        beCollides = true;
-//    }else{
-//        beCollides = false;
-//    }
-    //Fin de evaluacion de colisiones
-
-    for (QList<Enemy *>::iterator it = mEnemiesWorld.begin(); it != mEnemiesWorld.end(); it++) {
-        for (QList<Obstacle *>::iterator it2 = mObstaclesWorld.begin();
-             it2 != mObstaclesWorld.end(); it2++) {
-
-            if ((*it)->collidesWithItem(*it2)) {
-
-                qDebug() << "Colision en: " << (*it)->getPosx() << " " << (*it)->getPosy();
-                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), 80, 80);
-                mScene->addItem(e);
-                mExplosionsWorld.push_back(e);
-            }
-        }
-    }
-
 
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
@@ -167,6 +132,7 @@ void GameWorld::spawnSceneObject(){
     static int lastPosy = 0;
 
     /// [ GENERACION ALEATORIA DE LOS OBSTACULOS/ENEMIGOS SEGUN UNA PROBABILIDAD ]
+
     int numRand = rand()%1000 + 1; // numero aleatoria entre [1-1000]
     int randPosyObjec; // Posicion en Y aleatoria de los obstaculos/enemigos
 
@@ -217,10 +183,12 @@ void GameWorld::spawnSceneObject(){
     }
 
     /// [ GENERACION ALEATORIA DEL OBJETO DECORATION PARA LA DECORACION DEL JUEGO ]
+
     int randPosyDecor; // Posicion en Y aleatoria
     int randDecorKind; // Como son dos tipos de decoracion, habrá un 50% de spawn para cada uno
-    int hMaxDecor = hDecor1 > hDecor2 ? hDecor1 : hDecor2; // Para delimitar la posicion de spawn
-    int randPutDecor = rand()%1000 + 1;
+    // Para delimitar la posicion de spawn
+    int hMaxDecor = hDecor1 > hDecor2 ? hDecor1 : hDecor2;
+    int randPutDecor = rand()%1000 + 1; // [1, 1000]
 
     if (randPutDecor < probSpawnDecor) { // Se genera un nuevo objeto decoracion.
 
@@ -261,6 +229,25 @@ void GameWorld::deleteWorldObject()
 //            qDebug() << "Elimina Enemigo" <<__LINE__;
             break; // Que solo se elimine uno en cada ejecucion.
         }
+        double timeToExplEnemy = mEnemiesWorld.at(i)->getTimeMillisecondsToExpl();
+        int contTimeToExplEnemy = mEnemiesWorld.at(i)->getContTimeToExpl();
+
+        if (contTimeToExplEnemy*numToTimer >= timeToExplEnemy) {
+
+            // En la posicion del auto se genera una explosion.
+            double posxEnemy = mEnemiesWorld.at(i)->getPosx();
+            double posyEnemy = mEnemiesWorld.at(i)->getPosy();
+
+            Explosion *newExplosion = new Explosion(posxEnemy, posyEnemy,
+                                                    wExplosion, hExplosion);
+            mScene->addItem(newExplosion);
+            mExplosionsWorld.push_back(newExplosion);
+
+            // Se elimina el enemigo
+            mScene->removeItem(mEnemiesWorld.at(i));
+            delete mEnemiesWorld.at(i);
+            mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
+        }
     }
     // Eliminacion de los obstaculos que ya estan fuera de la escena
     for (int i = 0; i < mObstaclesWorld.size(); i++) {
@@ -290,13 +277,29 @@ void GameWorld::deleteWorldObject()
     }
     // Eliminacion de las explosiones
     for (int i = 0; i < mExplosionsWorld.size(); i++) {
+
         // Se verifica que la explosion terminó
         if (mExplosionsWorld.at(i)->getEndExplosion()) {
+
             mScene->removeItem(mExplosionsWorld.at(i));
             delete mExplosionsWorld.at(i);
             mExplosionsWorld.erase(mExplosionsWorld.begin() + i);
             qDebug() << "Elimina explosion" << __LINE__;
-            break;
+            break; // Que solo se elimine uno en cada ejecucion.
+        }
+    }
+    // Eliminacion de las balas
+    for (int i = 0; i < mGunShotsWorld.size(); i++) {
+
+        posObject = mGunShotsWorld.at(i)->getPosx();
+        // Que haya salido de la escena
+        if ((posObject <= posToDelete) || (posObject >= posxSpwanAny)) {
+
+            mScene->removeItem(mGunShotsWorld.at(i));
+            delete mGunShotsWorld.at(i);
+            mGunShotsWorld.erase(mGunShotsWorld.begin() + i);
+            qDebug() << "Elimina disparo" << __LINE__;
+            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
 
@@ -324,10 +327,37 @@ void GameWorld::moveWorldObjects()
     for (int i = 0; i < mExplosionsWorld.size(); i++) {
         mExplosionsWorld.at(i)->moveExplosion();
     }
+    // Las balas
+    for (int i = 0; i < mGunShotsWorld.size(); i++) {
+        mGunShotsWorld.at(i)->moveObject();
+    }
 }
 
-GameWorld::~GameWorld(){
-    delete ui;
+void GameWorld::collisionEvaluator()
+{
+    // Se evalua la colision de un disparo
+    for (int i = 0; i < mGunShotsWorld.size(); i++) {
+        // Se evalua con los autos enemigos
+        for (QList<Enemy *>::iterator it2 = mEnemiesWorld.begin();
+             it2 != mEnemiesWorld.end(); it2++) {
+
+            if (mGunShotsWorld.at(i)->collidesWithItem(*it2)) {
+
+                // Se aplica modelo fisico
+                // Conservacion del momentum en una colision plástica
+                double newVel;
+                newVel = (masaEnemy*(*it2)->getVel() + masaShot*velShot)/(masaEnemy + masaShot);
+                (*it2)->setIsColliding(true); // Hay un cambio de estado
+                (*it2)->setVel(newVel); // Se le asigna una nueva velocidad
+
+                // Se elimina la bala que colisionó con el enemigo
+                mScene->removeItem(mGunShotsWorld.at(i));
+                delete mGunShotsWorld.at(i);
+                mGunShotsWorld.erase(mGunShotsWorld.begin() + i);
+            }
+        }
+    }
+
 }
 
 void GameWorld::keyPressEvent(QKeyEvent *event){
@@ -358,5 +388,10 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
 
 void GameWorld::startQTimer(){
     mTimer->start(numToTimer);
+}
+
+
+GameWorld::~GameWorld(){
+    delete ui;
 }
 

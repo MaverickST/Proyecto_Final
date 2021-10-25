@@ -4,7 +4,7 @@ WorldObject::WorldObject() {}
 
 void WorldObject::moveObject()
 {
-    posx = posx - vel;
+    posx = posx + vel;
 
     setPos(posx,posy);
     setPixmap(pixMapObj);

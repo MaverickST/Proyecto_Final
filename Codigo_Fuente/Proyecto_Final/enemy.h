@@ -21,18 +21,17 @@ public:
     bool getIsColliding() const;
     void setIsColliding(bool value);
 
-    double getVelColliderObject() const;
-    void setVelColliderObject(double value);
-
     int getContTimeToExpl() const;
     void setContTimeToExpl(int value);
+
+    int getTimeMillisecondsToExpl() const;
+    void setTimeMillisecondsToExpl(int value);
 
 private:
 
     bool isColliding;
-    double velColliderObject;
     int contTimeToExpl;
-    double velResultOfCollides;
+    int timeMillisecondsToExpl;
 
 };
 
