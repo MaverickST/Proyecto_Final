@@ -17,7 +17,8 @@ ProfileUser::ProfileUser(User &_User,QWidget *parent): QMainWindow(parent),ui(ne
     connect(ui->pB_closeProfile, &QPushButton::clicked, this, &ProfileUser::closeWindowProfile);
 }
 
-/*ProfileUser::ProfileUser(string username, string password, int level, int lives, int score1, int score2, int score3,QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
+/*ProfileUser::ProfileUser(string username, string password, int level, int lives, int score1,
+ * int score2, int score3,QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
 
 
     //Inicializacion de atributos de usuario
@@ -133,12 +134,12 @@ void ProfileUser::startGameLevel1(){
 
     string _nameSpEnemy = ":/Sprites/auto4.png";
     double _wEnemy = 50, _hEnemy = 30;
-    double _velEnemy = -8, _probSpawnEnemy = 100;
+    double _velEnemy = -8, _probSpawnEnemy = 500;
     double _masaEnemy = 40;
 
     string _nameSpObstacle = ":/Sprites/cono1.png";
     double _wObstacle = 20, _hObstacle = 20;
-    double _velObstacle = -3, _probSpawnObst = 180;
+    double _velObstacle = -3, _probSpawnObst = 800;
 
     string _nameSpShot = "";
     double _wShot = 10, _hShot = 20;
