@@ -27,12 +27,11 @@ public:
 
     double getLastPosy() const;
     void setLastPosy(double value);
-
 private:
     double dt;
     double Vx, Vy;
     double lastPosy;
-    //std::string spriteCharacter;
+
     int lastKey;
 
     bool jump = false;

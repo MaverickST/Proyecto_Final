@@ -1,6 +1,10 @@
 #include "gameworld.h"
 #include "ui_gameworld.h"
 
+#define PATH_TO_USERS     "../Proyecto_Final/Users/Users.txt"
+#define PATH_TO_USERS_TMP "../Proyecto_Final/Users/UsersTMP.txt"
+
+
 GameWorld::GameWorld(string &_nameSpBackground,
     string &_nameSpDecor1, double _wDecor1, double _hDecor1,
     string &_nameSpDecor2, double _wDecor2, double _hDecor2,
@@ -11,14 +15,17 @@ GameWorld::GameWorld(string &_nameSpBackground,
     double _velObstacle, double _probSpawnObst,
     string &_nameSpShot, double _wShot, double _hShot,
     double _velShot, double _masaShot, double _millisecondsToShot,
-    double _wExplosion, double _hExplosion,
+    double _wExplosion, double _hExplosion, 
+    User &_User,
     QWidget *parent)
-
     : QMainWindow(parent),ui(new Ui::GameWorld)
 {
 
     ui->setupUi(this);
     // Inicializacion del constructor sobrecargado, solo un poco sobrecargado...
+
+    //Inicualizacion objeto User
+    mUser = _User;
 
     // Atributos para las decoraciones
     nameSpDecor1 = _nameSpDecor1;
@@ -112,7 +119,44 @@ bool GameWorld::collisioWithObstacle(){
     return false;
 }
 
+void GameWorld::loseAllTheLives(){
+    //Funcion que se va a ejecutar cuando el jugador principal pierda todas las vidas
+    /*endGame();
+    updateUsersInformation();*/
+}
+
 void GameWorld::onUptade(){
+    //Evaluacion de vidas del personaje
+    /*if(PJ->getLives() == 0){
+        //El personaje principal se ha quedado sin vidas
+        loseAllTheLives();
+    }*/
+
+
+//    Salto con movimiento parabolico
+//    if(PJ->getJump() == true){
+//        PJ->parabolicMovement(0.1f);
+//        beCollides = false;
+//    }
+
+//    Evaluacion de colisiones
+//    bool Enemy = collisionWithEnemy();
+//    bool Obstacle = collisioWithObstacle();
+
+//    if(Enemy == true || Obstacle == true){
+//        //Se detecto una colision
+//        beCollides = true;
+//    }else{
+//        beCollides = false;
+//    }
+
+    /*if(Enemy == true || Obstacle == true){
+        //Se detecto una colision
+        beCollides = true;
+    }else{
+        beCollides = false;
+    }*/
+    //Fin de evaluacion de colisiones
 
 
     contTimeToSpawn++;

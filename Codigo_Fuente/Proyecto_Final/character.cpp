@@ -55,7 +55,7 @@ void Character::calculateInitialVelocity(){
     lastPosy = posy;
 
     //Se pasa de grados a radianes
-    double theta = qDegreesToRadians(45.0);
+    double theta = qDegreesToRadians(45.0);//Posiblemente se solucione poniendo el angulo negativo
 
     //Se halla velocidad en ambos ejes
     Vx = vel * cos(theta);

@@ -20,6 +20,7 @@ SOURCES += \
     idcatc.cpp \
     obstacle.cpp \
     profileuser.cpp \
+    user.cpp \
     worldobject.cpp
 
 HEADERS += \
@@ -33,6 +34,7 @@ HEADERS += \
     idcatc.h \
     obstacle.h \
     profileuser.h \
+    user.h \
     worldobject.h
 
 FORMS += \
