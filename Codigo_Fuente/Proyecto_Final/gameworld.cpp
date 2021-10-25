@@ -82,11 +82,7 @@ GameWorld::GameWorld(string &_nameSpBackground,
     pixMapBackground = pixMapBackground.scaled(widthScene, heightScene);
     mScene->addPixmap(pixMapBackground);
 
-    Explosion *e = new Explosion(100, 100, 80, 80);
-    mScene->addItem(e);
-    mExplosionsWorld.push_back(e);
-
-    qDebug() << __LINE__;
+    createRectsInvisibles();
 
     numToTimer = 20;
     mTimer = new QTimer;
@@ -158,6 +154,28 @@ void GameWorld::onUptade(){
     }*/
     //Fin de evaluacion de colisiones
 
+//    for (QList<Enemy *>::iterator it = mEnemiesWorld.begin();
+//         it != mEnemiesWorld.end(); it++) {
+
+//        for (QList<Obstacle *>::iterator it2 = mObstaclesWorld.begin();
+//             it2 != mObstaclesWorld.end(); it2++) {
+
+//            if ((*it)->collidesWithItem(*it2)) {
+
+//                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+//                mScene->addItem(e);
+//                mExplosionsWorld.push_back(e);
+//            }
+//        }
+
+//        if (!mScene->collidingItems(*it).isEmpty()) {
+//            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+//            mScene->addItem(e);
+//        }
+//    }
+
+
+
 
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
@@ -183,14 +201,15 @@ void GameWorld::spawnSceneObject(){
 //    qDebug() << "Numero rand: " << numRand;
     if (numRand <= probSpawnEnemy) { // Se genera un enemigo
 
-        // [spaceToPutDecor + hEnemy/2, heightScene - hEnemy] -> Numero aleatoria en este intervalo
-        randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 3*hEnemy/2 + 1))
+        // Numero aleatoria en este intervalo
+        // [spaceToPutDecor + hEnemy/2, heightScene - 3*hEnemy/2]
+        randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 5*hEnemy/2 + 1))
                 + spaceToPutDecor + hEnemy/2;
 
         // Esto para el caso en que los objetos se generan casi juntos o juntos
         while ((randPosyObjec + hEnemy/2 >= lastPosy) && (randPosyObjec - hEnemy/2 <= lastPosy)) {
 
-            randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 3*hEnemy/2 + 1))
+            randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 5*hEnemy/2 + 1))
                     + spaceToPutDecor + hEnemy/2;
         }
         // Se actualiza la nueva ultima posicion aleatoria en y de los objetos
@@ -205,14 +224,15 @@ void GameWorld::spawnSceneObject(){
     }
     else if (numRand <= probSpawnObst) { // Se genera un obstaculo
 
-        // [spaceToPutDecor + hObst/2, heightScene - hObst] -> Numero aleatoria en este intervalo
-        randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 3*hObstacle/2 + 1))
+        // [spaceToPutDecor + hObst/2, heightScene - 3*hObst/2] -> Numero aleatoria en este intervalo
+        randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 5*hObstacle/2 + 1))
                 + spaceToPutDecor + hObstacle/2;
 
         // Esto para el caso en que los objetos se generan casi juntos o juntos
-        while ((randPosyObjec + hObstacle/2 >= lastPosy) && (randPosyObjec - hObstacle/2 <= lastPosy)) {
+        while ((randPosyObjec + hObstacle/2 >= lastPosy) &&
+               (randPosyObjec - hObstacle/2 <= lastPosy)) {
 
-            randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 3*hObstacle/2 + 1))
+            randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 5*hObstacle/2 + 1))
                     + spaceToPutDecor + hObstacle/2;
         }
         // Se actualiza la nueva ultima posicion aleatoria en y de los objetos
@@ -264,21 +284,24 @@ void GameWorld::deleteWorldObject()
     // Eliminacion de enemigos fuera de la escena
     for (int i = 0; i < mEnemiesWorld.size(); i++) {
 
+        // Se eliminan los que estan fuera de la escena
         posObject = mEnemiesWorld.at(i)->getPosx();
         if (posObject <= posToDelete) {
 
             mScene->removeItem(mEnemiesWorld.at(i));
             delete mEnemiesWorld.at(i);
             mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
-//            qDebug() << "Elimina Enemigo" <<__LINE__;
             break; // Que solo se elimine uno en cada ejecucion.
         }
+        // Se eliminan los que fueron impactados por un disparo
+        // y, cumplido el tiempo para la explosion, se destruye
+        // dejando en su sitio una explosion
         double timeToExplEnemy = mEnemiesWorld.at(i)->getTimeMillisecondsToExpl();
         int contTimeToExplEnemy = mEnemiesWorld.at(i)->getContTimeToExpl();
 
         if (contTimeToExplEnemy*numToTimer >= timeToExplEnemy) {
 
-            // En la posicion del auto se genera una explosion.
+            // En la posicion del auto, se genera una explosion.
             double posxEnemy = mEnemiesWorld.at(i)->getPosx();
             double posyEnemy = mEnemiesWorld.at(i)->getPosy();
 
@@ -302,7 +325,6 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mObstaclesWorld.at(i));
             delete mObstaclesWorld.at(i);
             mObstaclesWorld.erase(mObstaclesWorld.begin() + i);
-            qDebug() << "Elimina obstacles" <<__LINE__;
             break; // Que solo se elimine uno en cada ejecucion.
         }
     }
@@ -315,7 +337,6 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mDecorsWorld.at(i));
             delete mDecorsWorld.at(i);
             mDecorsWorld.erase(mDecorsWorld.begin() + i);
-            qDebug() << "Elimina decors" <<__LINE__;
             break; // Que solo se elimine uno en cada ejecucion.
         }
     }
@@ -328,7 +349,6 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mExplosionsWorld.at(i));
             delete mExplosionsWorld.at(i);
             mExplosionsWorld.erase(mExplosionsWorld.begin() + i);
-            qDebug() << "Elimina explosion" << __LINE__;
             break; // Que solo se elimine uno en cada ejecucion.
         }
     }
@@ -342,12 +362,9 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mGunShotsWorld.at(i));
             delete mGunShotsWorld.at(i);
             mGunShotsWorld.erase(mGunShotsWorld.begin() + i);
-            qDebug() << "Elimina disparo" << __LINE__;
             break; // Que solo se elimine uno en cada ejecucion.
         }
     }
-
-    qDebug() << "Aqui no" <<__LINE__;
 }
 
 void GameWorld::moveWorldObjects()
@@ -398,6 +415,7 @@ void GameWorld::collisionEvaluator()
                 mScene->removeItem(mGunShotsWorld.at(i));
                 delete mGunShotsWorld.at(i);
                 mGunShotsWorld.erase(mGunShotsWorld.begin() + i);
+                break;
             }
         }
     }
@@ -439,3 +457,42 @@ GameWorld::~GameWorld(){
     delete ui;
 }
 
+void GameWorld::createRectsInvisibles()
+{
+
+    // La funcion se encarga de crear un rectangulos pequeños invisibles
+    // que limitarán el desplazamiento del usuario
+    // Esto para que no salga de la escena
+
+    // [spaceToPutDecor + hObst/2, heightScene - 3*hObst/2]
+    QGraphicsRectItem *rec;
+    QPen penRect(Qt::transparent, 3, Qt::SolidLine,Qt::RoundCap, Qt::RoundJoin);
+    QColor colorRect(Qt::transparent);
+
+    // Que sean pequeños para que no reduzcan mucho el espacio
+    int wRects = 5;
+    int hRects = 5;
+
+    // Se obtiene la cantidad de rects a poner en base al tamaño de la escena
+    int numRectsW = widthScene/wRects + 1;
+    int numRectsH = (heightScene - spaceToPutDecor - 5)/hRects ;
+
+    for (int i = 0; i < numRectsH; i++) {
+        for (int j = 0; j < numRectsW; j++) {
+
+            // Solo se ponen en los bordes.
+            if ((i == 0) || (j == 0) || (j == numRectsW - 1) || (i == numRectsH - 1)) {
+
+                rec = new QGraphicsRectItem(j*wRects, i*hRects + spaceToPutDecor,
+                                            wRects, hRects);
+                // Se pone transparente
+                rec->setBrush(colorRect);
+                rec->setPen(penRect);
+
+                mScene->addItem(rec);
+                mRectsInvisibles.push_back(rec);
+            }
+        }
+    }
+
+}

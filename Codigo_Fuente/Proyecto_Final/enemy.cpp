@@ -30,6 +30,7 @@ QRectF Enemy::boundingRect() const
 
 void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    painter->setBrush(Qt::transparent);
     painter->drawPixmap(-width/2, height/2, pixMapObj, 0, 0, width, height);
     setPos(posx, posy);
 

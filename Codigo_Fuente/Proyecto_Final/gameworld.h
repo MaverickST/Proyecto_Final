@@ -52,9 +52,11 @@ public:
     void moveWorldObjects();
 
     void collisionEvaluator();
+    void createRectsInvisibles();
 
     bool collisionWithEnemy();
     bool collisioWithObstacle();
+
 
     void loseAllTheLives();
 
@@ -84,6 +86,7 @@ private:
     QList<Obstacle *> mObstaclesWorld;
     QList<Explosion *> mExplosionsWorld;
     QList<GunShot *> mGunShotsWorld;
+    QVector<QGraphicsRectItem *> mRectsInvisibles;
 
     // Dimesiones de la escena
     double widthScene;
