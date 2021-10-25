@@ -5,11 +5,11 @@
 #define PATH_TO_USERS_TMP "../Proyecto_Final/Users/UsersTMP.txt"
 
 /*GameWorld::GameWorld(QWidget *parent) :QMainWindow(parent),ui(new Ui::GameWorld){
-//    ui->setupUi(this);
+    ui->setupUi(this);
 
-//    // Inicializacion de la escena
-//    mScene = new QGraphicsScene(this);
-//    ui->graphicsView->setScene(mScene);
+    // Inicializacion de la escena
+    mScene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(mScene);
 
 
     //Inicializacion del personaje principal
@@ -17,21 +17,17 @@
     PJ = new Character (0,0,20,20,60.0f,sprite);
     mScene->addItem(PJ);
 
-//    ui->graphicsView->setScene(mScene);
-//    ui->graphicsView->show();
+    ui->graphicsView->setScene(mScene);
+    ui->graphicsView->show();
 
-//    numToTimer = 50;
-//    mTimer = new QTimer;
-//    mTimer->start(50);
+    numToTimer = 50;
+    mTimer = new QTimer;
+    mTimer->start(50);
 
     connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
     //connect(ui->pB_StartGame, &QPushButton::clicked, this, &GameWorld::startQTimer);
     connect(mTimer, &QTimer::timeout, this, &GameWorld::onUptade);
-}
-//    //connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
-//    //connect(ui->pB_StartGame, &QPushButton::clicked, this, &GameWorld::startQTimer);
-//    connect(mTimer, &QTimer::timeout, this, &GameWorld::onUptade);
-//}*/
+}*/
 
 GameWorld::GameWorld (string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1,
 double _hDecor1, string &_nameSpDecor2, double _wDecor2, double _hDecor2,
@@ -76,6 +72,9 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, User &_User, QWid
     timeToSpawn = 200; // son milisegundos
     posxSpwanAny = widthScene + 60;
 
+    //Atributos que controlaran el tiempo de juego
+    timeToEndGame = 500, contTimeToEndG = 0;
+
     // Inicializacion de la escena
     mScene = new QGraphicsScene(this);
     mScene->setSceneRect(0, 0, widthScene, heightScene);
@@ -101,6 +100,33 @@ double _hObstacle, double _velObstacle, double _probSpawnObst, User &_User, QWid
 
 }
 
+int GameWorld::getKindCollidesPJ(){
+    //Se usa para poder identificar contra que se esta colisionando
+    //y en base a eso reaccionar de una forma u otra
+    //TIPOS DE COLISIONES:
+    //Tipo 1: Colisiona contra enemigos, autos.
+    //Tipo 2: Colisiona contra obstaculos.
+    //Tipo 3: Colision contra el jefe final.
+    //Tipo 4: Colisiona contra los limites del mapa, bloques invisibles.
+
+    for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
+        if(PJ->collidesWithItem(*i)){
+            return 1;//Colisiona con autos enemigos
+        }
+    }
+
+    for(auto i = mObstaclesWorld.begin(); i != mObstaclesWorld.end(); i++){
+        if(PJ->collidesWithItem(*i)){
+            return 2;//Colisiona contra
+        }
+    }
+
+    //FALTA DESARROLLAR COLISIION CON BLOQUES Y CON EJ JEFE FINAL
+
+    return 0;
+
+}
+
 bool GameWorld::collisionWithEnemy(){
     for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
         if(PJ->collidesWithItem(*i)){
@@ -122,18 +148,16 @@ bool GameWorld::collisioWithObstacle(){
     return false;
 }
 
-void GameWorld::loseAllTheLives(){
-    //Funcion que se va a ejecutar cuando el jugador principal pierda todas las vidas
-    /*endGame();
-    updateUsersInformation();*/
-}
-
 void GameWorld::onUptade(){
-    //Evaluacion de vidas del personaje
-    /*if(PJ->getLives() == 0){
+    int kindCollides;
+    //Evaluacion de condicion de Game Over
+    if(mUser.lives() == 0){
         //El personaje principal se ha quedado sin vidas
-        loseAllTheLives();
-    }*/
+        GameWorld::endGame();
+    }else if(timeToEndGame == 0){
+        //Se agoto el tiempo para culminar el nivel
+        GameWorld::endGame();
+    }
 
 //    Salto con movimiento parabolico
 //    if(PJ->getJump() == true){
@@ -141,24 +165,23 @@ void GameWorld::onUptade(){
 //        beCollides = false;
 //    }
 
-//    Evaluacion de colisiones
-//    bool Enemy = collisionWithEnemy();
-//    bool Obstacle = collisioWithObstacle();
+    //MANEJO DEL TIEMPO LIMITE QUE TIENE EL USUARIO PARA GANAR EL NIVEL
+    contTimeToEndG++;// Está hecho para que cambie cada segundo
+    if(contTimeToEndG == 20){// 20 porque el startTime es de 50, 20*50 = 1000 = 1s
+        contTimeToEndG = 0;//Se reseta la variable contTimeEndG
+    }
 
-//    if(Enemy == true || Obstacle == true){
-//        //Se detecto una colision
-//        beCollides = true;
-//    }else{
-//        beCollides = false;
-//    }
-
-    /*if(Enemy == true || Obstacle == true){
-        //Se detecto una colision
+    /**    EVALUACION DE COLISIONES     **/
+    //Reestriucturar con booleanos :)
+    if(!mScene->collidingItems(PJ).isEmpty() && PJ->getJump() == false){
+        //Si hay colisiones se detecta que tipo de colision fue
+        kindCollides = getKindCollidesPJ();
         beCollides = true;
     }else{
+        //De lo contrasio se le lleva false a la variabel BeCollides
         beCollides = false;
-    }*/
-    //Fin de evaluacion de colisiones
+    }
+    /** FIN DE EVALUACION DE COLISIONES **/
 
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
@@ -299,8 +322,7 @@ void GameWorld::deleteWorldObject()
     qDebug() << "Aqui no" <<__LINE__;
 }
 
-void GameWorld::moveWorldObjects()
-{
+void GameWorld::moveWorldObjects(){
     // La funcion se encarga de ejecutar el metodo: moveObject.
     // Tal metodo mueve al objeto en cuestion segun su propia velocidad
 
@@ -328,13 +350,13 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
         ///**************EL PERSONAJE PRINCIPAL DISPARA***************///
         cout << "Se realiza disparo" << endl;
     }else if(event->key() == Qt::Key_Space && (PJ->getJump() == false)){
-        ///*******************SALTO DEL PERSONAJE********************///
-        /// Tecla que realiza el salto (Movimiento Parabolico) del personaje
-        /// Mientras el persoanje se encuentre en dicho movimiento, no se podra
-        /// Mover hacia otras direcciones ni tampoco realizar otro salto
+        ///**********************SALTO DEL PERSONAJE**********************///
+        ///Tecla que realiza el salto (Movimiento Parabolico) del personaje
+        ///Mientras el persoanje se encuentre en dicho movimiento, no se
+        ///podra Mover hacia otras direcciones ni tampoco realizar otro salto
 
         //Se envia true al atributo privado del objeto Character
-        //Para indicar que hay un salto e ejecucion
+        //Para indicar que hay un salto en ejecucion
         PJ->setJump(true);
 
         //Se resetea la velocidad inicial
@@ -342,10 +364,6 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
     }else if(!beCollides && (PJ->getJump() == false)){
         PJ->moveCharacter(event->key());
     }
-    /*if(PJ->getJump() == true){
-        cout << "Salto activo" << endl;
-    }*/
-
 }
 
 void GameWorld::startQTimer(){
