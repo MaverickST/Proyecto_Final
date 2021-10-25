@@ -74,6 +74,7 @@ void Character::parabolicMovement(double dt){
         posy += Vy * dt + (G * dt * dt)/2.0f;
 
         setPos(posx , posy);
+        setPixmap(pixMapObj);
         cout << "[ " << posx << " , " << posy << " ]" << endl;
     }else{
         cout << "Maximo alcance" << endl;

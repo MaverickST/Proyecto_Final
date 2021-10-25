@@ -1,12 +1,11 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include <QGraphicsPixmapItem>
-#include <QPainter>
 #include <QKeyEvent>
 #include <QtMath>
 #include <iostream>
 #include "worldobject.h"
+
 using namespace std;
 class Character : public WorldObject{
 public:
