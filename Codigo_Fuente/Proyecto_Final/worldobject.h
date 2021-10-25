@@ -2,6 +2,7 @@
 #define WORLDOBJECT_H
 
 #include <QGraphicsPixmapItem>
+#include <QPainter>
 
 class WorldObject : public QGraphicsPixmapItem
 {
@@ -19,10 +20,14 @@ public:
     double getVel() const;
     void setVel(double value);
 
+    double getMasa() const;
+    void setMasa(double value);
+
 protected:
     double posx, posy;
     double width, height;
     double vel;
+    double masa;
     std::string nameSpObj;
 
     QPixmap pixMapObj;

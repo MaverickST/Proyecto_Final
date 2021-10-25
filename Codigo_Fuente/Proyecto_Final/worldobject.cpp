@@ -4,7 +4,7 @@ WorldObject::WorldObject() {}
 
 void WorldObject::moveObject()
 {
-    posx = posx - vel;
+    posx = posx + vel;
 
     setPos(posx,posy);
     setPixmap(pixMapObj);
@@ -38,4 +38,14 @@ double WorldObject::getVel() const
 void WorldObject::setVel(double value)
 {
     vel = value;
+}
+
+double WorldObject::getMasa() const
+{
+    return masa;
+}
+
+void WorldObject::setMasa(double value)
+{
+    masa = value;
 }

@@ -123,26 +123,40 @@ void ProfileUser::startGameLevel1(){
     // Variables del nivel 1
     string strPath = "../Proyecto_final/:Sprites/";
 
-    string _nameSpBackground = ":/Sprites/carretera2.jpg";
+    string _nameSpBackground = ":/Sprites/carretera5.png";
 
     string _nameSpDecor1 = ":/Sprites/arbol1.png";
     double _wDecor1 = 40,_hDecor1 = 50;
     string _nameSpDecor2 = ":/Sprites/arbusto3.png";
     double _wDecor2 = 30,_hDecor2 = 30;
-    double _velDecor = 3, _numMaxDecor = 56;
+    double _velDecor = -3, _probSpawnDecor = 200;
 
     string _nameSpEnemy = ":/Sprites/auto4.png";
     double _wEnemy = 50, _hEnemy = 30;
-    double _velEnemy = 8, _probSpawnEnemy = 100;
+    double _velEnemy = -8, _probSpawnEnemy = 100;
+    double _masaEnemy = 40;
 
     string _nameSpObstacle = ":/Sprites/cono1.png";
     double _wObstacle = 20, _hObstacle = 20;
-    double _velObstacle = 3, _probSpawnObst = 180;
+    double _velObstacle = -3, _probSpawnObst = 180;
 
-    Game = new GameWorld(_nameSpBackground, _nameSpDecor1, _wDecor1, _hDecor1, _nameSpDecor2,
-                         _wDecor2, _hDecor2, _velDecor, _numMaxDecor, _nameSpEnemy, _wEnemy,
-                         _hEnemy, _velEnemy, _probSpawnEnemy, _nameSpObstacle, _wObstacle,
-                         _hObstacle, _velObstacle, _probSpawnObst, mUser);
+    string _nameSpShot = "";
+    double _wShot = 10, _hShot = 20;
+    double _velshot = 12,_masaShot = 20, _millisecondsToShot = 10000;
+
+    double _wExplosion = 80, _hExplosion = 80;
+
+    qDebug() << "Aqui no" <<__LINE__;
+    Game = new GameWorld(_nameSpBackground,
+    _nameSpDecor1, _wDecor1, _hDecor1,
+    _nameSpDecor2, _wDecor2, _hDecor2, _velDecor, _probSpawnDecor,
+    _nameSpEnemy, _wEnemy, _hEnemy,
+    _velEnemy, _masaEnemy ,_probSpawnEnemy,
+    _nameSpObstacle, _wObstacle, _hObstacle, _velObstacle, _probSpawnObst,
+    _nameSpShot, _wShot, _hShot, _velshot, _masaShot, _millisecondsToShot,
+    _wExplosion, _hExplosion, 
+    mUser);
+//    Game = new GameWorld;
     Game->show();
 
     connect(Game, &GameWorld::endGame, this, &ProfileUser::endGameLevel1);
