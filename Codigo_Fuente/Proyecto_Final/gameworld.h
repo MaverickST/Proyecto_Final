@@ -57,9 +57,7 @@ public:
     bool collisionWithEnemy();
     bool collisioWithObstacle();
 
-
-    void loseAllTheLives();
-
+    int getKindCollidesPJ();
     ~GameWorld();
 
 signals:
@@ -76,6 +74,7 @@ private:
     Ui::GameWorld *ui;
     QGraphicsScene *mScene;
     QTimer *mTimer;
+    int timeToEndGame, contTimeToEndG;
 
     //Objeto user
     User mUser;
@@ -133,6 +132,7 @@ private:
 
     bool beCollides = false;
     bool win        = false;
+
 //    string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1, double _hDecor1,
 //    string &_nameSpDecor2, double _wDecor2, double _hDecor2, double _velDecor, int _numMaxDecor,
 //    string &_nameSpEnemy, double _wEnemy, double _hEnemy, double _velEnemy, double _probSpawnEnemy,

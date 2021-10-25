@@ -49,4 +49,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    spritesLevel1.qrc
+    spritesLevel1.qrc \
+    welcome.qrc
+
+DISTFILES += \
+    Sprites/welcome1.png

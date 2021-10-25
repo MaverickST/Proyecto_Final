@@ -33,15 +33,18 @@ void Character::moveCharacter(int keyEventChar){
     if(keyEventChar == Qt::Key_A){
         posx -= 5;
         setPos(posx , posy);
+        setPixmap(pixMapObj);
     }else if (keyEventChar == Qt::Key_D){
         posx += 5;
         setPos(posx , posy);
+        setPixmap(pixMapObj);
     }else if(keyEventChar == Qt::Key_S){
         posy += 5;
         setPos(posx , posy);
     }else if(keyEventChar == Qt::Key_W){
         posy -= 5;
         setPos(posx , posy);
+        setPixmap(pixMapObj);
     }
 
     /*if(jump){
@@ -55,7 +58,7 @@ void Character::calculateInitialVelocity(){
     lastPosy = posy;
 
     //Se pasa de grados a radianes
-    double theta = qDegreesToRadians(45.0);//Posiblemente se solucione poniendo el angulo negativo
+    double theta = qDegreesToRadians(-45.0);//Posiblemente se solucione poniendo el angulo negativo
 
     //Se halla velocidad en ambos ejes
     Vx = vel * cos(theta);
@@ -71,6 +74,7 @@ void Character::parabolicMovement(double dt){
         posy += Vy * dt + (G * dt * dt)/2.0f;
 
         setPos(posx , posy);
+        setPixmap(pixMapObj);
         cout << "[ " << posx << " , " << posy << " ]" << endl;
     }else{
         cout << "Maximo alcance" << endl;
