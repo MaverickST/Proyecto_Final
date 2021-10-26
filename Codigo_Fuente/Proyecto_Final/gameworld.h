@@ -55,7 +55,7 @@ public:
     void createRectsInvisibles();
 
     bool collisionWithEnemy();
-    bool collisioWithObstacle();
+    bool collisionWithObstacle();
     bool collisionWithLimits();
 
     ~GameWorld();
