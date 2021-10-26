@@ -82,6 +82,7 @@ GameWorld::GameWorld(string &_nameSpBackground,
     pixMapBackground = pixMapBackground.scaled(widthScene, heightScene);
     mScene->addPixmap(pixMapBackground);
 
+    // Se crean rectangulos alrededor del mapa
     createRectsInvisibles();
 
     numToTimer = 20;
@@ -154,27 +155,27 @@ void GameWorld::onUptade(){
     }*/
     //Fin de evaluacion de colisiones
 
-//    for (QList<Enemy *>::iterator it = mEnemiesWorld.begin();
-//         it != mEnemiesWorld.end(); it++) {
+    for (QList<Enemy *>::iterator it = mEnemiesWorld.begin();
+         it != mEnemiesWorld.end(); it++) {
 
-//        for (QList<Obstacle *>::iterator it2 = mObstaclesWorld.begin();
-//             it2 != mObstaclesWorld.end(); it2++) {
+        for (QList<Obstacle *>::iterator it2 = mObstaclesWorld.begin();
+             it2 != mObstaclesWorld.end(); it2++) {
 
-//            if ((*it)->collidesWithItem(*it2)) {
+            if ((*it)->collidesWithItem(*it2)) {
 
-//                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
-//                mScene->addItem(e);
-//                mExplosionsWorld.push_back(e);
-//            }
-//        }
+                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+                mScene->addItem(e);
+                mExplosionsWorld.push_back(e);
+            }
+        }
 
 //        if (!mScene->collidingItems(*it).isEmpty()) {
 //            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
 //            mScene->addItem(e);
 //        }
-//    }
+    }
 
-
+    boss->moveBoss(numToTimer);
 
 
     contTimeToSpawn++;

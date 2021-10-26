@@ -14,6 +14,7 @@ SOURCES += \
     createaccount.cpp \
     enemy.cpp \
     explosion.cpp \
+    finalboss.cpp \
     gameworld.cpp \
     gunshot.cpp \
     main.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     createaccount.h \
     enemy.h \
     explosion.h \
+    finalboss.h \
     gameworld.h \
     gunshot.h \
     idcatc.h \

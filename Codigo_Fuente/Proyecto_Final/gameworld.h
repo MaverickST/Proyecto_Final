@@ -9,6 +9,7 @@
 #include <QPixmap>
 #include <time.h>
 #include <fstream>
+//#include <QMediaPlayer>
 
 #include "character.h"
 #include "obstacle.h"
@@ -18,6 +19,7 @@
 #include "explosion.h"
 #include "gunshot.h"
 #include "user.h"
+#include "finalboss.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -76,6 +78,8 @@ private:
     Ui::GameWorld *ui;
     QGraphicsScene *mScene;
     QTimer *mTimer;
+
+    FinalBoss *boss;
 
     //Objeto user
     User mUser;
