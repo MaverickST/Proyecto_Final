@@ -63,7 +63,7 @@ void Character::calculateInitialVelocity(){
     lastPosy = posy;
 
     //Se pasa de grados a radianes
-    double theta = qDegreesToRadians(-45.0);//Posiblemente se solucione poniendo el angulo negativo
+    double theta = qDegreesToRadians(45.0);//Posiblemente se solucione poniendo el angulo negativo
 
     //Se halla velocidad en ambos ejes
     Vx = vel * cos(theta);
@@ -103,22 +103,18 @@ void Character::setLastPosy(double value){
     lastPosy = value;
 }
 
-int Character::getLastKey() const
-{
+int Character::getLastKey() const{
     return lastKey;
 }
 
-void Character::setLastKey(int value)
-{
+void Character::setLastKey(int value){
     lastKey = value;
 }
 
-int Character::getScore() const
-{
+int Character::getScore() const{
     return Score;
 }
 
-void Character::setScore(int value)
-{
+void Character::setScore(int value){
     Score = value;
 }

@@ -118,8 +118,6 @@ void ProfileUser::updateUsers(){
 }
 
 void ProfileUser::startGameLevel1(){
-    int lives = mUser.lives();
-    mUser.setLives(lives - 1);
     // Se crea y muestra la partida, el mundo, ya jugar se ha dicho
     // Variables del nivel 1
     string strPath = "../Proyecto_final/:Sprites/";
@@ -141,13 +139,11 @@ void ProfileUser::startGameLevel1(){
     double _wObstacle = 20, _hObstacle = 20;
     double _velObstacle = -3, _probSpawnObst = 800;
 
-    string _nameSpShot = "";
+    string _nameSpShot = "../Proyecto_Final/Sprites/bala1.png";
     double _wShot = 10, _hShot = 20;
     double _velshot = 12,_masaShot = 20, _millisecondsToShot = 10000;
 
     double _wExplosion = 80, _hExplosion = 80;
-
-    int level = 1;
 
     qDebug() << "Aqui no" <<__LINE__;
     Game = new GameWorld(_nameSpBackground,
