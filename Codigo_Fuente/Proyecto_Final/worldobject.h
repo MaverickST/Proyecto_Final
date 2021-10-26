@@ -1,6 +1,7 @@
 #ifndef WORLDOBJECT_H
 #define WORLDOBJECT_H
 
+#include <QtMath>
 #include <QGraphicsPixmapItem>
 #include <QPainter>
 

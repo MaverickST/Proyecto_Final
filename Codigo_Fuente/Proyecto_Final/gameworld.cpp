@@ -78,12 +78,15 @@ ui->setupUi(this);
     pixMapBackground = pixMapBackground.scaled(widthScene, heightScene);
     mScene->addPixmap(pixMapBackground);
 
+
+    // Se crean rectangulos alrededor del mapa
+    createRectsInvisibles();
+      
     //Inicializacion del personaje principal
     std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
     PJ = new Character (0,0,20,20,60.0f,sprite);
     mScene->addItem(PJ);
 
-    createRectsInvisibles();
 
     numToTimer = 20;
     mTimer = new QTimer;
@@ -149,6 +152,28 @@ void GameWorld::onUptade(){
     if(PJ->getJump() == true){
         PJ->parabolicMovement(0.1f);
         beCollides = false;
+
+    }*/
+    //Fin de evaluacion de colisiones
+
+    for (QList<Enemy *>::iterator it = mEnemiesWorld.begin();
+         it != mEnemiesWorld.end(); it++) {
+
+        for (QList<Obstacle *>::iterator it2 = mObstaclesWorld.begin();
+             it2 != mObstaclesWorld.end(); it2++) {
+
+            if ((*it)->collidesWithItem(*it2)) {
+
+                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+                mScene->addItem(e);
+                mExplosionsWorld.push_back(e);
+            }
+        }
+
+//        if (!mScene->collidingItems(*it).isEmpty()) {
+//            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+//            mScene->addItem(e);
+//        }
     }
 
     //MANEJO DEL TIEMPO DE INVESIBILIDAD
@@ -285,6 +310,7 @@ void GameWorld::onUptade(){
                 mExplosionsWorld.push_back(e);
             }
         }
+
 
         //        if (!mScene->collidingItems(*it).isEmpty()) {
         //            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);

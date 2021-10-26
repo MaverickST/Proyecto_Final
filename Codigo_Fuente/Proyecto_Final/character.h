@@ -2,7 +2,6 @@
 #define CHARACTER_H
 
 #include <QKeyEvent>
-#include <QtMath>
 #include <iostream>
 #include "worldobject.h"
 
