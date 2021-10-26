@@ -28,29 +28,34 @@ void Character::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 }
 
 void Character::moveCharacter(int keyEventChar){
-    lastKey = keyEventChar;
     // Movimiento del personaje en funcion de la tecla presionada.
     if(keyEventChar == Qt::Key_A){
         posx -= 5;
-        setPos(posx , posy);
-        setPixmap(pixMapObj);
+        setPosition();
+        lastKey = Qt::Key_A;
     }else if (keyEventChar == Qt::Key_D){
         posx += 5;
-        setPos(posx , posy);
-        setPixmap(pixMapObj);
+        setPosition();
+        lastKey = Qt::Key_D;
     }else if(keyEventChar == Qt::Key_S){
         posy += 5;
-        setPos(posx , posy);
+        setPosition();
+        lastKey = Qt::Key_S;
     }else if(keyEventChar == Qt::Key_W){
         posy -= 5;
-        setPos(posx , posy);
-        setPixmap(pixMapObj);
+        setPosition();
+        lastKey = Qt::Key_W;
     }
 
     /*if(jump){
         lastPosy = posy;
         calculateSpeed();
     }*/
+}
+
+void Character::setPosition(){
+    setPos(posx , posy);
+    setPixmap(pixMapObj);
 }
 
 void Character::calculateInitialVelocity(){
@@ -96,4 +101,24 @@ double Character::getLastPosy() const{
 
 void Character::setLastPosy(double value){
     lastPosy = value;
+}
+
+int Character::getLastKey() const
+{
+    return lastKey;
+}
+
+void Character::setLastKey(int value)
+{
+    lastKey = value;
+}
+
+int Character::getScore() const
+{
+    return Score;
+}
+
+void Character::setScore(int value)
+{
+    Score = value;
 }

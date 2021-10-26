@@ -124,7 +124,6 @@ int GameWorld::getKindCollidesPJ(){
 bool GameWorld::collisionWithEnemy(){
     for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
         if(PJ->collidesWithItem(*i)){
-            cout << "Colision con " << *i << endl;
             return true;
         }
     }
@@ -134,16 +133,22 @@ bool GameWorld::collisionWithEnemy(){
 bool GameWorld::collisioWithObstacle(){
     for(auto i = mObstaclesWorld.begin(); i != mObstaclesWorld.end(); i++){
         if(PJ->collidesWithItem(*i)){
-            cout << "Colision con " << *i << endl;
             return true;
         }
     }
+    return false;
+}
 
+bool GameWorld::collisionWithLimits(){
+    for(auto i = mRectsInvisibles.begin(); i != mRectsInvisibles.end(); i++){
+        if(PJ->collidesWithItem(*i)){
+
+        }
+    }
     return false;
 }
 
 void GameWorld::onUptade(){
-    int kindCollides;
     //Evaluacion de condicion de Game Over
     if(mUser.lives() == 0){
         //El personaje principal se ha quedado sin vidas
@@ -151,6 +156,7 @@ void GameWorld::onUptade(){
     }else if(timeToEndGame == 0){
         //Se agoto el tiempo para culminar el nivel
         GameWorld::endGame();
+        mUser.setScore(PJ->getScore());
     }
 
 
@@ -166,15 +172,62 @@ void GameWorld::onUptade(){
         contTimeToEndG = 0;//Se reseta la variable contTimeEndG
     }
 
+    //MANEJO DEL TIEMPO DE INVESIBILIDAD
+    if(invisibilityTime > 0 && contTimeToEndG == 20){
+        invisibilityTime--;//Se resta cada 1s sigueindo la misma logica que el if anterior
+    }
+
     /**    EVALUACION DE COLISIONES     **/
-    //Reestriucturar con booleanos :)
-    if(!mScene->collidingItems(PJ).isEmpty() && PJ->getJump() == false){
-        //Si hay colisiones se detecta que tipo de colision fue
-        kindCollides = getKindCollidesPJ();
-        beCollides = true;
-    }else{
-        //De lo contrasio se le lleva false a la variabel BeCollides
-        beCollides = false;
+    if(PJ->getJump() == false && invisibilityTime == 0){//Otra consision para evaluar colisiones es el tiempo de invensibilidad
+        //Solo se va a evaluar colisiones cuando el personaje no este saltando
+        bool Enemy    =   collisionWithEnemy();
+        bool Obstacle = collisioWithObstacle();
+        bool Limits   =  collisionWithLimits();
+        if(Limits || Obstacle || Enemy){
+            if(Limits){
+                //Hubo colision con los bloques invisibles, se devuelve al PJ
+                if(PJ->getLastKey() == Qt::Key_A){
+                    PJ->setPosx(PJ->getPosx() + 5);
+                }else if(PJ->getLastKey() == Qt::Key_D){
+                    PJ->setPosx(PJ->getPosx() - 5);
+                }else if(PJ->getLastKey() == Qt::Key_S){
+                    PJ->setPosy(PJ->getPosy() - 5);
+                }else if(PJ->getLastKey() == Qt::Key_W){
+                    PJ->setPosy(PJ->getPosy() + 5);
+                }
+                PJ->setPosition();
+            }
+            if(Obstacle){
+                //Hubo colision con un obstaculo
+                contCollisionsWithObstacle++;
+                if(contCollisionsWithObstacle == 2){
+                    //Se resta vida solo cuando colisiona dos veces contra un obstaculo
+                    mUser.setLives(mUser.lives()-1);
+                    Explosion *e = new Explosion((PJ)->getPosx(), (PJ)->getPosy(), wExplosion, hExplosion);
+                    mScene->addItem(e);
+                    mExplosionsWorld.push_back(e);
+                }
+                PJ->setPosy(0);
+                PJ->setPosx(0);
+                PJ->setPosition();
+                invisibilityTime = 5;
+            }
+            if(Enemy){
+                //Hubo colision con un enemigo
+                //Se resta vida
+                mUser.setLives(mUser.lives()-1);
+                Explosion *e = new Explosion((PJ)->getPosx(), (PJ)->getPosy(), wExplosion, hExplosion);
+                mScene->addItem(e);
+                mExplosionsWorld.push_back(e);
+                PJ->setPosy(0);
+                PJ->setPosx(0);
+                PJ->setPosition();
+                invisibilityTime = 5;
+            }
+            beCollides = true;
+        }else{
+            beCollides = false;
+        }
     }
     /** FIN DE EVALUACION DE COLISIONES **/
 
@@ -197,9 +250,6 @@ void GameWorld::onUptade(){
 //            mScene->addItem(e);
 //        }
 //    }
-
-
-
 
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
@@ -417,8 +467,7 @@ void GameWorld::moveWorldObjects(){
     }
 }
 
-void GameWorld::collisionEvaluator()
-{
+void GameWorld::collisionEvaluator(){
     // Se evalua la colision de un disparo
     for (int i = 0; i < mGunShotsWorld.size(); i++) {
         // Se evalua con los autos enemigos

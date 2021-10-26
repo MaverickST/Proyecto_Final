@@ -147,6 +147,8 @@ void ProfileUser::startGameLevel1(){
 
     double _wExplosion = 80, _hExplosion = 80;
 
+    int level = 1;
+
     qDebug() << "Aqui no" <<__LINE__;
     Game = new GameWorld(_nameSpBackground,
     _nameSpDecor1, _wDecor1, _hDecor1,
@@ -157,7 +159,6 @@ void ProfileUser::startGameLevel1(){
     _nameSpShot, _wShot, _hShot, _velshot, _masaShot, _millisecondsToShot,
     _wExplosion, _hExplosion, 
     mUser);
-//    Game = new GameWorld;
     Game->show();
 
     connect(Game, &GameWorld::endGame, this, &ProfileUser::endGameLevel1);
@@ -170,6 +171,10 @@ void ProfileUser::endGameLevel1(){
     Game->close();
     delete Game;
     this->setVisible(true);
+    //Actualizacion de Score
+    if(mUser.score() > mUser.scoreFirstLevel()){
+        mUser.setScoreFirstLevel(mUser.score());
+    }
     showInformation();
 }
 
