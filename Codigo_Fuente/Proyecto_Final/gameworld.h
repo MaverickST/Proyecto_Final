@@ -56,8 +56,8 @@ public:
 
     bool collisionWithEnemy();
     bool collisioWithObstacle();
+    bool collisionWithLimits();
 
-    int getKindCollidesPJ();
     ~GameWorld();
 
 signals:
@@ -129,9 +129,13 @@ private:
 
     //Atributos para el personaje principal
     Character *PJ;
+    int contCollisionsWithObstacle = 0;
+    int invisibilityTime = 0;
 
     bool beCollides = false;
     bool win        = false;
+
+    int level;
 
 //    string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1, double _hDecor1,
 //    string &_nameSpDecor2, double _wDecor2, double _hDecor2, double _velDecor, int _numMaxDecor,

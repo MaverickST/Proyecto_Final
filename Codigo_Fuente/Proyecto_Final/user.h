@@ -30,6 +30,9 @@ public:
     int lives() const;
     void setLives(int lives);
 
+    int score() const;
+    void setScore(int score);
+
 private:
     //Declaracion de atributos de usuarios
     string mUsername         = "";
@@ -39,6 +42,7 @@ private:
     int    mScoreFirstLevel  =  0;
     int    mScoreSecondLevel =  0;
     int    mScoreThirdLevel  =  0;
+    int    mScore            =  0;
 };
 
 #endif // USER_H
