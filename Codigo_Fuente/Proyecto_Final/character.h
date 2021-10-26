@@ -17,6 +17,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
     void moveCharacter(int keyEventChar);
+    void setPosition();
 
     void calculateInitialVelocity();
     void parabolicMovement(double dt);
@@ -26,12 +27,20 @@ public:
 
     double getLastPosy() const;
     void setLastPosy(double value);
+
+    int getLastKey() const;
+    void setLastKey(int value);
+
+    int getScore() const;
+    void setScore(int value);
+
 private:
     double dt;
     double Vx, Vy;
     double lastPosy;
 
     int lastKey;
+    int Score;
 
     bool jump = false;
     double G = -9.8;

@@ -15,14 +15,22 @@ GameWorld::GameWorld(string &_nameSpBackground,
     double _velObstacle, double _probSpawnObst,
     string &_nameSpShot, double _wShot, double _hShot,
     double _velShot, double _masaShot, double _millisecondsToShot,
-    double _wExplosion, double _hExplosion, 
+    double _wExplosion, double _hExplosion,
     User &_User,
     QWidget *parent)
     : QMainWindow(parent),ui(new Ui::GameWorld)
 {
-
-    ui->setupUi(this);
+ui->setupUi(this);
     // Inicializacion del constructor sobrecargado, solo un poco sobrecargado...
+
+    // Dimesiones de la escena
+    widthScene = ui->graphicsView->width() - 5;
+    heightScene = ui->graphicsView->height() - 5;
+
+    // Inicializacion de la escena
+    mScene = new QGraphicsScene(this);
+    mScene->setSceneRect(0, 0, widthScene, heightScene);
+    ui->graphicsView->setScene(mScene);
 
     //Inicualizacion objeto User
     mUser = _User;
@@ -57,24 +65,12 @@ GameWorld::GameWorld(string &_nameSpBackground,
     // Para las explosiones
     wExplosion = _wExplosion, hExplosion = _hExplosion;
 
-    // Dimesiones de la escena
-    widthScene = ui->graphicsView->width() - 5;
-    heightScene = ui->graphicsView->height() - 5;
-
     // Para controlar la generacion de objetos
     contTimeToSpawn = 0;
     timeToSpawn = 200; // son milisegundos
     posxSpwanAny = widthScene + 60;
 
-    //Inicializacion del personaje principal
-//    std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
-//    PJ = new Character (0,0,20,20,60.0f,sprite);
-//    mScene->addItem(PJ);
-
-    // Inicializacion de la escena
-    mScene = new QGraphicsScene(this);
-    mScene->setSceneRect(0, 0, widthScene, heightScene);
-    ui->graphicsView->setScene(mScene);
+    timeToEndGame = 500, contTimeToEndG = 0;
 
     // Imagen de fondo
     std::string nameImgBackground = _nameSpBackground;
@@ -82,76 +78,81 @@ GameWorld::GameWorld(string &_nameSpBackground,
     pixMapBackground = pixMapBackground.scaled(widthScene, heightScene);
     mScene->addPixmap(pixMapBackground);
 
+
     // Se crean rectangulos alrededor del mapa
     createRectsInvisibles();
+      
+    //Inicializacion del personaje principal
+    std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
+    PJ = new Character (0,0,20,20,60.0f,sprite);
+    mScene->addItem(PJ);
+
 
     numToTimer = 20;
     mTimer = new QTimer;
     srand(time(NULL));
 
+    ui->LCD_LIVES->display(mUser.lives());
+    ui->LCD_TIME->display(timeToEndGame);
+    ui->LCD_SCORE->display(0);
+
     connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
     connect(ui->pB_StartGame, &QPushButton::clicked, this, &GameWorld::startQTimer);
     connect(mTimer, &QTimer::timeout, this, &GameWorld::onUptade);
-
 }
 
 bool GameWorld::collisionWithEnemy(){
     for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
+        qDebug() << "Evaluando colision con enemigos" <<__LINE__;
         if(PJ->collidesWithItem(*i)){
-            cout << "Colision con " << *i << endl;
             return true;
         }
     }
     return false;
 }
 
-bool GameWorld::collisioWithObstacle(){
-    for(auto i = mObstaclesWorld.begin(); i != mObstaclesWorld.end(); i++){
-        if(PJ->collidesWithItem(*i)){
-            cout << "Colision con " << *i << endl;
+bool GameWorld::collisionWithObstacle(){
+    for(QList<Obstacle *>::iterator it2 = mObstaclesWorld.begin(); it2 != mObstaclesWorld.end(); it2++){
+        qDebug() << "Evaluando colision con Obstaculos" <<__LINE__;
+        if(PJ->collidesWithItem(*it2)){
             return true;
         }
     }
-
     return false;
 }
 
-void GameWorld::loseAllTheLives(){
-    //Funcion que se va a ejecutar cuando el jugador principal pierda todas las vidas
-    /*endGame();
-    updateUsersInformation();*/
+bool GameWorld::collisionWithLimits(){
+    for(auto i = mRectsInvisibles.begin(); i != mRectsInvisibles.end(); i++){
+        qDebug() << "Evaluando colision con limites" <<__LINE__;
+        if(PJ->collidesWithItem(*i)){
+            return true;
+        }
+    }
+    return false;
 }
 
 void GameWorld::onUptade(){
-    //Evaluacion de vidas del personaje
-    /*if(PJ->getLives() == 0){
+    //Evaluacion de condicion de Game Over
+    if(mUser.lives() == 0){
         //El personaje principal se ha quedado sin vidas
-        loseAllTheLives();
-    }*/
+        //GameWorld::endGame();
+    }else if(timeToEndGame == 0){
+        //Se agoto el tiempo para culminar el nivel
+        //GameWorld::endGame();
+        //Se evia el Score hecho al objeto User
+        mUser.setScore(PJ->getScore());
+        //Se aumenta el nivel si este mismo es diferente de 3
+        if(mUser.level() != 3){
+           mUser.setLevel(mUser.level() + 1);
+        }
+    }
 
 
 //    Salto con movimiento parabolico
-//    if(PJ->getJump() == true){
-//        PJ->parabolicMovement(0.1f);
-//        beCollides = false;
-//    }
-
-//    Evaluacion de colisiones
-//    bool Enemy = collisionWithEnemy();
-//    bool Obstacle = collisioWithObstacle();
-
-//    if(Enemy == true || Obstacle == true){
-//        //Se detecto una colision
-//        beCollides = true;
-//    }else{
-//        beCollides = false;
-//    }
-
-    /*if(Enemy == true || Obstacle == true){
-        //Se detecto una colision
-        beCollides = true;
-    }else{
+    if(PJ->getJump() == true){
+        PJ->parabolicMovement(0.1f);
         beCollides = false;
+
     }*/
     //Fin de evaluacion de colisiones
 
@@ -175,8 +176,147 @@ void GameWorld::onUptade(){
 //        }
     }
 
-    boss->moveBoss(numToTimer);
+    //MANEJO DEL TIEMPO DE INVESIBILIDAD
+    if(invisibilityTime > 0 && contTimeToEndG == 20){
+        invisibilityTime--;//Se resta cada 1s sigueindo la misma logica que el if anterior
+    }
 
+    //MANEJO DEL TIEMPO LIMITE QUE TIENE EL USUARIO PARA GANAR EL NIVEL
+    contTimeToEndG++;// Está hecho para que cambie cada segundo
+    if(contTimeToEndG == 20){// 20 porque el startTime es de 50, 20*50 = 1000 = 1s
+        ui->LCD_TIME->display(timeToEndGame--);
+        contTimeToEndG = 0;//Se reseta la variable contTimeEndG
+    }  
+
+    /**    EVALUACION DE COLISIONES     **/
+    /*if(PJ->getJump() == false && invisibilityTime == 0){//Otra consision para evaluar colisiones es el tiempo de invensibilidad
+        //Solo se va a evaluar colisiones cuando el personaje no este saltando
+        bool Enemy    =   collisionWithEnemy();
+        bool Obstacle = collisioWithObstacle();
+        bool Limits   =  collisionWithLimits();
+        if(Limits || Obstacle || Enemy){
+            if(Limits){
+                //Hubo colision con los bloques invisibles, se devuelve al PJ
+                if(PJ->getLastKey() == Qt::Key_A){
+                    PJ->setPosx(PJ->getPosx() + 5);
+                }else if(PJ->getLastKey() == Qt::Key_D){
+                    PJ->setPosx(PJ->getPosx() - 5);
+                }else if(PJ->getLastKey() == Qt::Key_S){
+                    PJ->setPosy(PJ->getPosy() - 5);
+                }else if(PJ->getLastKey() == Qt::Key_W){
+                    PJ->setPosy(PJ->getPosy() + 5);
+                }
+                PJ->setPosition();
+            }
+            if(Obstacle){
+                //Hubo colision con un obstaculo
+                contCollisionsWithObstacle++;
+                if(contCollisionsWithObstacle == 2){
+                    //Se resta vida solo cuando colisiona dos veces contra un obstaculo
+                    mUser.setLives(mUser.lives()-1);
+                    ui->LCD_LIVES->display(mUser.lives());
+                    Explosion *e = new Explosion((PJ)->getPosx(), (PJ)->getPosy(), wExplosion, hExplosion);
+                    mScene->addItem(e);
+                    mExplosionsWorld.push_back(e);
+                }
+                PJ->setPosy(0);
+                PJ->setPosx(0);
+                PJ->setPosition();
+                invisibilityTime = 5;
+            }
+            if(Enemy){
+                //Hubo colision con un enemigo
+                //Se resta vida
+                mUser.setLives(mUser.lives()-1);
+                ui->LCD_LIVES->display(mUser.lives());
+                Explosion *e = new Explosion((PJ)->getPosx(), (PJ)->getPosy(), wExplosion, hExplosion);
+                mScene->addItem(e);
+                mExplosionsWorld.push_back(e);
+                PJ->setPosy(0);
+                PJ->setPosx(0);
+                PJ->setPosition();
+                invisibilityTime = 5;
+            }
+            beCollides = true;
+        }else{
+            beCollides = false;
+        }
+    }*/
+    //Solo se va a evaluar colisiones cuando el personaje no este saltando
+    bool Enemy    =   collisionWithEnemy();
+    bool Obstacle = collisionWithObstacle();
+    bool Limits   =  collisionWithLimits();
+    cout << "Enemigos: " << Enemy << endl;
+    cout << "Obstacle: " << Obstacle << endl;
+    cout << "Limit: " << Limits << endl;
+    if(Limits == true){
+        cout << "Colision con limites" << endl;
+        //Hubo colision con los bloques invisibles, se devuelve al PJ
+        if(PJ->getLastKey() == Qt::Key_A){
+            PJ->setPosx(PJ->getPosx() + 5);
+        }else if(PJ->getLastKey() == Qt::Key_D){
+            PJ->setPosx(PJ->getPosx() - 5);
+        }else if(PJ->getLastKey() == Qt::Key_S){
+            PJ->setPosy(PJ->getPosy() - 5);
+        }else if(PJ->getLastKey() == Qt::Key_W){
+            PJ->setPosy(PJ->getPosy() + 5);
+        }
+        PJ->setPosition();
+        beCollides = true;
+    }
+    if(Obstacle == true){
+        cout << "colision con obstaculos" << endl;
+        //Hubo colision con un obstaculo
+        contCollisionsWithObstacle++;
+        if(contCollisionsWithObstacle == 2){
+            //Se resta vida solo cuando colisiona dos veces contra un obstaculo
+            mUser.setLives(mUser.lives()-1);
+            ui->LCD_LIVES->display(mUser.lives());
+            Explosion *e = new Explosion((PJ)->getPosx(), (PJ)->getPosy(), wExplosion, hExplosion);
+            mScene->addItem(e);
+            mExplosionsWorld.push_back(e);
+        }
+        PJ->setPosy(0);
+        PJ->setPosx(0);
+        PJ->setPosition();
+        invisibilityTime = 5;
+        beCollides = true;
+    }
+    if(Enemy == true){
+        cout << "Colision con enemigos" << endl;
+        //Hubo colision con un enemigo
+        //Se resta vida
+        mUser.setLives(mUser.lives()-1);
+        ui->LCD_LIVES->display(mUser.lives());
+        Explosion *e = new Explosion((PJ)->getPosx(), (PJ)->getPosy(), wExplosion, hExplosion);
+        mScene->addItem(e);
+        mExplosionsWorld.push_back(e);
+        PJ->setPosy(0);
+        PJ->setPosx(0);
+        PJ->setPosition();
+        invisibilityTime = 5;
+        beCollides = true;
+    }
+    /** FIN DE EVALUACION DE COLISIONES **/
+
+    for (auto it = mEnemiesWorld.begin();it != mEnemiesWorld.end(); it++) {
+
+        for (auto it2 = mObstaclesWorld.begin();it2 != mObstaclesWorld.end(); it2++) {
+
+            if ((*it)->collidesWithItem(*it2)) {
+
+                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+                mScene->addItem(e);
+                mExplosionsWorld.push_back(e);
+            }
+        }
+
+
+        //        if (!mScene->collidingItems(*it).isEmpty()) {
+        //            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+        //            mScene->addItem(e);
+        //        }
+    }
 
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
@@ -368,8 +508,7 @@ void GameWorld::deleteWorldObject()
     }
 }
 
-void GameWorld::moveWorldObjects()
-{
+void GameWorld::moveWorldObjects(){
     // La funcion se encarga de ejecutar el metodo: moveObject.
     // Tal metodo mueve al objeto en cuestion segun su propia velocidad
 
@@ -395,8 +534,7 @@ void GameWorld::moveWorldObjects()
     }
 }
 
-void GameWorld::collisionEvaluator()
-{
+void GameWorld::collisionEvaluator(){
     // Se evalua la colision de un disparo
     for (int i = 0; i < mGunShotsWorld.size(); i++) {
         // Se evalua con los autos enemigos
@@ -427,15 +565,17 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
 
     if(event->key() == Qt::Key_B){
         ///**************EL PERSONAJE PRINCIPAL DISPARA***************///
-        cout << "Se realiza disparo" << endl;
+        GunShot *bullet;
+        bullet = new GunShot(PJ->getPosx()+5,PJ->getPosy()+5,wShot,hShot,velShot,masaShot,nameSpShot);
+        mGunShotsWorld.push_back(bullet);
     }else if(event->key() == Qt::Key_Space && (PJ->getJump() == false)){
-        ///*******************SALTO DEL PERSONAJE********************///
-        /// Tecla que realiza el salto (Movimiento Parabolico) del personaje
-        /// Mientras el persoanje se encuentre en dicho movimiento, no se podra
-        /// Mover hacia otras direcciones ni tampoco realizar otro salto
+        ///**********************SALTO DEL PERSONAJE**********************///
+        ///Tecla que realiza el salto (Movimiento Parabolico) del personaje
+        ///Mientras el persoanje se encuentre en dicho movimiento, no se
+        ///podra Mover hacia otras direcciones ni tampoco realizar otro salto
 
         //Se envia true al atributo privado del objeto Character
-        //Para indicar que hay un salto e ejecucion
+        //Para indicar que hay un salto en ejecucion
         PJ->setJump(true);
 
         //Se resetea la velocidad inicial
@@ -443,10 +583,6 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
     }else if(!beCollides && (PJ->getJump() == false)){
         PJ->moveCharacter(event->key());
     }
-    /*if(PJ->getJump() == true){
-        cout << "Salto activo" << endl;
-    }*/
-
 }
 
 void GameWorld::startQTimer(){
@@ -458,8 +594,7 @@ GameWorld::~GameWorld(){
     delete ui;
 }
 
-void GameWorld::createRectsInvisibles()
-{
+void GameWorld::createRectsInvisibles(){
 
     // La funcion se encarga de crear un rectangulos pequeños invisibles
     // que limitarán el desplazamiento del usuario

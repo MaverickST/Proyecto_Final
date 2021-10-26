@@ -72,3 +72,13 @@ void User::setLives(int lives)
 {
     mLives = lives;
 }
+
+int User::score() const
+{
+    return mScore;
+}
+
+void User::setScore(int score)
+{
+    mScore = score;
+}
