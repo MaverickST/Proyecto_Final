@@ -71,7 +71,7 @@ void IDCATC::on_pB_Login_clicked(){
     ui->progressBar->setValue(10);
 
     //Variables temporales para recorrer usuarios en la base de datos de usuarios
-    string Username ,Password, Level, Lives, ScoreFirstLevel, ScoreSecondLevel, ScoreThirdLevel;
+    string Username ,Password, Lives, Time, Score;
 
     /*
      * Banderas booleanas:
@@ -83,15 +83,7 @@ void IDCATC::on_pB_Login_clicked(){
     static bool FoundUser = false, FoundPassword = false;
 
     while(!usersFile.eof()){
-        usersFile >> Username >> Password >> Level >> Lives >> ScoreFirstLevel >> ScoreSecondLevel >> ScoreThirdLevel;
-
-        /*cout << "Nombre: " << Username << endl;
-        cout << "Password: " << Password << endl;
-        cout << "Level: " << Level << endl;
-        cout << "Lives: " << Lives << endl;
-        cout << "Socre 1: " << ScoreFirstLevel << endl;
-        cout << "Score 2: " << ScoreSecondLevel << endl;
-        cout << "Score 3: " << ScoreThirdLevel << endl << endl;*/
+        usersFile >> Username >> Password >> Lives >> Time >> Score;
 
         ui->progressBar->setValue(15);
 
@@ -104,7 +96,7 @@ void IDCATC::on_pB_Login_clicked(){
             //Se procede a verificar que las contraseñas coincidan
             if(ui->Text_Password->text().toStdString() == Password){
                 //Creacion del objeto User//
-                mUser = new User(Username,Password,stoi(Level),stoi(Lives),stoi(ScoreFirstLevel),stoi(ScoreSecondLevel),stoi(ScoreThirdLevel));
+                mUser = new User(Username,Password,stoi(Lives), stoi(Time), stoi(Score));
 
                 ui->progressBar->setValue(100);
                 FoundPassword = true;

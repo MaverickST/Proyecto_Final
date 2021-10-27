@@ -13,7 +13,7 @@ ProfileUser::ProfileUser(User *&_User,QWidget *parent): QMainWindow(parent),ui(n
 
     mUser = _User;
     showInformation();
-    connect(ui->pB_StartLevel1, &QPushButton::clicked, this, &ProfileUser::startGameLevel1);
+    connect(ui->pB_StartLevel, &QPushButton::clicked, this, &ProfileUser::startGameLevel1);
     connect(ui->pB_closeProfile, &QPushButton::clicked, this, &ProfileUser::closeWindowProfile);
 }
 
@@ -27,31 +27,15 @@ void ProfileUser::showInformation(){
 
     //Evaluamos si las vidas del usuario son igules a 0
     if(mUser->lives() == 0){
-        //En este caso se reiicia el modo campaña y el usuario perdera todo su avance
+        //En este caso se reinicia el modo campaña y el usuario perdera todo su avance
         mUser->setLives(5);
-        mUser->setLevel(1);
-        mUser->setScoreFirstLevel(0);
-        mUser->setScoreSecondLevel(0);
-        mUser->setScoreThirdLevel(0);
     }
 
     //Envimos en numero de vidas
     ui->lcd_Lives->display(mUser->lives());
 
     //Enviamos el Score de cada nivel
-    ui->Label_Score1->setText(QString::number(mUser->scoreFirstLevel()));
-    ui->Label_Score2->setText(QString::number(mUser->scoreSecondLevel()));
-    ui->Label_Score3->setText(QString::number(mUser->scoreThirdLevel()));
-
-    if(mUser->level() == 1){
-        ui->pB_StartLevel2->setEnabled(false);
-        ui->pB_StartLevel3->setEnabled(false);
-    }else if(mUser->level() == 2){
-        ui->pB_StartLevel2->setEnabled(true);
-        ui->pB_StartLevel3->setEnabled(false);
-    }else if(mUser->level() == 3){
-        ui->pB_StartLevel3->setEnabled(true);
-    }   
+    ui->Label_Score->setText(QString::number(mUser->score()));
 }
 
 void ProfileUser::updateUsers(){
@@ -61,24 +45,21 @@ void ProfileUser::updateUsers(){
     inFile.open(PATH_TO_USERS);
 
     //Atributos de usuario
-    string Username ,Password, Level, Lives, ScoreFirstLevel
-            , ScoreSecondLevel, ScoreThirdLevel;
+    string Username ,Password, Lives, Time, Score;
     string updatedUsersTMP = "";
 
     while(!inFile.eof()){
-        inFile >> Username >> Password >> Level >> Lives >> ScoreFirstLevel >> ScoreSecondLevel >> ScoreThirdLevel;
+        inFile >> Username >> Password >> Lives >> Time >> Score;
         //Se evalua si el usuario leido es el usuario con sesion activa
         if(Username == mUser->username()){
             //Si es el usuario activo, se actualiza el archivo .txt de usuarios
-            updatedUsersTMP = updatedUsersTMP + Username + "   " + Password + "   " + to_string(mUser->level()) +
-                    "   " + to_string(mUser->lives()) + "   " + to_string(mUser->scoreFirstLevel()) + "   " +
-                    to_string(mUser->scoreSecondLevel()) + "   " +
-                    to_string(mUser->scoreThirdLevel()) + "\n";
+            updatedUsersTMP = updatedUsersTMP + Username + "   " + Password + "   " +
+                    to_string(mUser->lives()) + "   " + to_string(mUser->time()) +
+                    "   " + to_string(mUser->score()) +  "\n";
         }else{
             //Si no lo es, se respeta los datos de los demas usuarios
-            updatedUsersTMP = updatedUsersTMP + Username + "   " + Password + "   " + Level +
-                    "   " + Lives + "   " + ScoreFirstLevel + "   " + ScoreSecondLevel +
-                    "   " + ScoreThirdLevel + "\n";
+            updatedUsersTMP = updatedUsersTMP + Username + "   " + Password + "   " +
+                    Lives + "   " + Time + "   " + Score + "\n";
         }
     }
     //Se cierra el archivo de usuarios
@@ -158,8 +139,8 @@ void ProfileUser::endGameLevel1(){
     delete Game;
     this->setVisible(true);
     //Actualizacion de Score
-    if(mUser->score() > mUser->scoreFirstLevel()){
-        mUser->setScoreFirstLevel(mUser->score());
+    if(mUser->scoreLevel() > mUser->score()){
+        mUser->setScore(mUser->scoreLevel());
     }
     showInformation();
 }
