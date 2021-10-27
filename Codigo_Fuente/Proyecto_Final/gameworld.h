@@ -83,7 +83,7 @@ private:
     Ui::GameWorld *ui;
     QGraphicsScene *mScene;
     QTimer *mTimer;
-    int timeToEndGame, contTimeToEndG;
+    int timeToGame, contTimeToGame;
 
     FinalBoss *boss;
 

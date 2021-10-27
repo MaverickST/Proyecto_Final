@@ -72,7 +72,7 @@ ui->setupUi(this);
     timeToSpawn = 200; // son milisegundos
     posxSpwanAny = widthScene + 60;
 
-    timeToEndGame = 500, contTimeToEndG = 0;
+    timeToGame = 0, contTimeToGame = 0;
 
     // Imagen de fondo
     std::string nameImgBackground = _nameSpBackground;
@@ -101,8 +101,10 @@ ui->setupUi(this);
     mTimer = new QTimer;
     srand(time(NULL));
 
+
+
     ui->LCD_LIVES->display(mUser->lives());
-    ui->LCD_TIME->display(timeToEndGame);
+    ui->LCD_TIME->display(timeToGame);
     ui->LCD_SCORE->display(0);
 
     connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
@@ -245,7 +247,7 @@ void GameWorld::onUptade(){
     if(mUser->lives() == 0){
         //El personaje principal se ha quedado sin vidas
         //GameWorld::endGame();
-    }else if(timeToEndGame == 0){
+    }/*else if(timeToGame == 0){
         //Se agoto el tiempo para culminar el nivel
         //GameWorld::endGame();
         //Se evia el Score hecho al objeto User
@@ -254,7 +256,7 @@ void GameWorld::onUptade(){
         if(mUser->level() != 3){
            mUser->setLevel(mUser->level() + 1);
         }
-    }
+    }*/
 
 
     collisionEvaluator();
@@ -262,17 +264,17 @@ void GameWorld::onUptade(){
     if(PJ->getJump() == true){
         PJ->parabolicMovement(0.1f);
     }
-    
+    contTimeToGame++;
     //MANEJO DEL TIEMPO DE INVENSIBILIDAD
-    if(invisibilityTime > 0 && contTimeToEndG == 20){
+    if(invisibilityTime > 0 && contTimeToGame*numToTimer >= 1000){
         invisibilityTime--;//Se resta cada 1s sigueindo la misma logica que el if anterior
     }
 
     //MANEJO DEL TIEMPO LIMITE QUE TIENE EL USUARIO PARA GANAR EL NIVEL
-    contTimeToEndG++;// Está hecho para que cambie cada segundo
-    if(contTimeToEndG*numToTimer >= 1000){
-        ui->LCD_TIME->display(timeToEndGame--);
-        contTimeToEndG = 0;//Se reseta la variable contTimeEndG
+    // Está hecho para que cambie cada segundo
+    if(contTimeToGame*numToTimer >= 1000){
+        ui->LCD_TIME->display(timeToGame++);
+        contTimeToGame = 0;//Se reseta la variable contTimeEndG
 
     }
   
