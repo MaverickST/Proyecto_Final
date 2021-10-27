@@ -21,7 +21,7 @@ IDCATC::~IDCATC(){
 
 void IDCATC::openProfileInterfaz(){
     // Se crea y muestra ventana del perfil del usuario
-    Profile = new ProfileUser(*mUser);
+    Profile = new ProfileUser(mUser);
     Profile->show();
 
     // Conexion para el cierre de la ventana del perfil

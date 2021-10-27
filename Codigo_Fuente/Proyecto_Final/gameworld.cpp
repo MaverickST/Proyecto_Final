@@ -13,7 +13,7 @@ GameWorld::GameWorld(string &_nameSpBackground,
     double _velShot, double _masaShot, double _millisecondsToShot,
     double _wExplosion, double _hExplosion,
     string _nameSpBoss, double _RBoss, double _masaBoss, double _LBoss, double _tFinalBoss,
-    User &_User,
+    User *&_User,
     QWidget *parent)
     : QMainWindow(parent),ui(new Ui::GameWorld)
 {
@@ -101,7 +101,7 @@ ui->setupUi(this);
     mTimer = new QTimer;
     srand(time(NULL));
 
-    ui->LCD_LIVES->display(mUser.lives());
+    ui->LCD_LIVES->display(mUser->lives());
     ui->LCD_TIME->display(timeToEndGame);
     ui->LCD_SCORE->display(0);
 
@@ -140,8 +140,8 @@ void GameWorld::collisionEvaluator(){
                 contCollisionsWithObstacle++;
                 if(contCollisionsWithObstacle == 2){
                     //Se resta vida solo cuando colisiona dos veces contra un obstaculo
-                    mUser.setLives(mUser.lives()-1);
-                    ui->LCD_LIVES->display(mUser.lives());
+                    mUser->setLives(mUser->lives()-1);
+                    ui->LCD_LIVES->display(mUser->lives());
                     Explosion *e = new Explosion((PJ)->getPosx(), (PJ)->getPosy(), wExplosion, hExplosion);
                     mScene->addItem(e);
                     mExplosionsWorld.push_back(e);
@@ -156,8 +156,8 @@ void GameWorld::collisionEvaluator(){
             if(EnemyCollision){
                 //Hubo colision con un enemigo
                 //Se resta vida
-                mUser.setLives(mUser.lives()-1);
-                ui->LCD_LIVES->display(mUser.lives());
+                mUser->setLives(mUser->lives()-1);
+                ui->LCD_LIVES->display(mUser->lives());
                 Explosion *e = new Explosion((PJ)->getPosx(), (PJ)->getPosy(), wExplosion, hExplosion);
                 mScene->addItem(e);
                 mExplosionsWorld.push_back(e);
@@ -238,17 +238,17 @@ void GameWorld::onUptade(){
 
     boss->moveBoss(numToTimer);
     //Evaluacion de condicion de Game Over
-    if(mUser.lives() == 0){
+    if(mUser->lives() == 0){
         //El personaje principal se ha quedado sin vidas
         //GameWorld::endGame();
     }else if(timeToEndGame == 0){
         //Se agoto el tiempo para culminar el nivel
         //GameWorld::endGame();
         //Se evia el Score hecho al objeto User
-        mUser.setScore(PJ->getScore());
+        mUser->setScore(PJ->getScore());
         //Se aumenta el nivel si este mismo es diferente de 3
-        if(mUser.level() != 3){
-           mUser.setLevel(mUser.level() + 1);
+        if(mUser->level() != 3){
+           mUser->setLevel(mUser->level() + 1);
         }
     }
 
@@ -530,8 +530,8 @@ void GameWorld::createRectsInvisibles(){
 
     // [spaceToPutDecor + hObst/2, heightScene - 3*hObst/2]
     QGraphicsRectItem *rec;
-    QPen penRect(Qt::blue, 3, Qt::SolidLine,Qt::RoundCap, Qt::RoundJoin);
-    QColor colorRect(Qt::blue);
+    QPen penRect(Qt::transparent, 3, Qt::SolidLine,Qt::RoundCap, Qt::RoundJoin);
+    QColor colorRect(Qt::transparent);
 
     // Que sean pequeños para que no reduzcan mucho el espacio
     int wRects = 5;
