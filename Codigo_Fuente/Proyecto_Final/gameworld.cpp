@@ -12,6 +12,7 @@ GameWorld::GameWorld(string &_nameSpBackground,
     string &_nameSpShot, double _wShot, double _hShot,
     double _velShot, double _masaShot, double _millisecondsToShot,
     double _wExplosion, double _hExplosion,
+    string _nameSpBoss, double _RBoss, double _masaBoss, double _LBoss, double _tFinalBoss,
     User &_User,
     QWidget *parent)
     : QMainWindow(parent),ui(new Ui::GameWorld)
@@ -61,6 +62,11 @@ ui->setupUi(this);
     // Para las explosiones
     wExplosion = _wExplosion, hExplosion = _hExplosion;
 
+    // Para el boss
+    nameSpBoss = _nameSpBoss;
+    RBoss = _RBoss, masaBoss = _masaBoss;
+    LBoss = _LBoss, tFinalBoss = _tFinalBoss;
+
     // Para controlar la generacion de objetos
     contTimeToSpawn = 0;
     timeToSpawn = 200; // son milisegundos
@@ -74,7 +80,6 @@ ui->setupUi(this);
     pixMapBackground = pixMapBackground.scaled(widthScene, heightScene);
     mScene->addPixmap(pixMapBackground);
 
-
     // Se crean rectangulos alrededor del mapa
     createRectsInvisibles();
       
@@ -83,6 +88,14 @@ ui->setupUi(this);
     PJ = new Character (0,0,20,20,60.0f,sprite);
     mScene->addItem(PJ);
 
+    contCollisionsWithObstacle = 0;
+    invisibilityTime = 0;
+
+    // Creacion de un boss para pruebas
+    // (double _R, double _masa, double _L, double _tFinal, bool _level1)
+    boss = new FinalBoss(RBoss, masaBoss, LBoss, tFinalBoss, true, nameSpEnemy,
+                         widthScene, heightScene - hEnemy, spaceToPutDecor + hEnemy);
+    mScene->addItem(boss);
 
     numToTimer = 20;
     mTimer = new QTimer;
@@ -180,9 +193,11 @@ void GameWorld::collisionEvaluator(){
 }
 
 bool GameWorld::collisionWithEnemy(){
+
     for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
         if(PJ->collidesWithItem(*i)){
             qDebug() << "COLISICON CON " << *i << endl;
+
             return true;
         }
     }
@@ -190,9 +205,11 @@ bool GameWorld::collisionWithEnemy(){
 }
 
 bool GameWorld::collisionWithObstacle(){
+
     for(auto it = mObstaclesWorld.begin(); it != mObstaclesWorld.end(); it++){
         if(PJ->collidesWithItem(*it)){
             qDebug() << "COLISICON CON " << *it << endl;
+
             return true;
         }
     }
@@ -200,9 +217,11 @@ bool GameWorld::collisionWithObstacle(){
 }
 
 bool GameWorld::collisionWithLimits(){
+
     for(auto i = mRectsInvisibles.begin(); i != mRectsInvisibles.end(); i++){       
         if(PJ->collidesWithItem(*i)){
             qDebug() << "COLISICON CON " << *i << endl;
+
             return true;
         }
     }
@@ -210,6 +229,8 @@ bool GameWorld::collisionWithLimits(){
 }
 
 void GameWorld::onUptade(){
+
+    boss->moveBoss(numToTimer);
     //Evaluacion de condicion de Game Over
     if(mUser.lives() == 0){
         //El personaje principal se ha quedado sin vidas
@@ -227,7 +248,6 @@ void GameWorld::onUptade(){
 
     collisionEvaluator();
 
-    //Salto con movimiento parabolico
     if(PJ->getJump() == true){
         PJ->parabolicMovement(0.1f);
         beCollides = false;
@@ -248,20 +268,28 @@ void GameWorld::onUptade(){
 //            }
 //        }
 
-//        if (!mScene->collidingItems(*it).isEmpty()) {
-//            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
-//            mScene->addItem(e);
+//                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+//                mScene->addItem(e);
+//                mExplosionsWorld.push_back(e);
+//            }
 //        }
+
 //    }
 
-    //MANEJO DEL TIEMPO DE INVESIBILIDAD
+////        if (!mScene->collidingItems(*it).isEmpty()) {
+////            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+////            mScene->addItem(e);
+////        }
+//    }
+
+    //MANEJO DEL TIEMPO DE INVENSIBILIDAD
     if(invisibilityTime > 0 && contTimeToEndG == 20){
         invisibilityTime--;//Se resta cada 1s sigueindo la misma logica que el if anterior
     }
 
     //MANEJO DEL TIEMPO LIMITE QUE TIENE EL USUARIO PARA GANAR EL NIVEL
     contTimeToEndG++;// Está hecho para que cambie cada segundo
-    if(contTimeToEndG == 20){// 20 porque el startTime es de 50, 20*50 = 1000 = 1s
+    if(contTimeToEndG*numToTimer >= 1000){
         ui->LCD_TIME->display(timeToEndGame--);
         contTimeToEndG = 0;//Se reseta la variable contTimeEndG
     }  
@@ -297,7 +325,7 @@ void GameWorld::onUptade(){
                     mScene->addItem(e);
                     mExplosionsWorld.push_back(e);
                 }
-                PJ->setPosy(0);
+                    PJ->setPosy(0);
                 PJ->setPosx(0);
                 PJ->setPosition();
                 invisibilityTime = 5;
@@ -325,8 +353,9 @@ void GameWorld::onUptade(){
     /** FIN DE EVALUACION DE COLISIONES **/
 
     /*contTimeToSpawn++;
+
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
-        spawnSceneObject();
+//        spawnSceneObject();
         contTimeToSpawn = 0;
         deleteWorldObject();
     }
@@ -545,8 +574,10 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_B){
         ///**************EL PERSONAJE PRINCIPAL DISPARA***************///
         GunShot *bullet;
+
         bullet = new GunShot(PJ->getPosx()+5,PJ->getPosy(),wShot,hShot,velShot,masaShot,nameSpShot);
         mGunShotsWorld.push_back(bullet);
+
     }else if(event->key() == Qt::Key_J && (PJ->getJump() == false)){
         ///**********************SALTO DEL PERSONAJE**********************///
         ///Tecla que realiza el salto (Movimiento Parabolico) del personaje

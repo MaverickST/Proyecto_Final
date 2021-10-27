@@ -35,6 +35,10 @@ class GameWorld : public QMainWindow{
 public:
 //    explicit GameWorld(QWidget *parent = nullptr);
 
+//    double _R, double _masa,
+//                  double _L, double _tFinal, bool _level1 , std::string _nameSpBoss,
+//                  double _widthSpace, double _heightSpace, double _spaceOther)
+
     explicit GameWorld(string &_nameSpBackground,
     string &_nameSpDecor1, double _wDecor1, double _hDecor1,
     string &_nameSpDecor2, double _wDecor2, double _hDecor2,
@@ -46,6 +50,7 @@ public:
     string &_nameSpShot, double _wShot, double _hShot,
     double _velShot, double _masaShot, double _millisecondsToShot,
     double _wExplosion, double _hExplosion,
+    string _nameSpBoss, double _RBoss, double _masaBoss, double _LBoss, double _tFinalBoss,
     User &_User,
     QWidget *parent = nullptr);
 
@@ -122,9 +127,15 @@ private:
     string nameSpShot;
     double wShot, hShot;
     double velShot, masaShot, millisecondsToShot;
+    int contTimeToShot;
 
     // Para las explosiones
     double wExplosion, hExplosion;
+
+    // Para el boss;
+    string nameSpBoss;
+    double RBoss, masaBoss;
+    double LBoss, tFinalBoss;
 
     // Para controlar la generacion de objetos
     int contTimeToSpawn;
@@ -134,8 +145,8 @@ private:
 
     //Atributos para el personaje principal
     Character *PJ;
-    int contCollisionsWithObstacle = 0;
-    int invisibilityTime = 0;
+    int contCollisionsWithObstacle;
+    int invisibilityTime;
 
     bool beCollides = false;
     bool win        = false;

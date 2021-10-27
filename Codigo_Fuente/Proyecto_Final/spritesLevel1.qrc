@@ -7,5 +7,7 @@
         <file>Sprites/cono1.png</file>
         <file>Sprites/carretera5.png</file>
         <file>Sprites/Explosion.png</file>
+        <file>Sprites/bala1.png</file>
+        <file>Sprites/carretera_nivel1.png</file>
     </qresource>
 </RCC>
