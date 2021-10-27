@@ -31,7 +31,7 @@ QRectF Enemy::boundingRect() const
 void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     painter->drawPixmap(-width/2, -height/2, pixMapObj, 0, 0, width, height);
-//    setPos(posx, posy);
+    setPos(posx, posy);
 
     // Dibuja la fuente de la porción rectangular
     // del mapa  de píxeles dado en el objetivo

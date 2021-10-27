@@ -72,7 +72,7 @@ ui->setupUi(this);
     timeToSpawn = 200; // son milisegundos
     posxSpwanAny = widthScene + 60;
 
-    timeToEndGame = 500, contTimeToEndG = 0;
+    timeToGame = 0, contTimeToGame = 0;
 
     // Imagen de fondo
     std::string nameImgBackground = _nameSpBackground;
@@ -102,7 +102,7 @@ ui->setupUi(this);
     srand(time(NULL));
 
     ui->LCD_LIVES->display(mUser->lives());
-    ui->LCD_TIME->display(timeToEndGame);
+    ui->LCD_TIME->display(timeToGame);
     ui->LCD_SCORE->display(0);
 
     connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
@@ -126,8 +126,13 @@ void GameWorld::collisionEvaluator(){
 
     }
     if(PJ->getJump() == false && invisibilityTime == 0){//Otra consision para evaluar colisiones es el tiempo de invensibilidad
+
         //Solo se va a evaluar colisiones cuando el personaje no este saltando
         if(EnemyCollision || ObstacleCollision || LimitsCollision){
+            cout << "Enemy: " << EnemyCollision << endl;
+            cout << "Obstacle: " << ObstacleCollision << endl;
+            cout << "Limits: " << LimitsCollision << endl;
+
             if(LimitsCollision){
                 //Hubo colision con los bloques invisibles, se devuelve al PJ
                 if(PJ->getLastKey() == Qt::Key_A){
@@ -209,7 +214,6 @@ bool GameWorld::collisionWithEnemy(){
 
     for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
         if(PJ->collidesWithItem(*i)){
-
             return true;
         }
     }
@@ -220,7 +224,6 @@ bool GameWorld::collisionWithObstacle(){
 
     for(auto it = mObstaclesWorld.begin(); it != mObstaclesWorld.end(); it++){
         if(PJ->collidesWithItem(*it)){
-
             return true;
         }
     }
@@ -231,7 +234,6 @@ bool GameWorld::collisionWithLimits(){
 
     for(auto i = mRectsInvisibles.begin(); i != mRectsInvisibles.end(); i++){       
         if(PJ->collidesWithItem(*i)){
-
             return true;
         }
     }
@@ -245,35 +247,24 @@ void GameWorld::onUptade(){
     if(mUser->lives() == 0){
         //El personaje principal se ha quedado sin vidas
         //GameWorld::endGame();
-    }else if(timeToEndGame == 0){
-        //Se agoto el tiempo para culminar el nivel
-        //GameWorld::endGame();
-        //Se evia el Score hecho al objeto User
-        mUser->setScore(PJ->getScore());
-        //Se aumenta el nivel si este mismo es diferente de 3
-        if(mUser->level() != 3){
-           mUser->setLevel(mUser->level() + 1);
-        }
     }
-
 
     collisionEvaluator();
 
     if(PJ->getJump() == true){
         PJ->parabolicMovement(0.1f);
     }
-    
+    contTimeToGame++;
     //MANEJO DEL TIEMPO DE INVENSIBILIDAD
-    if(invisibilityTime > 0 && contTimeToEndG == 20){
-        invisibilityTime--;//Se resta cada 1s sigueindo la misma logica que el if anterior
+    if(contTimeToGame*numToTimer >= 1000){
+        invisibilityTime--;//Se resta cada 1s
     }
 
-    //MANEJO DEL TIEMPO LIMITE QUE TIENE EL USUARIO PARA GANAR EL NIVEL
-    contTimeToEndG++;// Está hecho para que cambie cada segundo
-    if(contTimeToEndG*numToTimer >= 1000){
-        ui->LCD_TIME->display(timeToEndGame--);
-        contTimeToEndG = 0;//Se reseta la variable contTimeEndG
-
+    //MANEJO DEL TIEMPO RECORRIDO HASTA EL MOMENTO
+    // Está hecho para que cambie cada segundo
+    if(contTimeToGame*numToTimer >= 1000){
+        ui->LCD_TIME->display(timeToGame++);
+        contTimeToGame = 0;//Se reseta la variable contTimeEndG
     }
   
     contTimeToSpawn++;
@@ -391,7 +382,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mEnemiesWorld.at(i));
             delete mEnemiesWorld.at(i);
             mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
-            break; // Que solo se elimine uno en cada ejecucion.
+//            break; // Que solo se elimine uno en cada ejecucion.
         }
         // Se eliminan los que fueron impactados por un disparo
         // y, cumplido el tiempo para la explosion, se destruye
@@ -409,13 +400,12 @@ void GameWorld::deleteWorldObject()
                                                     wExplosion, hExplosion);
             mScene->addItem(newExplosion);
             mExplosionsWorld.push_back(newExplosion);
-            cout << "Se agrega explosion en enemigo" << __LINE__ << endl;
+            cout << "Se agrega explosion en enemigo: " << __LINE__ << endl;
 
             // Se elimina el enemigo
             mScene->removeItem(mEnemiesWorld.at(i));
             delete mEnemiesWorld.at(i);
             mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
-            break;
         }
     }
     // Eliminacion de los obstaculos que ya estan fuera de la escena
@@ -427,7 +417,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mObstaclesWorld.at(i));
             delete mObstaclesWorld.at(i);
             mObstaclesWorld.erase(mObstaclesWorld.begin() + i);
-            break; // Que solo se elimine uno en cada ejecucion.
+//            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
     // Eliminacion de las decoraciones que estan fuera de la escena
@@ -439,7 +429,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mDecorsWorld.at(i));
             delete mDecorsWorld.at(i);
             mDecorsWorld.erase(mDecorsWorld.begin() + i);
-            break; // Que solo se elimine uno en cada ejecucion.
+//            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
     // Eliminacion de las explosiones
@@ -451,7 +441,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mExplosionsWorld.at(i));
             delete mExplosionsWorld.at(i);
             mExplosionsWorld.erase(mExplosionsWorld.begin() + i);
-            break; // Que solo se elimine uno en cada ejecucion.
+//            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
     // Eliminacion de las balas
@@ -464,7 +454,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mGunShotsWorld.at(i));
             delete mGunShotsWorld.at(i);
             mGunShotsWorld.erase(mGunShotsWorld.begin() + i);
-            break; // Que solo se elimine uno en cada ejecucion.
+//            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
 }
@@ -562,6 +552,7 @@ void GameWorld::createRectsInvisibles(){
                 rec->setBrush(colorRect);
                 rec->setPen(penRect);
 
+                // Se agrega a la escena y a un contenedor de todos estos
                 mScene->addItem(rec);
                 mRectsInvisibles.push_back(rec);
             }
