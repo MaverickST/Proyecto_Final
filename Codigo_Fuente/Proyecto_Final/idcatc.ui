@@ -21,7 +21,7 @@
     <property name="geometry">
      <rect>
       <x>160</x>
-      <y>360</y>
+      <y>370</y>
       <width>201</width>
       <height>31</height>
      </rect>
@@ -34,7 +34,7 @@
     <property name="geometry">
      <rect>
       <x>160</x>
-      <y>270</y>
+      <y>280</y>
       <width>201</width>
       <height>83</height>
      </rect>
@@ -114,8 +114,8 @@
    <widget class="QLabel" name="Label_Status">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>210</y>
+      <x>100</x>
+      <y>250</y>
       <width>321</width>
       <height>20</height>
      </rect>

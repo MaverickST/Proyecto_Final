@@ -12,8 +12,8 @@ Character::Character(double _posx, double _posy, double _width, double
     vel = _velObst;
     nameSpObj = _nameSpObst;
 
-    //pixMapObj.load(nameSpObj.c_str());
-    //pixMapObj = pixMapObj.scaled(width, height);
+    pixMapObj.load(nameSpObj.c_str());
+    pixMapObj = pixMapObj.scaled(width, height);
 }
 
 QRectF Character::boundingRect() const{
@@ -21,10 +21,8 @@ QRectF Character::boundingRect() const{
 }
 
 void Character::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *){
-    //painter->drawPixmap(posx, posy, pixMapObj);
-    painter->setBrush(Qt::blue);
-    painter->drawEllipse(boundingRect());
-    setPos(posx, posy);
+    painter->drawPixmap(-width/2, -height/2, pixMapObj, 0, 0, width, height);
+    setPosition();
 }
 
 void Character::moveCharacter(int keyEventChar){

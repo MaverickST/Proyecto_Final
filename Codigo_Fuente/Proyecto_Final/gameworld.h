@@ -2,6 +2,7 @@
 #define GAMEWORLD_H
 
 #include <QMainWindow>
+#include <QGraphicsItem>
 #include <QTimer>
 #include <QKeyEvent>
 #include <QDebug>
