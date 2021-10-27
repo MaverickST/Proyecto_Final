@@ -78,7 +78,6 @@ ui->setupUi(this);
     pixMapBackground = pixMapBackground.scaled(widthScene, heightScene);
     mScene->addPixmap(pixMapBackground);
 
-
     // Se crean rectangulos alrededor del mapa
     createRectsInvisibles();
       
@@ -87,6 +86,13 @@ ui->setupUi(this);
     PJ = new Character (0,0,20,20,60.0f,sprite);
     mScene->addItem(PJ);
 
+    contCollisionsWithObstacle = 0;
+    invisibilityTime = 0;
+
+    // (double _R, double _masa, double _L, double _tFinal, bool _level1)
+    boss = new FinalBoss(30, 3, 105, 100000, true, nameSpEnemy,
+                         widthScene, heightScene - hEnemy, spaceToPutDecor + hEnemy);
+    mScene->addItem(boss);
 
     numToTimer = 20;
     mTimer = new QTimer;
@@ -102,9 +108,13 @@ ui->setupUi(this);
 }
 
 bool GameWorld::collisionWithEnemy(){
-    for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
-        qDebug() << "Evaluando colision con enemigos" <<__LINE__;
-        if(PJ->collidesWithItem(*i)){
+    for(QList<Enemy *>::iterator it = mEnemiesWorld.begin();
+                 it != mEnemiesWorld.end(); it++){
+//        qDebug() << "Evaluando colision con enemigos" <<__LINE__;
+        if(PJ->collidesWithItem(*it)){
+            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+            mScene->addItem(e);
+            mExplosionsWorld.push_back(e);
             return true;
         }
     }
@@ -113,7 +123,7 @@ bool GameWorld::collisionWithEnemy(){
 
 bool GameWorld::collisionWithObstacle(){
     for(QList<Obstacle *>::iterator it2 = mObstaclesWorld.begin(); it2 != mObstaclesWorld.end(); it2++){
-        qDebug() << "Evaluando colision con Obstaculos" <<__LINE__;
+//        qDebug() << "Evaluando colision con Obstaculos" <<__LINE__;
         if(PJ->collidesWithItem(*it2)){
             return true;
         }
@@ -123,8 +133,9 @@ bool GameWorld::collisionWithObstacle(){
 
 bool GameWorld::collisionWithLimits(){
     for(auto i = mRectsInvisibles.begin(); i != mRectsInvisibles.end(); i++){
-        qDebug() << "Evaluando colision con limites" <<__LINE__;
-        if(PJ->collidesWithItem(*i)){
+//        qDebug() << "Evaluando colision con limites" <<__LINE__;
+        if((PJ)->collidesWithItem(*i)){
+
             return true;
         }
     }
@@ -132,6 +143,8 @@ bool GameWorld::collisionWithLimits(){
 }
 
 void GameWorld::onUptade(){
+
+    boss->moveBoss(numToTimer);
     //Evaluacion de condicion de Game Over
     if(mUser.lives() == 0){
         //El personaje principal se ha quedado sin vidas
@@ -147,43 +160,41 @@ void GameWorld::onUptade(){
         }
     }
 
-
 //    Salto con movimiento parabolico
     if(PJ->getJump() == true){
         PJ->parabolicMovement(0.1f);
         beCollides = false;
-
-    }*/
+    }
     //Fin de evaluacion de colisiones
 
-    for (QList<Enemy *>::iterator it = mEnemiesWorld.begin();
-         it != mEnemiesWorld.end(); it++) {
+//    for (QList<Enemy *>::iterator it = mEnemiesWorld.begin();
+//         it != mEnemiesWorld.end(); it++) {
 
-        for (QList<Obstacle *>::iterator it2 = mObstaclesWorld.begin();
-             it2 != mObstaclesWorld.end(); it2++) {
+//        for (QList<Obstacle *>::iterator it2 = mObstaclesWorld.begin();
+//             it2 != mObstaclesWorld.end(); it2++) {
 
-            if ((*it)->collidesWithItem(*it2)) {
+//            if ((*it)->collidesWithItem(*it2)) {
 
-                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
-                mScene->addItem(e);
-                mExplosionsWorld.push_back(e);
-            }
-        }
-
-//        if (!mScene->collidingItems(*it).isEmpty()) {
-//            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
-//            mScene->addItem(e);
+//                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+//                mScene->addItem(e);
+//                mExplosionsWorld.push_back(e);
+//            }
 //        }
-    }
 
-    //MANEJO DEL TIEMPO DE INVESIBILIDAD
+////        if (!mScene->collidingItems(*it).isEmpty()) {
+////            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
+////            mScene->addItem(e);
+////        }
+//    }
+
+    //MANEJO DEL TIEMPO DE INVENSIBILIDAD
     if(invisibilityTime > 0 && contTimeToEndG == 20){
         invisibilityTime--;//Se resta cada 1s sigueindo la misma logica que el if anterior
     }
 
     //MANEJO DEL TIEMPO LIMITE QUE TIENE EL USUARIO PARA GANAR EL NIVEL
     contTimeToEndG++;// Está hecho para que cambie cada segundo
-    if(contTimeToEndG == 20){// 20 porque el startTime es de 50, 20*50 = 1000 = 1s
+    if(contTimeToEndG*numToTimer >= 1000){
         ui->LCD_TIME->display(timeToEndGame--);
         contTimeToEndG = 0;//Se reseta la variable contTimeEndG
     }  
@@ -219,7 +230,7 @@ void GameWorld::onUptade(){
                     mScene->addItem(e);
                     mExplosionsWorld.push_back(e);
                 }
-                PJ->setPosy(0);
+                    PJ->setPosy(0);
                 PJ->setPosx(0);
                 PJ->setPosition();
                 invisibilityTime = 5;
@@ -246,9 +257,9 @@ void GameWorld::onUptade(){
     bool Enemy    =   collisionWithEnemy();
     bool Obstacle = collisionWithObstacle();
     bool Limits   =  collisionWithLimits();
-    cout << "Enemigos: " << Enemy << endl;
-    cout << "Obstacle: " << Obstacle << endl;
-    cout << "Limit: " << Limits << endl;
+//    cout << "Enemigos: " << Enemy << endl;
+//    cout << "Obstacle: " << Obstacle << endl;
+//    cout << "Limit: " << Limits << endl;
     if(Limits == true){
         cout << "Colision con limites" << endl;
         //Hubo colision con los bloques invisibles, se devuelve al PJ
@@ -275,6 +286,7 @@ void GameWorld::onUptade(){
             Explosion *e = new Explosion((PJ)->getPosx(), (PJ)->getPosy(), wExplosion, hExplosion);
             mScene->addItem(e);
             mExplosionsWorld.push_back(e);
+            contCollisionsWithObstacle = 0;
         }
         PJ->setPosy(0);
         PJ->setPosx(0);
@@ -299,28 +311,9 @@ void GameWorld::onUptade(){
     }
     /** FIN DE EVALUACION DE COLISIONES **/
 
-    for (auto it = mEnemiesWorld.begin();it != mEnemiesWorld.end(); it++) {
-
-        for (auto it2 = mObstaclesWorld.begin();it2 != mObstaclesWorld.end(); it2++) {
-
-            if ((*it)->collidesWithItem(*it2)) {
-
-                Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
-                mScene->addItem(e);
-                mExplosionsWorld.push_back(e);
-            }
-        }
-
-
-        //        if (!mScene->collidingItems(*it).isEmpty()) {
-        //            Explosion *e = new Explosion((*it)->getPosx(), (*it)->getPosy(), wExplosion, hExplosion);
-        //            mScene->addItem(e);
-        //        }
-    }
-
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
-        spawnSceneObject();
+//        spawnSceneObject();
         contTimeToSpawn = 0;
         deleteWorldObject();
     }
@@ -543,6 +536,7 @@ void GameWorld::collisionEvaluator(){
 
             if (mGunShotsWorld.at(i)->collidesWithItem(*it2)) {
 
+//                cout << "Colision bala-enemigo " << endl;
                 // Se aplica modelo fisico
                 // Conservacion del momentum en una colision plástica
                 double newVel;
@@ -558,7 +552,6 @@ void GameWorld::collisionEvaluator(){
             }
         }
     }
-
 }
 
 void GameWorld::keyPressEvent(QKeyEvent *event){
@@ -566,9 +559,11 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_B){
         ///**************EL PERSONAJE PRINCIPAL DISPARA***************///
         GunShot *bullet;
-        bullet = new GunShot(PJ->getPosx()+5,PJ->getPosy()+5,wShot,hShot,velShot,masaShot,nameSpShot);
+        bullet = new GunShot(PJ->getPosx()+10,PJ->getPosy(),wShot,hShot,velShot,masaShot,nameSpShot);
+        mScene->addItem(bullet);
         mGunShotsWorld.push_back(bullet);
-    }else if(event->key() == Qt::Key_Space && (PJ->getJump() == false)){
+
+    }else if(event->key() == Qt::Key_J && (PJ->getJump() == false)){
         ///**********************SALTO DEL PERSONAJE**********************///
         ///Tecla que realiza el salto (Movimiento Parabolico) del personaje
         ///Mientras el persoanje se encuentre en dicho movimiento, no se

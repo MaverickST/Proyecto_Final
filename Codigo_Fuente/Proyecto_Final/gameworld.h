@@ -121,6 +121,7 @@ private:
     string nameSpShot;
     double wShot, hShot;
     double velShot, masaShot, millisecondsToShot;
+    int contTimeToShot;
 
     // Para las explosiones
     double wExplosion, hExplosion;
@@ -133,8 +134,8 @@ private:
 
     //Atributos para el personaje principal
     Character *PJ;
-    int contCollisionsWithObstacle = 0;
-    int invisibilityTime = 0;
+    int contCollisionsWithObstacle;
+    int invisibilityTime;
 
     bool beCollides = false;
     bool win        = false;
