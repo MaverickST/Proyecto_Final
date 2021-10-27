@@ -74,6 +74,7 @@ void Character::parabolicMovement(double dt){
 
         //Se halla la posicion en ambos ejes
         posx += Vx * dt;
+
         posy -= Vy * dt + (G * dt * dt)/2.0f;
 
         setPos(posx , posy);
