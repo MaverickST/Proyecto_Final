@@ -66,8 +66,8 @@ void FinalBoss::moveBoss(int numToTimer)
     double rads = longArc/L;
 
     contTimeToChangeP++;
-    if (t <= timeToNextPhase || t == numToTimer) { // Primera fase
-        if (contTimeToChangeP*numToTimer >= timeToChangePos) {
+    if (t <= timeToNextPhase) { // Primera fase
+        if ((contTimeToChangeP*numToTimer >= timeToChangePos) || (t == numToTimer)) {
             contTimeToChangeP = 0;
 
             // [0.1*widthSpace , 0.4*widthSpace]
@@ -75,7 +75,7 @@ void FinalBoss::moveBoss(int numToTimer)
             // [spaceOther, heightSpace]
             randPosy = rand()%(int(heightSpace - spaceOther + 1)) + spaceOther;
         }
-    }else if (t <= timeToNextPhase*2) {
+    }else if (t <= timeToNextPhase*2) { // Segunda fase
         if (contTimeToChangeP*numToTimer >= timeToChangePos) {
             contTimeToChangeP = 0;
 
@@ -84,7 +84,7 @@ void FinalBoss::moveBoss(int numToTimer)
             // [spaceOther, heightSpace]
             randPosy = rand()%(int(heightSpace - spaceOther + 1)) + spaceOther;
         }
-    }else if (t <= timeToNextPhase*3) {
+    }else if (t <= timeToNextPhase*3) { // Tercera fase
         if (contTimeToChangeP*numToTimer >= timeToChangePos) {
             contTimeToChangeP = 0;
 

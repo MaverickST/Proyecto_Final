@@ -145,6 +145,10 @@ void ProfileUser::startGameLevel1(){
 
     double _wExplosion = 80, _hExplosion = 80;
 
+    string _nameSpBoss = "";
+    double _RBoss = 30, _masaBoss = 3;
+    double _LBoss = 105, _tFinalBoss = 100000; // 100 segundos, undidades -> millisegundos
+
     qDebug() << "Aqui no" <<__LINE__;
 
     Game = new GameWorld(_nameSpBackground,
@@ -155,6 +159,7 @@ void ProfileUser::startGameLevel1(){
     _nameSpObstacle, _wObstacle, _hObstacle, _velObstacle, _probSpawnObst,
     _nameSpShot, _wShot, _hShot, _velshot, _masaShot, _millisecondsToShot,
     _wExplosion, _hExplosion, 
+    _nameSpBoss, _RBoss, _masaBoss, _LBoss, _tFinalBoss,
     mUser);
 
     Game->show();

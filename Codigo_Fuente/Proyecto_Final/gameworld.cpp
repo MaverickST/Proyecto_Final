@@ -16,6 +16,7 @@ GameWorld::GameWorld(string &_nameSpBackground,
     string &_nameSpShot, double _wShot, double _hShot,
     double _velShot, double _masaShot, double _millisecondsToShot,
     double _wExplosion, double _hExplosion,
+    string _nameSpBoss, double _RBoss, double _masaBoss, double _LBoss, double _tFinalBoss,
     User &_User,
     QWidget *parent)
     : QMainWindow(parent),ui(new Ui::GameWorld)
@@ -65,6 +66,11 @@ ui->setupUi(this);
     // Para las explosiones
     wExplosion = _wExplosion, hExplosion = _hExplosion;
 
+    // Para el boss
+    nameSpBoss = _nameSpBoss;
+    RBoss = _RBoss, masaBoss = _masaBoss;
+    LBoss = _LBoss, tFinalBoss = _tFinalBoss;
+
     // Para controlar la generacion de objetos
     contTimeToSpawn = 0;
     timeToSpawn = 200; // son milisegundos
@@ -89,8 +95,9 @@ ui->setupUi(this);
     contCollisionsWithObstacle = 0;
     invisibilityTime = 0;
 
+    // Creacion de un boss para pruebas
     // (double _R, double _masa, double _L, double _tFinal, bool _level1)
-    boss = new FinalBoss(30, 3, 105, 100000, true, nameSpEnemy,
+    boss = new FinalBoss(RBoss, masaBoss, LBoss, tFinalBoss, true, nameSpEnemy,
                          widthScene, heightScene - hEnemy, spaceToPutDecor + hEnemy);
     mScene->addItem(boss);
 
