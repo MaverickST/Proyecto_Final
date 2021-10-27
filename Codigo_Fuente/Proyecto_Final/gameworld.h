@@ -9,6 +9,7 @@
 #include <QPixmap>
 #include <time.h>
 #include <fstream>
+#include <qiterator.h>
 //#include <QMediaPlayer>
 
 #include "character.h"
@@ -138,6 +139,9 @@ private:
 
     bool beCollides = false;
     bool win        = false;
+    bool EnemyCollision;
+    bool ObstacleCollision;
+    bool LimitsCollision;
 
     int level;
 

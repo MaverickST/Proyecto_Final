@@ -2,7 +2,6 @@
 #define FINALBOSS_H
 
 #define Lamb 0.02
-#define E  2.7182818285
 
 #include "worldobject.h"
 
@@ -48,7 +47,7 @@ private:
     double Phi; // Angulo inicial en radianes
     double t; // Tiempo
     double longArc; // Longitud de arco -> x(t)
-
+    double E = 2.7182818285;
 };
 
 #endif // FINALBOSS_H
