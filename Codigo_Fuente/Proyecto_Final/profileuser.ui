@@ -75,50 +75,24 @@
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pB_StartLevel1">
+   <widget class="QPushButton" name="pB_StartLevel">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>150</y>
+      <x>530</x>
+      <y>180</y>
       <width>158</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Level 1</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pB_StartLevel2">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>190</y>
-      <width>158</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Level 2</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pB_StartLevel3">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>230</y>
-      <width>158</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Level 3</string>
+     <string>PLAY</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>110</y>
+      <x>580</x>
+      <y>140</y>
       <width>31</width>
       <height>16</height>
      </rect>
@@ -130,47 +104,21 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>150</y>
+      <x>80</x>
+      <y>180</y>
       <width>161</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Level #1: It's just the beginning.</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>190</y>
-      <width>161</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Level #2: You almost got it.</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>230</y>
-      <width>161</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Level #3: Good Job.</string>
+     <string>Infinite level</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>110</y>
+      <x>360</x>
+      <y>140</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -182,8 +130,8 @@
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>110</y>
+      <x>140</x>
+      <y>140</y>
       <width>31</width>
       <height>16</height>
      </rect>
@@ -192,38 +140,12 @@
      <string>LEVEL</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Label_Score1">
+   <widget class="QLabel" name="Label_Score">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>150</y>
-      <width>171</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="Label_Score2">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
+      <x>300</x>
       <y>180</y>
       <width>171</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="Label_Score3">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>220</y>
-      <width>161</width>
       <height>20</height>
      </rect>
     </property>
