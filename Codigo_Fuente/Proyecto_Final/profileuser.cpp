@@ -17,25 +17,6 @@ ProfileUser::ProfileUser(User *&_User,QWidget *parent): QMainWindow(parent),ui(n
     connect(ui->pB_closeProfile, &QPushButton::clicked, this, &ProfileUser::closeWindowProfile);
 }
 
-/*ProfileUser::ProfileUser(string username, string password, int level, int lives, int score1,
- * int score2, int score3,QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
-
-
-    //Inicializacion de atributos de usuario
-    mUsername         = username;
-    mPassword         = password;
-    mLevel            =    level;
-    mLives            =    lives;
-    mScoreFirstLevel  =   score1;
-    mScoreSecondLevel =   score2;
-    mScoreThirdLevel  =   score3;
-
-    showInformation();
-
-    connect(ui->pB_StartLevel1, &QPushButton::clicked, this, &ProfileUser::startGameLevel1);
-    connect(ui->pB_closeProfile, &QPushButton::clicked, this, &ProfileUser::closeWindowProfile);
-}*/
-
 ProfileUser::~ProfileUser(){
     delete ui;
 }

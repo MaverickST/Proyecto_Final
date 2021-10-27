@@ -125,23 +125,26 @@ void GameWorld::collisionEvaluator(){
     if (PJ2 != nullptr) {
 
     }
+    if(LimitsCollision){
+        //Hubo colision con los bloques invisibles, se devuelve al PJ
+        if(PJ->getLastKey() == Qt::Key_A){
+            PJ->setPosx(PJ->getPosx() + 5);
+        }else if(PJ->getLastKey() == Qt::Key_D){
+            PJ->setPosx(PJ->getPosx() - 5);
+        }else if(PJ->getLastKey() == Qt::Key_S){
+            PJ->setPosy(PJ->getPosy() - 5);
+        }else if(PJ->getLastKey() == Qt::Key_W){
+            PJ->setPosy(PJ->getPosy() + 5);
+        }
+        PJ->setPosition();
+        beCollides = true;
+    }else{
+        beCollides = false;
+    }
+
     if(PJ->getJump() == false && invisibilityTime == 0){//Otra consision para evaluar colisiones es el tiempo de invensibilidad
         //Solo se va a evaluar colisiones cuando el personaje no este saltando
-        if(EnemyCollision || ObstacleCollision || LimitsCollision){
-            if(LimitsCollision){
-                //Hubo colision con los bloques invisibles, se devuelve al PJ
-                if(PJ->getLastKey() == Qt::Key_A){
-                    PJ->setPosx(PJ->getPosx() + 5);
-                }else if(PJ->getLastKey() == Qt::Key_D){
-                    PJ->setPosx(PJ->getPosx() - 5);
-                }else if(PJ->getLastKey() == Qt::Key_S){
-                    PJ->setPosy(PJ->getPosy() - 5);
-                }else if(PJ->getLastKey() == Qt::Key_W){
-                    PJ->setPosy(PJ->getPosy() + 5);
-                }
-                PJ->setPosition();
-                beCollides = true;
-            }
+        if(EnemyCollision || ObstacleCollision){
             if(ObstacleCollision){
                 //Hubo colision con un obstaculo
                 contCollisionsWithObstacle++;
