@@ -196,7 +196,7 @@ bool GameWorld::collisionWithEnemy(){
 
     for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
         if(PJ->collidesWithItem(*i)){
-            qDebug() << "COLISICON CON " << *i << endl;
+            qDebug() << "COLISICON CON " << *i;
 
             return true;
         }
@@ -208,7 +208,7 @@ bool GameWorld::collisionWithObstacle(){
 
     for(auto it = mObstaclesWorld.begin(); it != mObstaclesWorld.end(); it++){
         if(PJ->collidesWithItem(*it)){
-            qDebug() << "COLISICON CON " << *it << endl;
+            qDebug() << "COLISICON CON " << *it;
 
             return true;
         }
@@ -220,7 +220,7 @@ bool GameWorld::collisionWithLimits(){
 
     for(auto i = mRectsInvisibles.begin(); i != mRectsInvisibles.end(); i++){       
         if(PJ->collidesWithItem(*i)){
-            qDebug() << "COLISICON CON " << *i << endl;
+            qDebug() << "COLISICON CON " << *i;
 
             return true;
         }
@@ -352,15 +352,15 @@ void GameWorld::onUptade(){
 
     /** FIN DE EVALUACION DE COLISIONES **/
 
-    /*contTimeToSpawn++;
+    contTimeToSpawn++;
 
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
-//        spawnSceneObject();
+        spawnSceneObject();
         contTimeToSpawn = 0;
         deleteWorldObject();
     }
     // Se mueven todos los objetos de la escena
-    moveWorldObjects();*/
+    moveWorldObjects();
 }
 
 void GameWorld::spawnSceneObject(){
@@ -576,6 +576,7 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
         GunShot *bullet;
 
         bullet = new GunShot(PJ->getPosx()+5,PJ->getPosy(),wShot,hShot,velShot,masaShot,nameSpShot);
+        mScene->addItem(bullet);
         mGunShotsWorld.push_back(bullet);
 
     }else if(event->key() == Qt::Key_J && (PJ->getJump() == false)){
