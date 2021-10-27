@@ -25,12 +25,12 @@ Enemy::Enemy(double _posx, double _posy, double _width, double _height,
 
 QRectF Enemy::boundingRect() const
 {
-    return QRectF (-width/2, height/2, width, height);
+    return QRectF (-width/2, -height/2, width, height);
 }
 
 void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->drawPixmap(-width/2, height/2, pixMapObj, 0, 0, width, height);
+    painter->drawPixmap(-width/2, -height/2, pixMapObj, 0, 0, width, height);
 //    setPos(posx, posy);
 
     // Dibuja la fuente de la porción rectangular

@@ -52,7 +52,7 @@ public:
     double _velShot, double _masaShot, double _millisecondsToShot,
     double _wExplosion, double _hExplosion,
     string _nameSpBoss, double _RBoss, double _masaBoss, double _LBoss, double _tFinalBoss,
-    User &_User,
+    User *&_User,
     QWidget *parent = nullptr);
 
 
@@ -88,7 +88,7 @@ private:
     FinalBoss *boss;
 
     //Objeto user
-    User mUser;
+    User *mUser;
 
     // Contenedores
     QList<Decoration *> mDecorsWorld;
@@ -146,6 +146,7 @@ private:
 
     //Atributos para el personaje principal
     Character *PJ;
+    Character *PJ2 = nullptr;
     int contCollisionsWithObstacle;
     int invisibilityTime;
 
