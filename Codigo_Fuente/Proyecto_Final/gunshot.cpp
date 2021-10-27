@@ -21,7 +21,7 @@ GunShot::GunShot(double _posx, double _posy, double _width, double _height,
 
 QRectF GunShot::boundingRect() const
 {
-    return QRectF (-width/2, height/2, width, height);
+    return QRectF (-width/2, -height/2, width, height);
 }
 
 void GunShot::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

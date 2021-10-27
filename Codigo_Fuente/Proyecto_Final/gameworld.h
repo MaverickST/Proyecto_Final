@@ -146,6 +146,7 @@ private:
 
     //Atributos para el personaje principal
     Character *PJ;
+    Character *PJ2 = nullptr;
     int contCollisionsWithObstacle;
     int invisibilityTime;
 

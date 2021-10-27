@@ -132,16 +132,16 @@ void ProfileUser::startGameLevel1(){
 
     string _nameSpEnemy = ":/Sprites/auto4.png";
     double _wEnemy = 50, _hEnemy = 30;
-    double _velEnemy = -8, _probSpawnEnemy = 200;
+    double _velEnemy = -8, _probSpawnEnemy = 400;
     double _masaEnemy = 140;
 
     string _nameSpObstacle = ":/Sprites/cono1.png";
     double _wObstacle = 20, _hObstacle = 20;
-    double _velObstacle = -3, _probSpawnObst = 400;
+    double _velObstacle = -3, _probSpawnObst = 200;
 
     string _nameSpShot = ":/Sprites/bala1.png";
     double _wShot = 50, _hShot = 50;
-    double _velshot = 12,_masaShot = 2, _millisecondsToShot = 10000;
+    double _velshot = 12,_masaShot = 100, _millisecondsToShot = 10000;
 
     double _wExplosion = 80, _hExplosion = 80;
 
@@ -161,6 +161,8 @@ void ProfileUser::startGameLevel1(){
     _wExplosion, _hExplosion, 
     _nameSpBoss, _RBoss, _masaBoss, _LBoss, _tFinalBoss,
     mUser);
+
+
 
     Game->show();
 
