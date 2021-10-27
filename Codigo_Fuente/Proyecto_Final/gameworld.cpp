@@ -133,6 +133,7 @@ void GameWorld::collisionEvaluator(){
                     PJ->setPosy(PJ->getPosy() + 5);
                 }
                 PJ->setPosition();
+                beCollides = true;
             }
             if(ObstacleCollision){
                 //Hubo colision con un obstaculo
@@ -144,11 +145,13 @@ void GameWorld::collisionEvaluator(){
                     Explosion *e = new Explosion((PJ)->getPosx(), (PJ)->getPosy(), wExplosion, hExplosion);
                     mScene->addItem(e);
                     mExplosionsWorld.push_back(e);
+                    contCollisionsWithObstacle = 0;
                 }
                 PJ->setPosy((heightScene - spaceToPutDecor)/2);
                 PJ->setPosx((50+20)/2);
                 PJ->setPosition();
                 invisibilityTime = 5;
+                beCollides = false;
             }
             if(EnemyCollision){
                 //Hubo colision con un enemigo
@@ -162,8 +165,8 @@ void GameWorld::collisionEvaluator(){
                 PJ->setPosx((50+20)/2);
                 PJ->setPosition();
                 invisibilityTime = 5;
-            }
-            beCollides = true;
+                beCollides = false;
+            }           
         }else{
             beCollides = false;
         }
@@ -268,7 +271,7 @@ void GameWorld::onUptade(){
         contTimeToEndG = 0;//Se reseta la variable contTimeEndG
     }
   
-    contTimeToSpawn++
+    contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
       spawnSceneObject();
       contTimeToSpawn = 0;
