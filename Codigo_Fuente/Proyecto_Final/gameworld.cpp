@@ -101,6 +101,8 @@ ui->setupUi(this);
     mTimer = new QTimer;
     srand(time(NULL));
 
+
+
     ui->LCD_LIVES->display(mUser->lives());
     ui->LCD_TIME->display(timeToGame);
     ui->LCD_SCORE->display(0);
@@ -247,7 +249,20 @@ void GameWorld::onUptade(){
     if(mUser->lives() == 0){
         //El personaje principal se ha quedado sin vidas
         //GameWorld::endGame();
+<<<<<<< HEAD
     }
+=======
+    }/*else if(timeToGame == 0){
+        //Se agoto el tiempo para culminar el nivel
+        //GameWorld::endGame();
+        //Se evia el Score hecho al objeto User
+        mUser->setScore(PJ->getScore());
+        //Se aumenta el nivel si este mismo es diferente de 3
+        if(mUser->level() != 3){
+           mUser->setLevel(mUser->level() + 1);
+        }
+    }*/
+>>>>>>> origin/master
 
     collisionEvaluator();
 
@@ -256,15 +271,27 @@ void GameWorld::onUptade(){
     }
     contTimeToGame++;
     //MANEJO DEL TIEMPO DE INVENSIBILIDAD
+<<<<<<< HEAD
     if(contTimeToGame*numToTimer >= 1000){
         invisibilityTime--;//Se resta cada 1s
     }
 
     //MANEJO DEL TIEMPO RECORRIDO HASTA EL MOMENTO
+=======
+    if(invisibilityTime > 0 && contTimeToGame*numToTimer >= 1000){
+        invisibilityTime--;//Se resta cada 1s sigueindo la misma logica que el if anterior
+    }
+
+    //MANEJO DEL TIEMPO LIMITE QUE TIENE EL USUARIO PARA GANAR EL NIVEL
+>>>>>>> origin/master
     // Está hecho para que cambie cada segundo
     if(contTimeToGame*numToTimer >= 1000){
         ui->LCD_TIME->display(timeToGame++);
         contTimeToGame = 0;//Se reseta la variable contTimeEndG
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
     }
   
     contTimeToSpawn++;
