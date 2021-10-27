@@ -71,12 +71,13 @@ void Character::calculateInitialVelocity(){
 }
 
 void Character::parabolicMovement(double dt){
-    if(posy >= lastPosy){
+    if(posy <= lastPosy){
         Vy += G * dt;
 
         //Se halla la posicion en ambos ejes
         posx += Vx * dt;
-        posy += Vy * dt - (G * dt * dt)/2.0f;
+
+        posy -= Vy * dt + (G * dt * dt)/2.0f;
 
         setPos(posx , posy);
         setPixmap(pixMapObj);
