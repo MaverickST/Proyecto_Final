@@ -273,7 +273,7 @@ void GameWorld::onUptade(){
         cout << __LINE__ << endl;
     }
 
-    // APARICION DEL BOSS CADA CIERTO TIEMPO
+    // APARICION DEL BOSS CADA CIERTO TIEMPO ( 2/3 de timeToChangeWorld)
 
     // El residuo nos da el tiempo que ha pasado despues de un cambio de mundo
     // Por lógica se deduce:
@@ -283,7 +283,7 @@ void GameWorld::onUptade(){
 
     if ((timeToChangeWorld*1000 - timeLaterOfChangeWorld == tFinalBoss) && (contTimeToGame == 0)) {
         // Se genera un nuevo boss
-        Boss = new FinalBoss(RBoss, masaBoss, LBoss, tFinalBoss, tToChangePosBoss, nameSpEnemy,
+        Boss = new FinalBoss(RBoss, masaBoss, LBoss, tFinalBoss, tToChangePosBoss, nameSpBoss,
                              widthScene, heightScene - hEnemy, spaceToPutDecor + hEnemy);
         mScene->addItem(Boss);
     }
