@@ -1,24 +1,15 @@
 #include "gameworld.h"
 #include "ui_gameworld.h"
 
-GameWorld::GameWorld(string &_nameSpBackground,
-    string &_nameSpDecor1, double _wDecor1, double _hDecor1,
-    string &_nameSpDecor2, double _wDecor2, double _hDecor2,
-    double _velDecor, double _probSpawnDecor,
-    string &_nameSpEnemy, double _wEnemy, double _hEnemy,
-    double _velEnemy, double _masaEnemy, double _probSpawnEnemy,
-    string &_nameSpObstacle, double _wObstacle, double _hObstacle,
-    double _velObstacle, double _probSpawnObst,
-    string &_nameSpShot, double _wShot, double _hShot,
-    double _velShot, double _masaShot, double _millisecondsToShot,
-    double _wExplosion, double _hExplosion,
-    string _nameSpBoss, double _RBoss, double _masaBoss, double _LBoss, double _tFinalBoss,
+GameWorld::GameWorld(QMap<string, string> &_mSpritesWorld,
+    QMap<string, double> &_mObjectsValues, int _timeToChangeWorld, bool _multiPlayer,
     User *&_User,
     QWidget *parent)
     : QMainWindow(parent),ui(new Ui::GameWorld)
 {
 ui->setupUi(this);
     // Inicializacion del constructor sobrecargado, solo un poco sobrecargado...
+
 
     // Dimesiones de la escena
     widthScene = ui->graphicsView->width() - 5;
@@ -32,59 +23,32 @@ ui->setupUi(this);
     //Inicualizacion objeto User
     mUser = _User;
 
-    // Atributos para las decoraciones
-    nameSpDecor1 = _nameSpDecor1;
-    wDecor1 = _wDecor1, hDecor1 = _hDecor1;
+    // Contenedores de todos los datos
+    mObjectsValues = _mObjectsValues;
+    mSpritesWorld = _mSpritesWorld;
 
-    nameSpDecor2 = _nameSpDecor2;
-    wDecor2 = _wDecor2, hDecor2 = _hDecor2;
-    velDecor = _velDecor;
-    probSpawnDecor = _probSpawnDecor;
-    // Espacio hábil para poner las decoraciones. Van en la parte superior.
-    spaceToPutDecor = (hDecor1 > hDecor2 )? hDecor1*2 + 5 : hDecor2*2 + 5;
+    // Inicializacion de todos los atributos
+    partWorld_1 = true; // Para saber si es la parte 1 o 2 del mundo
+    assingAttributeValues();
 
-    // Atributos para los enemigos
-    nameSpEnemy = _nameSpEnemy;
-    wEnemy = _wEnemy, hEnemy = _hEnemy;
-    velEnemy = _velEnemy, probSpawnEnemy = _probSpawnEnemy;
-    masaEnemy = _masaEnemy;
-
-    // Para los obstaculos
-    nameSpObstacle = _nameSpObstacle;
-    wObstacle = _wObstacle, hObstacle = _hObstacle;
-    velObstacle = _velObstacle, probSpawnObst = _probSpawnObst;
-
-    // Para los disparos
-    nameSpShot = _nameSpShot;
-    wShot = _wShot, hShot = _hShot;
-    velShot = _velShot, masaShot = _masaShot, millisecondsToShot = _millisecondsToShot;
-
-    // Para las explosiones
-    wExplosion = _wExplosion, hExplosion = _hExplosion;
-
-    // Para el boss
-    nameSpBoss = _nameSpBoss;
-    RBoss = _RBoss, masaBoss = _masaBoss;
-    LBoss = _LBoss, tFinalBoss = _tFinalBoss;
+    // Otros atributos
+    timeToChangeWorld = _timeToChangeWorld;
+    multiPlayer = _multiPlayer;
 
     // Para controlar la generacion de objetos
     contTimeToSpawn = 0;
     timeToSpawn = 200; // son milisegundos
     posxSpwanAny = widthScene + 60;
 
+    // Para controlar el tiempo del juego
     timeToGame = 0, contTimeToGame = 0;
 
-    // Imagen de fondo
-    std::string nameImgBackground = _nameSpBackground;
-    QPixmap pixMapBackground(nameImgBackground.c_str());
-    pixMapBackground = pixMapBackground.scaled(widthScene, heightScene);
-    mScene->addPixmap(pixMapBackground);
 
     // Se crean rectangulos alrededor del mapa
     createRectsInvisibles();
 
     //Inicializacion del personaje principal
-    std::string sprite = "../Proyecto_Final/Sprites/auto1.png";
+    string sprite = "../Proyecto_Final/Sprites/auto1.png";
     PJ = new Character ((50+20)/2,(heightScene - spaceToPutDecor)/2,50,30,60.0f,sprite);
     mScene->addItem(PJ);
 
@@ -100,8 +64,6 @@ ui->setupUi(this);
     numToTimer = 20;
     mTimer = new QTimer;
     srand(time(NULL));
-
-
 
     ui->LCD_LIVES->display(mUser->lives());
     ui->LCD_TIME->display(timeToGame);
@@ -179,6 +141,7 @@ void GameWorld::collisionEvaluator(){
                     PJ->setPosition();
                     invisibilityTime = 5;
                     beCollides = false;
+
                 }
                 if(EnemyCollision){
                     //Hubo colision con un enemigo
@@ -265,16 +228,7 @@ void GameWorld::onUptade(){
     if(mUser->lives() == 0){
         //El personaje principal se ha quedado sin vidas
         //GameWorld::endGame();
-    }/*else if(timeToGame == 0){
-        //Se agoto el tiempo para culminar el nivel
-        //GameWorld::endGame();
-        //Se evia el Score hecho al objeto User
-        mUser->setScore(PJ->getScore());
-        //Se aumenta el nivel si este mismo es diferente de 3
-        if(mUser->level() != 3){
-           mUser->setLevel(mUser->level() + 1);
-        }
-    }*/
+    }
 
 
     collisionEvaluator();
@@ -284,16 +238,17 @@ void GameWorld::onUptade(){
     }
     contTimeToGame++;
     //MANEJO DEL TIEMPO DE INVENSIBILIDAD
+
     if(invisibilityTime > 0 && contTimeToGame*numToTimer >= 1000){
         invisibilityTime--;//Se resta cada 1s sigueindo la misma logica que el if anterior
     }
 
     //MANEJO DEL TIEMPO LIMITE QUE TIENE EL USUARIO PARA GANAR EL NIVEL
+
     // Está hecho para que cambie cada segundo
     if(contTimeToGame*numToTimer >= 1000){
         ui->LCD_TIME->display(timeToGame++);
         contTimeToGame = 0;//Se reseta la variable contTimeEndG
-
     }
   
     contTimeToSpawn++;
@@ -411,7 +366,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mEnemiesWorld.at(i));
             delete mEnemiesWorld.at(i);
             mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
-            break; // Que solo se elimine uno en cada ejecucion.
+//            break; // Que solo se elimine uno en cada ejecucion.
         }
         // Se eliminan los que fueron impactados por un disparo
         // y, cumplido el tiempo para la explosion, se destruye
@@ -429,13 +384,12 @@ void GameWorld::deleteWorldObject()
                                                     wExplosion, hExplosion);
             mScene->addItem(newExplosion);
             mExplosionsWorld.push_back(newExplosion);
-            cout << "Se agrega explosion en enemigo" << __LINE__ << endl;
+            cout << "Se agrega explosion en enemigo: " << __LINE__ << endl;
 
             // Se elimina el enemigo
             mScene->removeItem(mEnemiesWorld.at(i));
             delete mEnemiesWorld.at(i);
             mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
-            break;
         }
     }
     // Eliminacion de los obstaculos que ya estan fuera de la escena
@@ -447,7 +401,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mObstaclesWorld.at(i));
             delete mObstaclesWorld.at(i);
             mObstaclesWorld.erase(mObstaclesWorld.begin() + i);
-            break; // Que solo se elimine uno en cada ejecucion.
+//            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
     // Eliminacion de las decoraciones que estan fuera de la escena
@@ -459,7 +413,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mDecorsWorld.at(i));
             delete mDecorsWorld.at(i);
             mDecorsWorld.erase(mDecorsWorld.begin() + i);
-            break; // Que solo se elimine uno en cada ejecucion.
+//            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
     // Eliminacion de las explosiones
@@ -471,7 +425,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mExplosionsWorld.at(i));
             delete mExplosionsWorld.at(i);
             mExplosionsWorld.erase(mExplosionsWorld.begin() + i);
-            break; // Que solo se elimine uno en cada ejecucion.
+//            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
     // Eliminacion de las balas
@@ -484,7 +438,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mGunShotsWorld.at(i));
             delete mGunShotsWorld.at(i);
             mGunShotsWorld.erase(mGunShotsWorld.begin() + i);
-            break; // Que solo se elimine uno en cada ejecucion.
+//            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
 }
@@ -582,10 +536,102 @@ void GameWorld::createRectsInvisibles(){
                 rec->setBrush(colorRect);
                 rec->setPen(penRect);
 
+                // Se agrega a la escena y a un contenedor de todos estos
                 mScene->addItem(rec);
                 mRectsInvisibles.push_back(rec);
             }
         }
     }
+}
+
+
+void GameWorld::assingAttributeValues()
+{
+    // Atributos para las decoraciones
+
+    // Decoraciones tipo 1
+    wDecor1 = mObjectsValues["wDecor1"];
+    hDecor1 = mObjectsValues["hDecor1"];
+
+    // Decoraciones tipo 2
+    wDecor2 = mObjectsValues["wDecor2"];
+    hDecor2 = mObjectsValues["hDecor2"];
+
+    velDecor = mObjectsValues["velDecor"];
+    probSpawnDecor = mObjectsValues["probSpawnDecor"];
+    // Espacio hábil para poner las decoraciones. Van en la parte superior.
+    spaceToPutDecor = (hDecor1 > hDecor2 )? hDecor1*2 + 5 : hDecor2*2 + 5;
+
+    // Atributos para los enemigos
+    wEnemy = mObjectsValues["wEnemy"];
+    hEnemy = mObjectsValues["hEnemy"];
+    velEnemy = mObjectsValues["velEnemy"];
+    probSpawnEnemy = mObjectsValues["probSpawnEnemy"];
+    masaEnemy = mObjectsValues["masaEnemy"];
+
+    // Para los obstaculos
+    wObstacle = mObjectsValues["wObstacle"];
+    hObstacle = mObjectsValues["hObstacle"];
+    velObstacle = mObjectsValues["velObstacle"];
+    probSpawnObst = mObjectsValues["probSpawnObst"];
+
+    // Para los disparos
+    wShot = mObjectsValues["wShot"];
+    hShot = mObjectsValues["hShot"];
+    velShot = mObjectsValues["velShot"];
+    masaShot = mObjectsValues["masaShot"];
+    timeToShot = mObjectsValues["timeToShot"];
+
+    // Para las explosiones
+    wExplosion = mObjectsValues["wExplosion"];
+    hExplosion = mObjectsValues["hExplosion"];
+
+    // Para el boss
+    RBoss = mObjectsValues["RBoss"];
+    masaBoss = mObjectsValues["masaBoss"];
+    LBoss = mObjectsValues["LBoss"];
+    tFinalBoss = mObjectsValues["tFinalBoss"];
+
+    // Cambio en los sprites de los objetos
+
+    if (partWorld_1) { // Para la parte 1 del mundo
+        // Fondo
+        nameSpBackground = mSpritesWorld["nameSpBackground_1"];
+        // Decoraciones
+        nameSpDecor1 = mSpritesWorld["nameSpDecor1_1"];
+        nameSpDecor2 = mSpritesWorld["nameSpDecor2_1"];
+
+        // Enemigos
+        nameSpEnemy = mSpritesWorld["nameSpEnemy_1"];
+        // Obstaculos
+        nameSpObstacle = mSpritesWorld["nameSpObstacle_1"];
+        // Disparo
+        nameSpShot = mSpritesWorld["nameSpShot_1"];
+        // Boss
+        nameSpBoss = mSpritesWorld["nameSpBoss_1"];
+
+    }else {// Para la parte 2 del mundo
+        // Fondo
+        nameSpBackground = mSpritesWorld["nameSpBackground_2"];
+        // Decoraciones
+        nameSpDecor1 = mSpritesWorld["nameSpDecor1_2"];
+        nameSpDecor2 = mSpritesWorld["nameSpDecor2_2"];
+
+        // Enemigos
+        nameSpEnemy = mSpritesWorld["nameSpEnemy_2"];
+        // Obstaculos
+        nameSpObstacle = mSpritesWorld["nameSpObstacle_2"];
+        // Disparo
+        nameSpShot = mSpritesWorld["nameSpShot_2"];
+        // Boss
+        nameSpBoss = mSpritesWorld["nameSpBoss_2"];
+    }
+    // Se agrega el fondo
+    pixMapBackground.load(nameSpBackground.c_str());
+    pixMapBackground = pixMapBackground.scaled(widthScene + 5, heightScene + 5);
+    mScene->addPixmap(pixMapBackground);
 
 }
+
+
+

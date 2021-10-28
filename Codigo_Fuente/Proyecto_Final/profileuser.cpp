@@ -81,56 +81,69 @@ void ProfileUser::updateUsers(){
 
 void ProfileUser::startGameLevel1(){
     // Se crea y muestra la partida, el mundo, ya jugar se ha dicho
-    // Variables del nivel 1
     string strPath = "../Proyecto_final/:Sprites/";
+//    User *mUser2 = nullptr;
 
-    string _nameSpBackground = ":/Sprites/carretera_nivel1.png";
+    // Hay un cambio de mundo cada 3 minutos (180s * 1000ms = 180000ms)
+    int timeToChangeWorld = 180000;
+    // Para indicar si es multijugador o no
+    bool multiPlayer = false;
 
-    string _nameSpDecor1 = ":/Sprites/arbol1.png";
-    double _wDecor1 = 50,_hDecor1 = 60;
-    string _nameSpDecor2 = ":/Sprites/arbusto3.png";
-    double _wDecor2 = 30,_hDecor2 = 30;
-    double _velDecor = -3, _probSpawnDecor = 200;
+    // Este contenedor almacena todos los valores de todos lo objetos del juego
+    // Serían: dimensiones, probabilidades, velocidades, masas,...
+    QMap<string, double> objectsValues{
+        // Decoraciones
+        {"wDecor1" , 50}, {"hDecor1", 60},
+        {"wDecor2", 30}, {"hDecor2", 30},
+        {"velDecor", -3}, {"probSpawnDecor", 200},
+        // Enemigos
+        {"wEnemy", 50}, {"hEnemy", 30},
+        {"velEnemy", -8}, {"probSpawnEnemy", 300}, {"masaEnemy", 140},
+        // Obstáculos
+        {"wObstacle", 20}, {"hObstacle", 20},
+        {"velObstacle", -3}, {"probSpawnObst", 400},
+        // Disparo
+        {"wShot", 50}, {"hShot", 50},
+        {"velShot", 12}, {"masaShot", 105}, {"timeToShot", 2000},
+        // Explosion
+        {"wExplosion", 80}, {"hExplosion", 80},
+        // Boss
+        {"RBoss", 30}, {"masaBoss", 3}, {"LBoss", 102}, {"tFinalBoss", 90000}
+    };
 
-    string _nameSpEnemy = ":/Sprites/auto4.png";
-    double _wEnemy = 50, _hEnemy = 30;
-    double _velEnemy = -8, _probSpawnEnemy = 300;
-    double _masaEnemy = 140;
+    // El contenedor almacena todos los sprites de todos los objetos del juego
+    // Como el mundo va a cambiar cada cierto tiempo, los spriter de los objetos tambien.
+    QMap<string, string> SpritesWorld{
+        // Parte 1 del mundo
+        {"nameSpBackground_1", ":/Sprites/carretera_nivel1.png"},
+        {"nameSpDecor1_1", ":/Sprites/arbol1.png"},
+        {"nameSpDecor2_1",":/Sprites/arbusto3.png"},
+        {"nameSpEnemy_1",":/Sprites/auto4.png"},
+        {"nameSpObstacle_1", ":/Sprites/cono1.png"},
+        {"nameSpShot_1", ":/Sprites/bala1.png"},
+        {"nameSpBoss_1", ""},
 
-    string _nameSpObstacle = ":/Sprites/cono1.png";
-    double _wObstacle = 20, _hObstacle = 20;
-    double _velObstacle = -3, _probSpawnObst = 400;
+        // Parte 2 del mundo
+        {"nameSpBackground_2", ":/Sprites/carretera_nivel2.png"},
+        {"nameSpDecor1_2", ":/Sprites/camello1.png"},
+        {"nameSpDecor2_2",":/Sprites/cactus1.png"},
+        {"nameSpEnemy_2",":/Sprites/auto2.png"},
+        {"nameSpObstacle_2", ":/Sprites/basura1.png"},
+        {"nameSpShot_2", ":/Sprites/bala2.png"},
+        {"nameSpBoss_2", ""},
+    };
 
-    string _nameSpShot = ":/Sprites/bala1.png";
-    double _wShot = 50, _hShot = 50;
-    double _velshot = 12,_masaShot = 100, _millisecondsToShot = 10000;
 
-    double _wExplosion = 80, _hExplosion = 80;
-
-    string _nameSpBoss = "";
-    double _RBoss = 30, _masaBoss = 3;
-    double _LBoss = 105, _tFinalBoss = 100000; // 100 segundos, undidades -> millisegundos
-
-    qDebug() << "Aqui no" <<__LINE__;
-
-    Game = new GameWorld(_nameSpBackground,
-    _nameSpDecor1, _wDecor1, _hDecor1,
-    _nameSpDecor2, _wDecor2, _hDecor2, _velDecor, _probSpawnDecor,
-    _nameSpEnemy, _wEnemy, _hEnemy,
-    _velEnemy, _masaEnemy ,_probSpawnEnemy,
-    _nameSpObstacle, _wObstacle, _hObstacle, _velObstacle, _probSpawnObst,
-    _nameSpShot, _wShot, _hShot, _velshot, _masaShot, _millisecondsToShot,
-    _wExplosion, _hExplosion, 
-    _nameSpBoss, _RBoss, _masaBoss, _LBoss, _tFinalBoss,
+    Game = new GameWorld(SpritesWorld, objectsValues,
+    timeToChangeWorld, multiPlayer,
     mUser);
-
-
 
     Game->show();
 
     connect(Game, &GameWorld::endGame, this, &ProfileUser::endGameLevel1);
 
     this->setVisible(false);
+
 }
 
 void ProfileUser::endGameLevel1(){

@@ -34,24 +34,10 @@ class GameWorld : public QMainWindow{
     Q_OBJECT
 
 public:
-//    explicit GameWorld(QWidget *parent = nullptr);
 
-//    double _R, double _masa,
-//                  double _L, double _tFinal, bool _level1 , std::string _nameSpBoss,
-//                  double _widthSpace, double _heightSpace, double _spaceOther)
-
-    explicit GameWorld(string &_nameSpBackground,
-    string &_nameSpDecor1, double _wDecor1, double _hDecor1,
-    string &_nameSpDecor2, double _wDecor2, double _hDecor2,
-    double _velDecor, double _probSpawnDecor,
-    string &_nameSpEnemy, double _wEnemy, double _hEnemy,
-    double _velEnemy, double _masaEnemy, double _probSpawnEnemy,
-    string &_nameSpObstacle, double _wObstacle, double _hObstacle,
-    double _velObstacle, double _probSpawnObst,
-    string &_nameSpShot, double _wShot, double _hShot,
-    double _velShot, double _masaShot, double _millisecondsToShot,
-    double _wExplosion, double _hExplosion,
-    string _nameSpBoss, double _RBoss, double _masaBoss, double _LBoss, double _tFinalBoss,
+    explicit GameWorld(QMap<string, string> &_mSpritesWorld,
+    QMap<string, double> &_mObjectsValues,
+    int _timeToChangeWorld, bool _multiPlayer,
     User *&_User,
     QWidget *parent = nullptr);
 
@@ -66,6 +52,8 @@ public:
     bool collisionWithEnemy();
     bool collisionWithObstacle();
     bool collisionWithLimits();
+
+    void assingAttributeValues();
 
     ~GameWorld();
 
@@ -83,7 +71,6 @@ private:
     Ui::GameWorld *ui;
     QGraphicsScene *mScene;
     QTimer *mTimer;
-    int timeToGame, contTimeToGame;
 
     FinalBoss *Boss;
 
@@ -91,12 +78,21 @@ private:
     User *mUser;
 
     // Contenedores
-    QList<Decoration *> mDecorsWorld;
-    QList<Enemy *> mEnemiesWorld;
-    QList<Obstacle *> mObstaclesWorld;
-    QList<Explosion *> mExplosionsWorld;
-    QList<GunShot *> mGunShotsWorld;
-    QVector<QGraphicsRectItem *> mRectsInvisibles;
+    QList<Decoration *> mDecorsWorld; // Decoraciones
+    QList<Enemy *> mEnemiesWorld; // Enemigos
+    QList<Obstacle *> mObstaclesWorld; // Obstaculos
+    QList<Explosion *> mExplosionsWorld; // Explosiones
+    QList<GunShot *> mGunShotsWorld; // Disparos
+    QVector<QGraphicsRectItem *> mRectsInvisibles; // Bloques delimitadores
+
+    // Contenedores que almaceran todos los datos de los objetos
+    // del juego
+    QMap<string, string> mSpritesWorld;
+    QMap<string, double> mObjectsValues;
+
+    // Para el fondo
+    QPixmap pixMapBackground;
+    string nameSpBackground;
 
     // Dimesiones de la escena
     double widthScene;
@@ -127,7 +123,7 @@ private:
     // Para los disparos
     string nameSpShot;
     double wShot, hShot;
-    double velShot, masaShot, millisecondsToShot;
+    double velShot, masaShot, timeToShot;
     int contTimeToShot;
 
     // Para las explosiones
@@ -144,19 +140,26 @@ private:
     int posxSpwanAny; // Posicion en x, no de spawnean los objetos
     int numToTimer; // Define el startTimer.
 
-    //Atributos para el personaje principal
+    // Atributos para el personaje principal
     Character *PJ;
     Character *PJ2 = nullptr;
     int contCollisionsWithObstacle;
     int invisibilityTime;
 
+    // Booleanos para las colisiones
     bool beCollides = false;
     bool win        = false;
     bool EnemyCollision;
     bool ObstacleCollision;
     bool LimitsCollision;
 
-    int level;
+    // Contadores del tiempo del juego
+    int timeToGame, contTimeToGame;
+
+    // Para el cambio de mundo
+    bool partWorld_1;
+    int timeToChangeWorld;
+    bool multiPlayer;
 
 //    string &_nameSpBackground, string &_nameSpDecor1, double _wDecor1, double _hDecor1,
 //    string &_nameSpDecor2, double _wDecor2, double _hDecor2, double _velDecor, int _numMaxDecor,
