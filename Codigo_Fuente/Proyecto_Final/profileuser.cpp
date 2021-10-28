@@ -89,6 +89,7 @@ void ProfileUser::startGameLevel1(){
     int timeToChangeWorld = 90; // 90s -> tiempo para cambiar de mundo
     // Para indicar si es multijugador o no
     bool multiPlayer = false;
+    User *mUser2 = nullptr;
 
     // Este contenedor almacena todos los valores de todos lo objetos del juego
     // Serían: dimensiones, probabilidades, velocidades, masas,...
@@ -138,7 +139,7 @@ void ProfileUser::startGameLevel1(){
 
     Game = new GameWorld(SpritesWorld, objectsValues,
     timeToChangeWorld, multiPlayer,
-    mUser);
+    mUser, mUser2);
 
     Game->show();
 

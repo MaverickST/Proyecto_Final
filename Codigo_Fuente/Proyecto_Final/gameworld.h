@@ -22,6 +22,7 @@
 #include "gunshot.h"
 #include "user.h"
 #include "finalboss.h"
+#include "popupwindow.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -38,7 +39,7 @@ public:
     explicit GameWorld(QMap<string, string> &_mSpritesWorld,
     QMap<string, double> &_mObjectsValues,
     int _timeToChangeWorld, bool _multiPlayer,
-    User *&_User,
+    User *&_User, User *&_User2,
     QWidget *parent = nullptr);
 
 
@@ -57,6 +58,8 @@ public:
     void changeSprites();
     void increasedDifficulty(bool changeWorld);
 
+    void changeInUsers();
+
     ~GameWorld();
 
 signals:
@@ -68,6 +71,7 @@ protected:
 public slots:
     void startQTimer();
     void onUptade();
+    void pressButtonContinue();
 
 private:
     Ui::GameWorld *ui;
@@ -76,9 +80,6 @@ private:
 
     FinalBoss *Boss;
 
-    //Objeto user
-    User *mUser;
-
     // Contenedores
     QList<Decoration *> mDecorsWorld; // Decoraciones
     QList<Enemy *> mEnemiesWorld; // Enemigos
@@ -86,6 +87,23 @@ private:
     QList<Explosion *> mExplosionsWorld; // Explosiones
     QList<GunShot *> mGunShotsWorld; // Disparos
     QVector<QGraphicsRectItem *> mRectsInvisibles; // Bloques delimitadores
+
+    //Objeto user
+    User *mUser;
+    User *mUser2;
+
+    // En caso de que esté en multijugador, se usa para saber si
+    // está jugando el jugador 1 o el jugador 2
+    bool mUserOn;
+
+    // Para saber si está o no en multijugador
+    bool multiPlayer;
+
+    // Para saber si la ventana emergente está activa
+    bool popUpWindowOn;
+
+    // Ventana emergente
+    PopUpWindow *puWindow;
 
     // Contenedores que almaceran todos los datos de los objetos
     // del juego
@@ -144,7 +162,6 @@ private:
 
     // Atributos para el personaje principal
     Character *PJ;
-    Character *PJ2 = nullptr;
     int contCollisionsWithObstacle;
     int invisibilityTime;
 
@@ -161,7 +178,6 @@ private:
     // Para el cambio de mundo
     bool partWorld_1;
     int timeToChangeWorld;
-    bool multiPlayer;
 
 };
 

@@ -20,6 +20,7 @@ SOURCES += \
     main.cpp \
     idcatc.cpp \
     obstacle.cpp \
+    popupwindow.cpp \
     profileuser.cpp \
     user.cpp \
     worldobject.cpp
@@ -35,6 +36,7 @@ HEADERS += \
     gunshot.h \
     idcatc.h \
     obstacle.h \
+    popupwindow.h \
     profileuser.h \
     user.h \
     worldobject.h
@@ -43,6 +45,7 @@ FORMS += \
     createaccount.ui \
     gameworld.ui \
     idcatc.ui \
+    popupwindow.ui \
     profileuser.ui
 
 # Default rules for deployment.
