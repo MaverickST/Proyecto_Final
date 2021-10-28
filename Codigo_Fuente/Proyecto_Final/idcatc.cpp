@@ -125,6 +125,6 @@ void IDCATC::on_pB_Login_clicked(){
 }
 
 void IDCATC::on_pB_Multi_clicked(){
-    mUser = new User("PJ1","1234",2,0,0);
-    mUser = new User("PJ2","6789",2,0,0);
+    mUser = new User("1","1234",2,0,0);
+    mUser = new User("2","6789",2,0,0);
 }
