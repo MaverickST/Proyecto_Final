@@ -72,7 +72,7 @@ private:
     QGraphicsScene *mScene;
     QTimer *mTimer;
 
-    FinalBoss *boss;
+    FinalBoss *Boss;
 
     //Objeto user
     User *mUser;

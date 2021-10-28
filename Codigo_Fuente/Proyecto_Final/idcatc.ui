@@ -20,7 +20,7 @@
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>150</x>
       <y>370</y>
       <width>201</width>
       <height>31</height>
@@ -33,7 +33,7 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>150</x>
       <y>280</y>
       <width>201</width>
       <height>83</height>
@@ -66,7 +66,7 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>80</x>
       <y>120</y>
       <width>321</width>
       <height>51</height>
@@ -88,7 +88,7 @@
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>80</x>
       <y>190</y>
       <width>321</width>
       <height>51</height>
@@ -124,6 +124,25 @@
      <string/>
     </property>
    </widget>
+   <widget class="QGraphicsView" name="graphicsView">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>511</width>
+      <height>441</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/Sprites/welcome1.png);</string>
+    </property>
+   </widget>
+   <zorder>graphicsView</zorder>
+   <zorder>progressBar</zorder>
+   <zorder>verticalLayoutWidget</zorder>
+   <zorder>horizontalLayoutWidget</zorder>
+   <zorder>horizontalLayoutWidget_2</zorder>
+   <zorder>Label_Status</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

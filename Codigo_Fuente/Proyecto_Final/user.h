@@ -7,7 +7,7 @@ using namespace std;
 class User{
 public:
     User();
-    User(string Username_, string Password_, int Level_, int Lives_, int Score1_, int score2_, int score_3);
+    User(string Username_, string Password_, int Lives_, int Time_, int Score_);
 
     string username() const;
     void setUsername(const string &username);
@@ -15,34 +15,26 @@ public:
     string password() const;
     void setPassword(const string &password);
 
-    int level() const;
-    void setLevel(int level);
-
-    int scoreFirstLevel() const;
-    void setScoreFirstLevel(int scoreFirstLevel);
-
-    int scoreSecondLevel() const;
-    void setScoreSecondLevel(int scoreSecondLevel);
-
-    int scoreThirdLevel() const;
-    void setScoreThirdLevel(int scoreThirdLevel);
-
     int lives() const;
     void setLives(int lives);
 
+    int time() const;
+    void setTime(int time);
+
     int score() const;
     void setScore(int score);
+
+    int scoreLevel() const;
+    void setScoreLevel(int scoreLevel);
 
 private:
     //Declaracion de atributos de usuarios
     string mUsername         = "";
     string mPassword         = "";
-    int    mLevel            =  0;
     int    mLives            =  0;
-    int    mScoreFirstLevel  =  0;
-    int    mScoreSecondLevel =  0;
-    int    mScoreThirdLevel  =  0;
+    int    mTime             =  0;
     int    mScore            =  0;
+    int    mScoreLevel       =  0;
 };
 
 #endif // USER_H
