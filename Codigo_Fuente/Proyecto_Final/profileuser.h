@@ -20,12 +20,19 @@ class ProfileUser : public QMainWindow{
 public:
     explicit ProfileUser(QWidget *parent = nullptr);
     explicit ProfileUser(User *&_User,QWidget *parent = nullptr);
+
     ~ProfileUser();
+
     void showInformation();
     void updateUsers();
+
+    void setObjectsValues(const QMap<string, double> &objectsValues);
+
+    void setSpritesWorld(const QMap<string, string> &spritesWorld);
+
 public slots:
-    void startGameLevel1();
-    void endGameLevel1();
+    void startGame();
+    void endGame();
 
 signals:
     void closeWindowProfile();
@@ -38,6 +45,10 @@ private:
 
     GameWorld *Game;
     User *mUser;
+
+    QMap<string, double> mObjectsValues;
+
+    QMap<string, string> mSpritesWorld;
 };
 
 #endif // PROFILEUSER_H

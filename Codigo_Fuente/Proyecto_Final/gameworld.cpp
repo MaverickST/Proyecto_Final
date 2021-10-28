@@ -1,8 +1,8 @@
 #include "gameworld.h"
 #include "ui_gameworld.h"
 
-GameWorld::GameWorld(QMap<string, string> &_mSpritesWorld,
-    QMap<string, double> &_mObjectsValues, int _timeToChangeWorld, bool _multiPlayer,
+GameWorld::GameWorld(QMap<string, string> _mSpritesWorld,
+    QMap<string, double> _mObjectsValues, int _timeToChangeWorld, bool _multiPlayer,
     User *&_User, User *&_User2,
     QWidget *parent)
     : QMainWindow(parent),ui(new Ui::GameWorld)
@@ -575,15 +575,6 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
     }
 }
 
-void GameWorld::startQTimer(){
-    mTimer->start(numToTimer);
-}
-
-
-GameWorld::~GameWorld(){
-    delete ui;
-}
-
 void GameWorld::createRectsInvisibles(){
 
     // La funcion se encarga de crear un rectangulos pequeños invisibles
@@ -780,7 +771,6 @@ void GameWorld::changeInUsers()
         if (mUserOn == true) {
             // Se le resta una vida
             mUser->setLives(mUser->lives()-1);
-            ui->LCD_LIVES->display(mUser->lives());
 
             // Si perdió la vidas, se muestra la ventana emergente y
             // se cambio de jugador
@@ -793,10 +783,11 @@ void GameWorld::changeInUsers()
                 mUser->setLives(2); // Que vuelva a tener dos vidas
                 mUserOn = false; // Ahora juega el usuario 2
             }
+            ui->LCD_LIVES->display(mUser->lives());
+
         }else {
             // Se le resta una vida
             mUser2->setLives(mUser2->lives()-1);
-            ui->LCD_LIVES->display(mUser2->lives());
 
             // Si perdió la vidas, se muestra la ventana emergente y
             // se cambio de jugador
@@ -809,6 +800,7 @@ void GameWorld::changeInUsers()
                 mUser2->setLives(2); // Que vuelva a tener dos vidas
                 mUserOn = true; // Ahora juega el usuario 1
             }
+            ui->LCD_LIVES->display(mUser2->lives());
         }
     }else {
         // Se le resta una vida
@@ -839,5 +831,13 @@ void GameWorld::pressButtonContinue()
             GameWorld::endGame();
         }
     }
+}
+
+void GameWorld::startQTimer(){
+    mTimer->start(numToTimer);
+}
+
+GameWorld::~GameWorld(){
+    delete ui;
 }
 
