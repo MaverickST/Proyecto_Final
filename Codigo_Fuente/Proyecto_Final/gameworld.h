@@ -85,7 +85,7 @@ private:
     QTimer *mTimer;
     int timeToGame, contTimeToGame;
 
-    FinalBoss *boss;
+    FinalBoss *Boss;
 
     //Objeto user
     User *mUser;
