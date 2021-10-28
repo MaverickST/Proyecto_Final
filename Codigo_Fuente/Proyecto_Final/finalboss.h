@@ -11,8 +11,8 @@ class FinalBoss : public WorldObject
 {
 public:
     FinalBoss();
-    FinalBoss(double _R, double _masa,
-              double _L, double _tFinal, bool _level1 , std::string _nameSpBoss,
+    FinalBoss(double _R, double _masa, double _L,
+              double _tFinal, double _tToChangePos, std::string _nameSpBoss,
               double _widthSpace, double _heightSpace, double _spaceOther);
 
     QRectF boundingRect() const;
@@ -41,19 +41,18 @@ private:
 
     double tFinal; // El tiemp que dura el boss
 
-    // Hay boss en el primer y tercer nivel.
-    // Como son distintos los movimientos que hará en cada nivel, debe
-    // haber una forma de saber si es el nivel 1 o el nivel 3
-    bool level1;
 
     // Para delimitar el movimiento del boss
     double widthSpace;
     double heightSpace;
     double spaceOther;
 
+    // Tiempo para pasar a la siguiente fase
     double timeToNextPhase;
+    // Tiempo para cambiar de posicion. Para mayor dificultadad, se irá disminuyendo
     double timeToChangePos;
     int contTimeToChangeP;
+    // Posiciones aleatorias generadas
     double randPosx;
     double randPosy;
 

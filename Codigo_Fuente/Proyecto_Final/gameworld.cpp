@@ -30,6 +30,7 @@ ui->setupUi(this);
     // Inicializacion de todos los atributos
     partWorld_1 = true; // Para saber si es la parte 1 o 2 del mundo
     assingAttributeValues();
+    changeSprites();
 
     // Otros atributos
     timeToChangeWorld = _timeToChangeWorld;
@@ -41,7 +42,7 @@ ui->setupUi(this);
     posxSpwanAny = widthScene + 60;
 
     // Para controlar el tiempo del juego
-    timeToGame = 0, contTimeToGame = 0;
+    timeToGame = 1, contTimeToGame = 0;
 
 
     // Se crean rectangulos alrededor del mapa
@@ -51,15 +52,17 @@ ui->setupUi(this);
     string sprite = "../Proyecto_Final/Sprites/auto1.png";
     PJ = new Character ((50+20)/2,(heightScene - spaceToPutDecor)/2,50,30,60.0f,sprite);
     mScene->addItem(PJ);
+    PJ->setZValue(1000);
 
     contCollisionsWithObstacle = 0;
     invisibilityTime = 0;
 
     // Creacion de un boss para pruebas
     // (double _R, double _masa, double _L, double _tFinal, bool _level1)
-    Boss = new FinalBoss(RBoss, masaBoss, LBoss, tFinalBoss, true, nameSpEnemy,
-                         widthScene, heightScene - hEnemy, spaceToPutDecor + hEnemy);
-    mScene->addItem(Boss);
+    Boss = nullptr;
+//    Boss = new FinalBoss(RBoss, masaBoss, LBoss, tFinalBoss, 2000, nameSpEnemy,
+//                         widthScene, heightScene - hEnemy, spaceToPutDecor + hEnemy);
+//    mScene->addItem(Boss);
 
     numToTimer = 20;
     mTimer = new QTimer;
@@ -87,9 +90,9 @@ void GameWorld::collisionEvaluator(){
 
     /**    EVALUACION DE COLISIONES     **/
     if (PJ2 != nullptr) {
-        cout << "MULTIJUGADOR :)" << endl;
+//        cout << "MULTIJUGADOR :)" << endl;
     }else{
-        cout << "MODO 1 JUGADOR :)" << endl;
+//        cout << "MODO 1 JUGADOR :)" << endl;
         if(Boss != nullptr && PJ->collidesWithItem(Boss)){
             //Hubo colision con un enemigo
             //Se resta vida
@@ -228,22 +231,23 @@ bool GameWorld::collisionWithLimits(){
 
 void GameWorld::onUptade(){
 
-    Boss->moveBoss(numToTimer);
+
     //Evaluacion de condicion de Game Over
     if(mUser->lives() == 0){
         //El personaje principal se ha quedado sin vidas
         //GameWorld::endGame();
     }
 
-
+    // Evaluador de colisiones
     collisionEvaluator();
 
+    // Si está realizando un salto
     if(PJ->getJump() == true){
         PJ->parabolicMovement(0.1f);
     }
     contTimeToGame++;
-    //MANEJO DEL TIEMPO DE INVENSIBILIDAD
 
+    //MANEJO DEL TIEMPO DE INVENSIBILIDAD
     if(invisibilityTime > 0 && contTimeToGame*numToTimer >= 1000){
         invisibilityTime--;//Se resta cada 1s sigueindo la misma logica que el if anterior
     }
@@ -255,7 +259,22 @@ void GameWorld::onUptade(){
         ui->LCD_TIME->display(timeToGame++);
         contTimeToGame = 0;//Se reseta la variable contTimeEndG
     }
-  
+
+    // Tiempo para el cambio de mundo o aumento en la dificultad (cada 20s)
+    if ((timeToGame%20 == 0) && (contTimeToGame == 0)) { // Pruebas
+        if (timeToGame%timeToChangeWorld == 0) {
+            // Cambio de mundo y mayor aumento de la dificultad
+            cout << "Cambio de mundo" << endl;
+            increasedDifficulty(true);
+        }else {
+            // Solo un incremente leve de la dificultad
+            increasedDifficulty(false);
+        }
+        // Se reasignan los valores de todos los objetos
+        assingAttributeValues();
+    }
+
+    // Generacion y eliminacion de los objetos de la escena
     contTimeToSpawn++;
     if (contTimeToSpawn*numToTimer >= timeToSpawn) {
       spawnSceneObject();
@@ -333,11 +352,17 @@ void GameWorld::spawnSceneObject(){
     // Para delimitar la posicion de spawn
     int hMaxDecor = hDecor1 > hDecor2 ? hDecor1 : hDecor2;
     int randPutDecor = rand()%1000 + 1; // [1, 1000]
+    // Con el aumento de la dificualtad, va a llegar un momento en que las probabiliadaes
+    // serán mayores al 100% (1000), entonces se pone para ambos la misma prob
+    if (probSpawnObst >= 1000) {
+        probSpawnEnemy = 500;
+        probSpawnObst = 1000;
+    }
 
     if (randPutDecor < probSpawnDecor) { // Se genera un nuevo objeto decoracion.
 
-        // [0, spaceToPutDecor - hMaxDecor/2] -> Numero aleatorio en este intervalo
-        randPosyDecor = rand()%(int(spaceToPutDecor - hMaxDecor/2 + 1));
+        // [hMaxDecor/2, spaceToPutDecor - hMaxDecor/2] -> Numero aleatorio en este intervalo
+        randPosyDecor = rand()%(int(spaceToPutDecor - 2*hMaxDecor/2 + 1)) + hMaxDecor/2;
 
         randDecorKind = rand()%2; // [0,1]
         Decoration *newDecor;
@@ -552,6 +577,11 @@ void GameWorld::createRectsInvisibles(){
 
 void GameWorld::assingAttributeValues()
 {
+    // El metodo se encarga de reasignar todos los valores a los datos
+    // de todos los objetos
+    // Como hay un constante aumento de la dificultad, constantemente se estará reasignando
+    // tales valores, para que despues se vean reflejados en los propio objetos
+
     // Atributos para las decoraciones
 
     // Decoraciones tipo 1
@@ -596,10 +626,60 @@ void GameWorld::assingAttributeValues()
     masaBoss = mObjectsValues["masaBoss"];
     LBoss = mObjectsValues["LBoss"];
     tFinalBoss = mObjectsValues["tFinalBoss"];
+    tToChangePosBoss = mObjectsValues["tToChangePosBoss"];
 
+
+}
+
+void GameWorld::increasedDifficulty(bool changeWorld)
+{
+    // El método se encarga de aumentar los valores de los objetos,
+    // que al aumentarlos y disminuirlos, implica un incremente o
+    // decremento en la dificulta del juego
+    // Tales valores de los objetos son: velocidades, probabilidades.
+
+
+    if (changeWorld == true) { // El aumento es del 10%
+        mObjectsValues["velDecor"] *= 1.05; // Velocidad de las decoraciones
+        mObjectsValues["velEnemy"] *= 1.05; // Vel de los enemigos
+        mObjectsValues["probSpawnEnemy"] *= 1.05; // Prob de los enemigos
+        mObjectsValues["velObstacle"] *= 1.05; // Vel de los obstaculos
+        mObjectsValues["probSpawnObst"] *= 1.05; // Prob de los obstaculos
+        mObjectsValues["velShot"] *= 1.05; // Vel de los disparos
+
+        // Cuando es cambio de mundo (changeWorld == true), tambien aumenta la dificultad del boss
+
+        // Para la longitud es de 3%
+        mObjectsValues["LBoss"] *= 1.03;
+        // Su tiempo para cambiar de posicion se reduce un 20%
+        mObjectsValues["tToChangePosBoss"] *= 0.8;
+
+        // Para cargar los pixmap de la siguiente parte
+        if (partWorld_1 == true) {
+            partWorld_1 = false;
+        }else {
+            partWorld_1 = true;
+        }
+        changeSprites();
+
+    }else {
+        // El aumento es del 5% para las velocidades
+        // Y del 10% para las prob
+        mObjectsValues["velDecor"] *= 1.02; // Velocidad de las decoraciones
+        mObjectsValues["velEnemy"] *= 1.02; // Vel de los enemigos
+        mObjectsValues["probSpawnEnemy"] *= 1.02; // Prob de los enemigos
+        mObjectsValues["velObstacle"] *= 1.02; // Vel de los obstaculos
+        mObjectsValues["probSpawnObst"] *= 1.02; // Prob de los obstaculos
+        mObjectsValues["velShot"] *= 1.02; // Vel de los disparos
+
+    }
+}
+
+void GameWorld::changeSprites()
+{
     // Cambio en los sprites de los objetos
 
-    if (partWorld_1) { // Para la parte 1 del mundo
+    if (partWorld_1 == true) { // Para la parte 1 del mundo
         // Fondo
         nameSpBackground = mSpritesWorld["nameSpBackground_1"];
         // Decoraciones
@@ -614,6 +694,7 @@ void GameWorld::assingAttributeValues()
         nameSpShot = mSpritesWorld["nameSpShot_1"];
         // Boss
         nameSpBoss = mSpritesWorld["nameSpBoss_1"];
+
 
     }else {// Para la parte 2 del mundo
         // Fondo
@@ -630,13 +711,12 @@ void GameWorld::assingAttributeValues()
         nameSpShot = mSpritesWorld["nameSpShot_2"];
         // Boss
         nameSpBoss = mSpritesWorld["nameSpBoss_2"];
+
     }
     // Se agrega el fondo
     pixMapBackground.load(nameSpBackground.c_str());
     pixMapBackground = pixMapBackground.scaled(widthScene + 5, heightScene + 5);
     mScene->addPixmap(pixMapBackground);
-
 }
-
 
 

@@ -54,6 +54,8 @@ public:
     bool collisionWithLimits();
 
     void assingAttributeValues();
+    void changeSprites();
+    void increasedDifficulty(bool changeWorld);
 
     ~GameWorld();
 
@@ -132,7 +134,7 @@ private:
     // Para el boss;
     string nameSpBoss;
     double RBoss, masaBoss;
-    double LBoss, tFinalBoss;
+    double LBoss, tFinalBoss, tToChangePosBoss;
 
     // Para controlar la generacion de objetos
     int contTimeToSpawn;
