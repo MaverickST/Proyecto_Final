@@ -50,7 +50,7 @@ ui->setupUi(this);
 
     //Inicializacion del personaje principal
     string sprite = "../Proyecto_Final/Sprites/auto1.png";
-    PJ = new Character ((50+20)/2,(heightScene - spaceToPutDecor)/2,50,30,60.0f,sprite);
+    PJ = new Character ((50+20)/2,(heightScene - spaceToPutDecor)/2,50,30,30.0f,sprite);
     mScene->addItem(PJ);
     PJ->setZValue(1000);
 
@@ -454,6 +454,9 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mEnemiesWorld.at(i));
             delete mEnemiesWorld.at(i);
             mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
+            //Se actualiza el Score
+            mUser->setScoreLevel(mUser->scoreLevel() + 200);
+            ui->LCD_SCORE->display(mUser->scoreLevel());
         }
     }
     // Eliminacion de los obstaculos que ya estan fuera de la escena
