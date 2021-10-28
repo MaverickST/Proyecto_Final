@@ -418,6 +418,8 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(Boss);
             delete Boss;
             Boss = nullptr;
+            mUser->setScoreLevel(mUser->scoreLevel() + 200);
+            ui->LCD_SCORE->display(mUser->scoreLevel());
         }
     }
 
@@ -461,7 +463,7 @@ void GameWorld::deleteWorldObject()
             delete mEnemiesWorld.at(i);
             mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
             //Se actualiza el Score
-            mUser->setScoreLevel(mUser->scoreLevel() + 200);
+            mUser->setScoreLevel(mUser->scoreLevel() + 50);
             ui->LCD_SCORE->display(mUser->scoreLevel());
         }
     }
