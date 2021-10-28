@@ -155,6 +155,11 @@ void GameWorld::collisionEvaluator(){
             }
             PJ->setPosition();
             beCollides = true;
+            if(PJ->getJump() == true){
+                PJ->setJump(false);
+                PJ->setPosy(PJ->getPosy() + 20);
+                PJ->setPosx(PJ->getPosx() - 20);
+            }
         }else{
             beCollides = false;
         }
