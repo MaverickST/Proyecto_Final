@@ -36,8 +36,8 @@ class GameWorld : public QMainWindow{
 
 public:
 
-    explicit GameWorld(QMap<string, string> &_mSpritesWorld,
-    QMap<string, double> &_mObjectsValues,
+    explicit GameWorld(QMap<string, string> _mSpritesWorld,
+    QMap<string, double> _mObjectsValues,
     int _timeToChangeWorld, bool _multiPlayer,
     User *&_User, User *&_User2,
     QWidget *parent = nullptr);
