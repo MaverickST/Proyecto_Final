@@ -13,6 +13,54 @@ IDCATC::IDCATC(QWidget *parent): QMainWindow(parent), ui(new Ui::IDCATC){
     connect(ui->pB_createAccount, &QPushButton::clicked, this, &IDCATC::openCreateAccount);
     //connect(ui->pB_Login, &QPushButton::clicked, this, &IDCATC::openProfileInterfaz);
 
+
+    // Creacion de los contenedores
+
+    // Este contenedor almacena todos los valores de todos lo objetos del juego
+    // Serían: dimensiones, probabilidades, velocidades, masas,...
+    mObjectsValues = QMap<string, double>{
+        // Decoraciones
+        {"wDecor1" , 50}, {"hDecor1", 57},
+        {"wDecor2", 30}, {"hDecor2", 30},
+        {"velDecor", -3}, {"probSpawnDecor", 200},
+        // Enemigos
+        {"wEnemy", 50}, {"hEnemy", 30},
+        {"velEnemy", -8}, {"probSpawnEnemy", 300}, {"masaEnemy", 140},
+        // Obstáculos
+        {"wObstacle", 20}, {"hObstacle", 20},
+        {"velObstacle", -3}, {"probSpawnObst", 400},
+        // Disparo
+        {"wShot", 20}, {"hShot", 20},
+        {"velShot", 12}, {"masaShot", 90}, {"timeToShot", 2000},
+        // Explosion
+        {"wExplosion", 80}, {"hExplosion", 80},
+        // Boss
+        {"RBoss", 40}, {"masaBoss", 3}, {"LBoss", 102},
+        {"tFinalBoss", 30000}, {"tToChangePosBoss", 2000}
+    };
+
+    // El contenedor almacena todos los sprites de todos los objetos del juego
+    // Como el mundo va a cambiar cada cierto tiempo, los spriter de los objetos tambien.
+    mSpritesWorld = QMap<string, string>{
+        // Parte 1 del mundo
+        {"nameSpBackground_1", ":/Sprites/carretera_nivel1.png"},
+        {"nameSpDecor1_1", ":/Sprites/arbol1.png"},
+        {"nameSpDecor2_1",":/Sprites/arbusto3.png"},
+        {"nameSpEnemy_1",":/Sprites/auto4.png"},
+        {"nameSpObstacle_1", ":/Sprites/cono1.png"},
+        {"nameSpShot_1", ":/Sprites/bala1.png"},
+        {"nameSpBoss_1", ":/Sprites/boss4.png"},
+
+        // Parte 2 del mundo
+        {"nameSpBackground_2", ":/Sprites/carretera_nivel2.png"},
+        {"nameSpDecor1_2", ":/Sprites/camello1.png"},
+        {"nameSpDecor2_2",":/Sprites/cactus1.png"},
+        {"nameSpEnemy_2",":/Sprites/auto2.png"},
+        {"nameSpObstacle_2", ":/Sprites/heno1.png"},
+        {"nameSpShot_2", ":/Sprites/bala2.png"},
+        {"nameSpBoss_2", ":/Sprites/boss11.png"},
+    };
+
 }
 
 IDCATC::~IDCATC(){
@@ -22,6 +70,11 @@ IDCATC::~IDCATC(){
 void IDCATC::openProfileInterfaz(){
     // Se crea y muestra ventana del perfil del usuario
     Profile = new ProfileUser(mUser);
+
+    // Se asignan los contenedores
+    Profile->setSpritesWorld(mSpritesWorld);
+    Profile->setObjectsValues(mObjectsValues);
+
     Profile->show();
 
     // Conexion para el cierre de la ventana del perfil
@@ -126,5 +179,32 @@ void IDCATC::on_pB_Login_clicked(){
 
 void IDCATC::on_pB_Multi_clicked(){
     mUser = new User("1","1234",2,0,0);
-    mUser = new User("2","6789",2,0,0);
+    mUser2 = new User("2","6789",2,0,0);
+
+
+    // Hay un cambio de mundo cada 3 minutos (180s)
+    // Pero hay un aumento en la dificultad cada 10s
+    int timeToChangeWorld = 90; // 90s -> tiempo para cambiar de mundo
+    // Para indicar si es multijugador o no
+    bool multiPlayer = true;
+
+    Game = new GameWorld(mSpritesWorld, mObjectsValues,
+    timeToChangeWorld, multiPlayer,
+    mUser, mUser2);
+
+    Game->show();
+
+    connect(Game, &GameWorld::endGame, this, &IDCATC::endGame);
+
+    this->setVisible(false);
+
+}
+
+
+void IDCATC::endGame()
+{
+    // Se cierra y elimina la ventana del juego.
+    Game->close();
+    delete Game;
+    this->setVisible(true);
 }

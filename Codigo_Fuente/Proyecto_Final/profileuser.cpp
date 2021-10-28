@@ -13,7 +13,7 @@ ProfileUser::ProfileUser(User *&_User,QWidget *parent): QMainWindow(parent),ui(n
 
     mUser = _User;
     showInformation();
-    connect(ui->pB_StartLevel, &QPushButton::clicked, this, &ProfileUser::startGameLevel1);
+    connect(ui->pB_StartLevel, &QPushButton::clicked, this, &ProfileUser::startGame);
     connect(ui->pB_closeProfile, &QPushButton::clicked, this, &ProfileUser::closeWindowProfile);
 }
 
@@ -79,10 +79,9 @@ void ProfileUser::updateUsers(){
     rename(PATH_TO_USERS_TMP , PATH_TO_USERS);
 }
 
-void ProfileUser::startGameLevel1(){
-    // Se crea y muestra la partida, el mundo, ya jugar se ha dicho
-    string strPath = "../Proyecto_final/:Sprites/";
-//    User *mUser2 = nullptr;
+void ProfileUser::startGame(){
+
+    // Se crea y muestra la partida, el mundo, y a jugar se ha dicho
 
     // Hay un cambio de mundo cada 3 minutos (180s)
     // Pero hay un aumento en la dificultad cada 10s
@@ -91,65 +90,19 @@ void ProfileUser::startGameLevel1(){
     bool multiPlayer = false;
     User *mUser2 = nullptr;
 
-    // Este contenedor almacena todos los valores de todos lo objetos del juego
-    // Serían: dimensiones, probabilidades, velocidades, masas,...
-    QMap<string, double> objectsValues{
-        // Decoraciones
-        {"wDecor1" , 50}, {"hDecor1", 57},
-        {"wDecor2", 30}, {"hDecor2", 30},
-        {"velDecor", -3}, {"probSpawnDecor", 200},
-        // Enemigos
-        {"wEnemy", 50}, {"hEnemy", 30},
-        {"velEnemy", -8}, {"probSpawnEnemy", 300}, {"masaEnemy", 140},
-        // Obstáculos
-        {"wObstacle", 20}, {"hObstacle", 20},
-        {"velObstacle", -3}, {"probSpawnObst", 400},
-        // Disparo
-        {"wShot", 20}, {"hShot", 20},
-        {"velShot", 12}, {"masaShot", 90}, {"timeToShot", 2000},
-        // Explosion
-        {"wExplosion", 80}, {"hExplosion", 80},
-        // Boss
-        {"RBoss", 40}, {"masaBoss", 3}, {"LBoss", 102},
-        {"tFinalBoss", 30000}, {"tToChangePosBoss", 2000}
-    };
-
-    // El contenedor almacena todos los sprites de todos los objetos del juego
-    // Como el mundo va a cambiar cada cierto tiempo, los spriter de los objetos tambien.
-    QMap<string, string> SpritesWorld{
-        // Parte 1 del mundo
-        {"nameSpBackground_1", ":/Sprites/carretera_nivel1.png"},
-        {"nameSpDecor1_1", ":/Sprites/arbol1.png"},
-        {"nameSpDecor2_1",":/Sprites/arbusto3.png"},
-        {"nameSpEnemy_1",":/Sprites/auto4.png"},
-        {"nameSpObstacle_1", ":/Sprites/cono1.png"},
-        {"nameSpShot_1", ":/Sprites/bala1.png"},
-        {"nameSpBoss_1", ":/Sprites/boss4.png"},
-
-        // Parte 2 del mundo
-        {"nameSpBackground_2", ":/Sprites/carretera_nivel2.png"},
-        {"nameSpDecor1_2", ":/Sprites/camello1.png"},
-        {"nameSpDecor2_2",":/Sprites/cactus1.png"},
-        {"nameSpEnemy_2",":/Sprites/auto2.png"},
-        {"nameSpObstacle_2", ":/Sprites/heno1.png"},
-        {"nameSpShot_2", ":/Sprites/bala2.png"},
-        {"nameSpBoss_2", ":/Sprites/boss11.png"},
-    };
-
-
-    Game = new GameWorld(SpritesWorld, objectsValues,
+    Game = new GameWorld(mSpritesWorld, mObjectsValues,
     timeToChangeWorld, multiPlayer,
     mUser, mUser2);
 
     Game->show();
 
-    connect(Game, &GameWorld::endGame, this, &ProfileUser::endGameLevel1);
+    connect(Game, &GameWorld::endGame, this, &ProfileUser::endGame);
 
     this->setVisible(false);
 
 }
 
-void ProfileUser::endGameLevel1(){
+void ProfileUser::endGame(){
     // Se cierra y elimina la ventana del juego.
     Game->close();
     delete Game;
@@ -164,3 +117,15 @@ void ProfileUser::endGameLevel1(){
 void ProfileUser::on_pB_closeProfile_clicked(){
     updateUsers();
 }
+
+void ProfileUser::setSpritesWorld(const QMap<string, string> &spritesWorld)
+{
+    mSpritesWorld = spritesWorld;
+}
+
+void ProfileUser::setObjectsValues(const QMap<string, double> &objectsValues)
+{
+    mObjectsValues = objectsValues;
+}
+
+

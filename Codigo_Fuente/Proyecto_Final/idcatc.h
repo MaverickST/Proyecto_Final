@@ -23,11 +23,14 @@ public:
     IDCATC(QWidget *parent = nullptr);
     ~IDCATC();
 
+
 public slots:
     void openProfileInterfaz();
     void closeProfileInterfaz();
     void openCreateAccount();
     void closeCreateAccount();
+    void endGame();
+
 private slots:
     void on_pB_Login_clicked();
     void on_pB_Multi_clicked();
@@ -38,5 +41,13 @@ private:
     ProfileUser *Profile;
     createAccount *Account;
     User *mUser;
+    User *mUser2;
+
+    QMap<string, double> mObjectsValues;
+
+    QMap<string, string> mSpritesWorld;
+
+    GameWorld *Game;
 };
+
 #endif // IDCATC_H
