@@ -84,8 +84,9 @@ void ProfileUser::startGameLevel1(){
     string strPath = "../Proyecto_final/:Sprites/";
 //    User *mUser2 = nullptr;
 
-    // Hay un cambio de mundo cada 3 minutos (180s * 1000ms = 180000ms)
-    int timeToChangeWorld = 180000;
+    // Hay un cambio de mundo cada 3 minutos (180s)
+    // Pero hay un aumento en la dificultad cada 20s
+    int timeToChangeWorld = 180; // 180s
     // Para indicar si es multijugador o no
     bool multiPlayer = false;
 
@@ -93,7 +94,7 @@ void ProfileUser::startGameLevel1(){
     // Serían: dimensiones, probabilidades, velocidades, masas,...
     QMap<string, double> objectsValues{
         // Decoraciones
-        {"wDecor1" , 50}, {"hDecor1", 60},
+        {"wDecor1" , 50}, {"hDecor1", 50},
         {"wDecor2", 30}, {"hDecor2", 30},
         {"velDecor", -3}, {"probSpawnDecor", 200},
         // Enemigos
@@ -108,7 +109,8 @@ void ProfileUser::startGameLevel1(){
         // Explosion
         {"wExplosion", 80}, {"hExplosion", 80},
         // Boss
-        {"RBoss", 30}, {"masaBoss", 3}, {"LBoss", 102}, {"tFinalBoss", 90000}
+        {"RBoss", 30}, {"masaBoss", 3}, {"LBoss", 102},
+        {"tFinalBoss", 90000}, {"tToChangePosBoss", 2000}
     };
 
     // El contenedor almacena todos los sprites de todos los objetos del juego

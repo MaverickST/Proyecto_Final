@@ -3,7 +3,7 @@
 FinalBoss::FinalBoss() {}
 
 FinalBoss::FinalBoss(double _R, double _masa, double _L,
-                     double _tFinal, bool _level1, std::string _nameSpBoss,
+                     double _tFinal, double _tToChangePos, std::string _nameSpBoss,
                      double _widthSpace, double _heightSpace, double _spaceOther)
 {
     srand(time(NULL));
@@ -15,7 +15,7 @@ FinalBoss::FinalBoss(double _R, double _masa, double _L,
     tFinal = _tFinal;
     L = _L;
     nameSpObj = _nameSpBoss;
-    level1 = _level1;
+    timeToChangePos = _tToChangePos;
 
     widthSpace = _widthSpace;
     heightSpace = _heightSpace;
@@ -60,6 +60,7 @@ void FinalBoss::moveBoss(int numToTimer)
 {
 
     t += numToTimer;
+    tFinal -= numToTimer;
 
     longArc = L*qPow(E, -t/(2*Tau))*qCos(W*t + Phi);
 
