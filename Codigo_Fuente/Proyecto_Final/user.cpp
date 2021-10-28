@@ -4,11 +4,12 @@ User::User(){}
 
 User::User(string Username_, string Password_, int Lives_, int Time_, int Score_){
     /** Inicializacion de atributos de usario **/
-    mUsername = Username_;
-    mPassword = Password_;
-    mLives    =    Lives_;
-    mTime     =     Time_;
-    mScore    =    Score_;
+    mUsername   = Username_;
+    mPassword   = Password_;
+    mLives      =    Lives_;
+    mTime       =     Time_;
+    mScore      =    Score_;
+    mScoreLevel =         0;
 }
 
 string User::username() const{
