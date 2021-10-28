@@ -60,10 +60,8 @@ ui->setupUi(this);
     // Creacion de un boss para pruebas
     // (double _R, double _masa, double _L, double _tFinal, bool _level1)
     Boss = nullptr;
-//    Boss = new FinalBoss(RBoss, masaBoss, LBoss, tFinalBoss, 2000, nameSpEnemy,
-//                         widthScene, heightScene - hEnemy, spaceToPutDecor + hEnemy);
-//    mScene->addItem(Boss);
 
+    // Timer, cada 20ms
     numToTimer = 20;
     mTimer = new QTimer;
     srand(time(NULL));
@@ -231,6 +229,7 @@ bool GameWorld::collisionWithLimits(){
 
 void GameWorld::onUptade(){
 
+    // El slot se ejecuta en cada timeout
 
     //Evaluacion de condicion de Game Over
     if(mUser->lives() == 0){
@@ -260,11 +259,10 @@ void GameWorld::onUptade(){
         contTimeToGame = 0;//Se reseta la variable contTimeEndG
     }
 
-    // Tiempo para el cambio de mundo o aumento en la dificultad (cada 20s)
-    if ((timeToGame%20 == 0) && (contTimeToGame == 0)) { // Pruebas
+    // TIEMPO PARA EL CAMBIO DE MUNDO Y AUMENTO EN LA DIFICULTAD (cada 10s)
+    if ((timeToGame%10 == 0) && (contTimeToGame == 0)) { // Pruebas
         if (timeToGame%timeToChangeWorld == 0) {
             // Cambio de mundo y mayor aumento de la dificultad
-            cout << "Cambio de mundo" << endl;
             increasedDifficulty(true);
         }else {
             // Solo un incremente leve de la dificultad
@@ -272,6 +270,22 @@ void GameWorld::onUptade(){
         }
         // Se reasignan los valores de todos los objetos
         assingAttributeValues();
+        cout << __LINE__ << endl;
+    }
+
+    // APARICION DEL BOSS CADA CIERTO TIEMPO ( 2/3 de timeToChangeWorld)
+
+    // El residuo nos da el tiempo que ha pasado despues de un cambio de mundo
+    // Por lógica se deduce:
+    //      TiempoParaCambiarElMundo - TiempoDespuesDelCambio = TiempoDeDuracionDelBoss
+    // Y así sabemos cuando va a aparecer en boss
+    double timeLaterOfChangeWorld = (timeToGame*1000)%(timeToChangeWorld*1000);
+
+    if ((timeToChangeWorld*1000 - timeLaterOfChangeWorld == tFinalBoss) && (contTimeToGame == 0)) {
+        // Se genera un nuevo boss
+        Boss = new FinalBoss(RBoss, masaBoss, LBoss, tFinalBoss, tToChangePosBoss, nameSpBoss,
+                             widthScene, heightScene - hEnemy, spaceToPutDecor + hEnemy);
+        mScene->addItem(Boss);
     }
 
     // Generacion y eliminacion de los objetos de la escena
@@ -288,11 +302,22 @@ void GameWorld::onUptade(){
 
 void GameWorld::spawnSceneObject(){
 
+    // El método se encarga de la generacion aleatoria de todos los objetos
+    // del mapa.
+
+
     // La ultima posicion en y de los obstaculos y autos enemigos.
     // Se usa para evitar que se generen en el mismo lugar y queden pegados
     static int lastPosy = 0;
 
     /// [ GENERACION ALEATORIA DE LOS OBSTACULOS/ENEMIGOS SEGUN UNA PROBABILIDAD ]
+
+    // Con el aumento de la dificualtad, va a llegar un momento en que las probabiliadaes
+    // serán mayores al 100% (1000), entonces se pone para ambos la misma prob
+    if (probSpawnObst >= 1000) {
+        probSpawnEnemy = 500;
+        probSpawnObst = 1000;
+    }
 
     int numRand = rand()%1000 + 1; // numero aleatoria entre [1-1000]
     int randPosyObjec; // Posicion en Y aleatoria de los obstaculos/enemigos
@@ -301,14 +326,14 @@ void GameWorld::spawnSceneObject(){
     if (numRand <= probSpawnEnemy) { // Se genera un enemigo
 
         // Numero aleatoria en este intervalo
-        // [spaceToPutDecor + hEnemy/2, heightScene - 3*hEnemy/2]
-        randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 5*hEnemy/2 + 1))
+        // [spaceToPutDecor + hEnemy/2, heightScene - hEnemy/2]
+        randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 2*hEnemy/2 + 1))
                 + spaceToPutDecor + hEnemy/2;
 
         // Esto para el caso en que los objetos se generan casi juntos o juntos
         while ((randPosyObjec + hEnemy/2 >= lastPosy) && (randPosyObjec - hEnemy/2 <= lastPosy)) {
 
-            randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 5*hEnemy/2 + 1))
+            randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 2*hEnemy/2 + 1))
                     + spaceToPutDecor + hEnemy/2;
         }
         // Se actualiza la nueva ultima posicion aleatoria en y de los objetos
@@ -323,15 +348,15 @@ void GameWorld::spawnSceneObject(){
     }
     else if (numRand <= probSpawnObst) { // Se genera un obstaculo
 
-        // [spaceToPutDecor + hObst/2, heightScene - 3*hObst/2] -> Numero aleatoria en este intervalo
-        randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 5*hObstacle/2 + 1))
+        // [spaceToPutDecor + hObst/2, heightScene - hObst/2] -> Numero aleatoria en este intervalo
+        randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 2*hObstacle/2 + 1))
                 + spaceToPutDecor + hObstacle/2;
 
         // Esto para el caso en que los objetos se generan casi juntos o juntos
         while ((randPosyObjec + hObstacle/2 >= lastPosy) &&
                (randPosyObjec - hObstacle/2 <= lastPosy)) {
 
-            randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 5*hObstacle/2 + 1))
+            randPosyObjec = rand()%(int(heightScene - spaceToPutDecor - 2*hObstacle/2 + 1))
                     + spaceToPutDecor + hObstacle/2;
         }
         // Se actualiza la nueva ultima posicion aleatoria en y de los objetos
@@ -352,12 +377,6 @@ void GameWorld::spawnSceneObject(){
     // Para delimitar la posicion de spawn
     int hMaxDecor = hDecor1 > hDecor2 ? hDecor1 : hDecor2;
     int randPutDecor = rand()%1000 + 1; // [1, 1000]
-    // Con el aumento de la dificualtad, va a llegar un momento en que las probabiliadaes
-    // serán mayores al 100% (1000), entonces se pone para ambos la misma prob
-    if (probSpawnObst >= 1000) {
-        probSpawnEnemy = 500;
-        probSpawnObst = 1000;
-    }
 
     if (randPutDecor < probSpawnDecor) { // Se genera un nuevo objeto decoracion.
 
@@ -382,6 +401,21 @@ void GameWorld::spawnSceneObject(){
 
 void GameWorld::deleteWorldObject()
 {
+    // El método se encarga de la eliminacion de los objetos del mapa
+    // Se eliminan bajo ciertas condiciones: que esten fuera de la escena
+    // o que haya una explosion que los destruya
+
+    // Eliminar Boss cuando haya pasado un tiempo t = tFinalBoss desde que apareció
+
+    if (Boss != nullptr) {
+        if (Boss->getTFinal() <= 0) {
+            mScene->removeItem(Boss);
+            delete Boss;
+            Boss = nullptr;
+        }
+    }
+
+
     // Posicion en X de la escena, a partir de la cual se eliminan los objetos
     int posToDelete = -posxSpwanAny;
     int posObject;
@@ -414,7 +448,7 @@ void GameWorld::deleteWorldObject()
                                                     wExplosion, hExplosion);
             mScene->addItem(newExplosion);
             mExplosionsWorld.push_back(newExplosion);
-            cout << "Se agrega explosion en enemigo: " << __LINE__ << endl;
+//            cout << "Se agrega explosion en enemigo: " << __LINE__ << endl;
 
             // Se elimina el enemigo
             mScene->removeItem(mEnemiesWorld.at(i));
@@ -476,6 +510,10 @@ void GameWorld::deleteWorldObject()
 void GameWorld::moveWorldObjects(){
     // La funcion se encarga de ejecutar el metodo: moveObject.
     // Tal metodo mueve al objeto en cuestion segun su propia velocidad
+
+    if (Boss != nullptr) {
+        Boss->moveBoss(numToTimer);
+    }
 
     // Se mueven las decoraciones
     for (int i = 0; i < mDecorsWorld.size(); i++) {

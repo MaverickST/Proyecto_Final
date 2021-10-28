@@ -85,8 +85,8 @@ void ProfileUser::startGameLevel1(){
 //    User *mUser2 = nullptr;
 
     // Hay un cambio de mundo cada 3 minutos (180s)
-    // Pero hay un aumento en la dificultad cada 20s
-    int timeToChangeWorld = 180; // 180s
+    // Pero hay un aumento en la dificultad cada 10s
+    int timeToChangeWorld = 90; // 90s -> tiempo para cambiar de mundo
     // Para indicar si es multijugador o no
     bool multiPlayer = false;
 
@@ -94,7 +94,7 @@ void ProfileUser::startGameLevel1(){
     // Serían: dimensiones, probabilidades, velocidades, masas,...
     QMap<string, double> objectsValues{
         // Decoraciones
-        {"wDecor1" , 50}, {"hDecor1", 50},
+        {"wDecor1" , 50}, {"hDecor1", 57},
         {"wDecor2", 30}, {"hDecor2", 30},
         {"velDecor", -3}, {"probSpawnDecor", 200},
         // Enemigos
@@ -104,13 +104,13 @@ void ProfileUser::startGameLevel1(){
         {"wObstacle", 20}, {"hObstacle", 20},
         {"velObstacle", -3}, {"probSpawnObst", 400},
         // Disparo
-        {"wShot", 50}, {"hShot", 50},
-        {"velShot", 12}, {"masaShot", 105}, {"timeToShot", 2000},
+        {"wShot", 20}, {"hShot", 20},
+        {"velShot", 12}, {"masaShot", 90}, {"timeToShot", 2000},
         // Explosion
         {"wExplosion", 80}, {"hExplosion", 80},
         // Boss
-        {"RBoss", 30}, {"masaBoss", 3}, {"LBoss", 102},
-        {"tFinalBoss", 90000}, {"tToChangePosBoss", 2000}
+        {"RBoss", 40}, {"masaBoss", 3}, {"LBoss", 102},
+        {"tFinalBoss", 30000}, {"tToChangePosBoss", 2000}
     };
 
     // El contenedor almacena todos los sprites de todos los objetos del juego
@@ -123,16 +123,16 @@ void ProfileUser::startGameLevel1(){
         {"nameSpEnemy_1",":/Sprites/auto4.png"},
         {"nameSpObstacle_1", ":/Sprites/cono1.png"},
         {"nameSpShot_1", ":/Sprites/bala1.png"},
-        {"nameSpBoss_1", ""},
+        {"nameSpBoss_1", ":/Sprites/boss4.png"},
 
         // Parte 2 del mundo
         {"nameSpBackground_2", ":/Sprites/carretera_nivel2.png"},
         {"nameSpDecor1_2", ":/Sprites/camello1.png"},
         {"nameSpDecor2_2",":/Sprites/cactus1.png"},
         {"nameSpEnemy_2",":/Sprites/auto2.png"},
-        {"nameSpObstacle_2", ":/Sprites/basura1.png"},
+        {"nameSpObstacle_2", ":/Sprites/heno1.png"},
         {"nameSpShot_2", ":/Sprites/bala2.png"},
-        {"nameSpBoss_2", ""},
+        {"nameSpBoss_2", ":/Sprites/boss11.png"},
     };
 
 

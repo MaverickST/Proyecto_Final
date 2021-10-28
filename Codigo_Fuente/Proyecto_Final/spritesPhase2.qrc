@@ -1,10 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>Sprites/auto2.png</file>
-        <file>Sprites/basura1.png</file>
         <file>Sprites/cactus1.png</file>
         <file>Sprites/camello1.png</file>
         <file>Sprites/carretera_nivel2.png</file>
         <file>Sprites/bala2.png</file>
+        <file>Sprites/boss11.png</file>
+        <file>Sprites/heno1.png</file>
     </qresource>
 </RCC>

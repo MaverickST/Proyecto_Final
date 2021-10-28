@@ -7,5 +7,6 @@
         <file>Sprites/Explosion.png</file>
         <file>Sprites/bala1.png</file>
         <file>Sprites/carretera_nivel1.png</file>
+        <file>Sprites/boss4.png</file>
     </qresource>
 </RCC>
