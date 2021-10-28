@@ -30,6 +30,8 @@ public slots:
     void closeCreateAccount();
 private slots:
     void on_pB_Login_clicked();
+    void on_pB_Multi_clicked();
+
 private:
     Ui::IDCATC *ui;
 
