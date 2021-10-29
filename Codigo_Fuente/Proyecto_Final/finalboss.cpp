@@ -10,13 +10,14 @@ FinalBoss::FinalBoss(double _R, double _masa, double _L,
 
     posx = 110;
     posy = 110;
-    R = _R;
+    R = _R; // Radio del objeto, da las dimensiones
     masa = _masa;
-    tFinal = _tFinal;
-    L = _L;
+    tFinal = _tFinal; // Tiempo que durará en escena
+    L = _L; // Longitud de la "cuerda"
     nameSpObj = _nameSpBoss;
-    timeToChangePos = _tToChangePos;
+    timeToChangePos = _tToChangePos; // Tiempo que se demora para cambiar de posicion
 
+    // Espacion habiles para su aparicion
     widthSpace = _widthSpace;
     heightSpace = _heightSpace;
     spaceOther = _spaceOther;
@@ -33,13 +34,12 @@ FinalBoss::FinalBoss(double _R, double _masa, double _L,
 
     // Valores para el movimiento oscilatorio amortiguado
     double g = 9.81;
-    double Wo = sqrt(g/L); // Frecuencia angular para pendulo fisico
+    double Wo = sqrt(g/L); // Frecuencia angular para un MAS
     double Wc = Lamb/(2*masa); // Frecuencia angular critica
     W = sqrt(Wo*Wo - Wc*Wc); // Frecuencia angular amortiguada
 
-    Tau = masa/Lamb;
-    tFinal = _tFinal;
-    // Es un angulo pequeño, esto porque es un MAS amortiguado
+    Tau = masa/Lamb; // Constante de decaimiento
+    // Es un angulo pequeño (11°), esto porque es un MAS amortiguado
     Phi = (11)*(M_PI_2*2)/180; // De grados a rad
     t = 0;
 }
@@ -60,8 +60,10 @@ void FinalBoss::moveBoss(int numToTimer)
     t += numToTimer;
     tFinal -= numToTimer;
 
+    // Se aplica movimiento oscilatorio amortiguado
     longArc = L*qPow(E, -t/(2*Tau))*qCos(W*t + Phi);
 
+    // Se obtienen los grados de la longitud de arco obtenida previamente
     double rads = longArc/L;
 
     contTimeToChangeP++;

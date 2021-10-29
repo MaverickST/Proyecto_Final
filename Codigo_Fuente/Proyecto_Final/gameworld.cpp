@@ -56,9 +56,10 @@ ui->setupUi(this);
     PJ->setZValue(1000);
     mUserOn = true;
 
-
+    // Contador para las colisiones con los obstaculos, al colisionar
+    // dos veces, pierde una vida
     contCollisionsWithObstacle = 0;
-    invisibilityTime = 0;
+    invisibilityTime = 0; // Para el tiempo que está invensible
 
     // Creacion del boss
     Boss = nullptr;
@@ -71,6 +72,7 @@ ui->setupUi(this);
     mTimer = new QTimer;
     srand(time(NULL));
 
+    // Se muestran los datos del usuario
     ui->LCD_LIVES->display(mUser->lives());
     ui->LCD_TIME->display(timeToGame);
     ui->LCD_SCORE->display(0);
@@ -85,15 +87,14 @@ ui->setupUi(this);
 }
 
 void GameWorld::collisionEvaluator(){
+
+    // El metodo se encarga de evaluar las colisiones entre los objetos
+
     //Se evalua colision con enemigos, limites y obstaculos
 
     EnemyCollision = collisionWithEnemy();
     ObstacleCollision = collisionWithObstacle();
     LimitsCollision = collisionWithLimits();
-
-    // Colision jefe final
-    // Invensibilidad
-    // Adaptarlo infinito
 
     /**    EVALUACION DE COLISIONES     **/
 
@@ -331,7 +332,6 @@ void GameWorld::spawnSceneObject(){
     int numRand = rand()%1000 + 1; // numero aleatoria entre [1-1000]
     int randPosyObjec; // Posicion en Y aleatoria de los obstaculos/enemigos
 
-//    qDebug() << "Numero rand: " << numRand;
     if (numRand <= probSpawnEnemy) { // Se genera un enemigo
 
         // Numero aleatoria en este intervalo
@@ -353,7 +353,6 @@ void GameWorld::spawnSceneObject(){
                                     velEnemy, masaEnemy, nameSpEnemy);
         mEnemiesWorld.push_back(newEnemy);
         mScene->addItem(newEnemy);
-//        qDebug() << "Agrega enemigo en : " << lastPosy << " "<<__LINE__;
     }
     else if (numRand <= probSpawnObst) { // Se genera un obstaculo
 
@@ -376,7 +375,6 @@ void GameWorld::spawnSceneObject(){
                                          velObstacle, nameSpObstacle);
         mObstaclesWorld.push_back(newObst);
         mScene->addItem(newObst);
-//        qDebug() << "Agrega obstaculo en : "<< lastPosy << " "<<__LINE__;
     }
 
     /// [ GENERACION ALEATORIA DEL OBJETO DECORATION PARA LA DECORACION DEL JUEGO ]
@@ -404,7 +402,6 @@ void GameWorld::spawnSceneObject(){
             mDecorsWorld.push_back(newDecor);
         }
         mScene->addItem(newDecor);
-//        qDebug() << "Agrega decoracion en : "<< randPosyDecor << " " <<__LINE__;
     }
 }
 
@@ -447,7 +444,6 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mEnemiesWorld.at(i));
             delete mEnemiesWorld.at(i);
             mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
-//            break; // Que solo se elimine uno en cada ejecucion.
         }
         // Se eliminan los que fueron impactados por un disparo
         // y, cumplido el tiempo para la explosion, se destruye
@@ -465,12 +461,12 @@ void GameWorld::deleteWorldObject()
                                                     wExplosion, hExplosion);
             mScene->addItem(newExplosion);
             mExplosionsWorld.push_back(newExplosion);
-//            cout << "Se agrega explosion en enemigo: " << __LINE__ << endl;
 
             // Se elimina el enemigo
             mScene->removeItem(mEnemiesWorld.at(i));
             delete mEnemiesWorld.at(i);
             mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
+
             //Se actualiza el Score
             if (mUserOn) {
                 mUser->setScoreLevel(mUser->scoreLevel() + 50);
@@ -490,7 +486,6 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mObstaclesWorld.at(i));
             delete mObstaclesWorld.at(i);
             mObstaclesWorld.erase(mObstaclesWorld.begin() + i);
-//            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
     // Eliminacion de las decoraciones que estan fuera de la escena
@@ -502,7 +497,6 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mDecorsWorld.at(i));
             delete mDecorsWorld.at(i);
             mDecorsWorld.erase(mDecorsWorld.begin() + i);
-//            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
     // Eliminacion de las explosiones
@@ -568,6 +562,8 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_B){
         ///**************EL PERSONAJE PRINCIPAL DISPARA***************///
 
+        // Debe transcurrir, al menos, un tiempo t = timeToShot entre
+        // disparo y disparo
         if (contTimeToShot*numToTimer >= timeToShot) {
             GunShot *bullet;
 
@@ -698,12 +694,14 @@ void GameWorld::increasedDifficulty(bool changeWorld)
     // Tales valores de los objetos son: velocidades, probabilidades.
 
 
-    if (changeWorld == true) { // El aumento es del 10%
+    if (changeWorld == true) {
+        // El aumento es del 5% para las velocidades
+        // Y del 8% para las probabilidades
         mObjectsValues["velDecor"] *= 1.05; // Velocidad de las decoraciones
         mObjectsValues["velEnemy"] *= 1.05; // Vel de los enemigos
-        mObjectsValues["probSpawnEnemy"] *= 1.05; // Prob de los enemigos
+        mObjectsValues["probSpawnEnemy"] *= 1.08; // Prob de los enemigos
         mObjectsValues["velObstacle"] *= 1.05; // Vel de los obstaculos
-        mObjectsValues["probSpawnObst"] *= 1.05; // Prob de los obstaculos
+        mObjectsValues["probSpawnObst"] *= 1.08; // Prob de los obstaculos
         mObjectsValues["velShot"] *= 1.05; // Vel de los disparos
 
         // Cuando es cambio de mundo (changeWorld == true), tambien aumenta la dificultad del boss
@@ -722,13 +720,13 @@ void GameWorld::increasedDifficulty(bool changeWorld)
         changeSprites();
 
     }else {
-        // El aumento es del 5% para las velocidades
-        // Y del 10% para las prob
+        // El aumento es del 2% para las velocidades
+        // Y del 4% para las prob
         mObjectsValues["velDecor"] *= 1.02; // Velocidad de las decoraciones
         mObjectsValues["velEnemy"] *= 1.02; // Vel de los enemigos
-        mObjectsValues["probSpawnEnemy"] *= 1.02; // Prob de los enemigos
+        mObjectsValues["probSpawnEnemy"] *= 1.04; // Prob de los enemigos
         mObjectsValues["velObstacle"] *= 1.02; // Vel de los obstaculos
-        mObjectsValues["probSpawnObst"] *= 1.02; // Prob de los obstaculos
+        mObjectsValues["probSpawnObst"] *= 1.04; // Prob de los obstaculos
         mObjectsValues["velShot"] *= 1.02; // Vel de los disparos
 
     }
@@ -854,7 +852,6 @@ void GameWorld::pressButtonContinue()
     // las vidas. Entonces pierde y vulve a ventana de ProfileUser
     if (multiPlayer == false) {
         if (mUser->lives() == 0) {
-
             // Se emite una señal, para terminar el juego, el usuario perdió
             GameWorld::endGame();
         }
@@ -866,6 +863,9 @@ void GameWorld::startQTimer(){
 }
 
 GameWorld::~GameWorld(){
+
+
+
     delete ui;
 }
 

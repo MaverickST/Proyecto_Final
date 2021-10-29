@@ -13,6 +13,7 @@ Explosion::Explosion(double _posx, double _posy, double _width, double _height)
 
     nameSpObj = ":/Sprites/Explosion.png";
     pixMapObj.load(nameSpObj.c_str());
+    // La matriz del sprite de explosiones es de 9x9
     pixMapObj = pixMapObj.scaled(width*9, height*9);
 }
 

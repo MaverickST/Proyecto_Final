@@ -107,6 +107,7 @@ void ProfileUser::endGame(){
     Game->close();
     delete Game;
     this->setVisible(true);
+
     //Actualizacion de Score
     if(mUser->scoreLevel() > mUser->score()){
         mUser->setScore(mUser->scoreLevel());
