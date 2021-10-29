@@ -111,10 +111,16 @@ void ProfileUser::endGame(){
     if(mUser->scoreLevel() > mUser->score()){
         mUser->setScore(mUser->scoreLevel());
     }
+    
     // Se actualiza el mejor tiempo
     if (mUser->time() < mUser->timeLevel()) {
         mUser->setTime(mUser->timeLevel());
     }
+    
+    //Si la vida del usuario es igual a 0:
+    //Se resetea atributo que se encarga de guardar info del nivel jugado
+    //Se resetea atributo que almacena variable del tiempo de juego
+    mUser->setScoreLevel(0);
     showInformation();
 }
 
