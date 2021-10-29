@@ -11,6 +11,7 @@ ProfileUser::ProfileUser(QWidget *parent): QMainWindow(parent),ui(new Ui::Profil
 ProfileUser::ProfileUser(User *&_User,QWidget *parent): QMainWindow(parent),ui(new Ui::ProfileUser){
     ui->setupUi(this);
 
+    //Inicializacion del objeto mUser
     mUser = _User;
     showInformation();
     connect(ui->pB_StartLevel, &QPushButton::clicked, this, &ProfileUser::startGame);
@@ -34,8 +35,9 @@ void ProfileUser::showInformation(){
     //Envimos en numero de vidas
     ui->lcd_Lives->display(mUser->lives());
 
-    //Enviamos el Score de cada nivel
+    //Enviamos el mejor Score y el mejor tiempo hecho
     ui->Label_Score->setText(QString::number(mUser->score()));
+    ui->LABEL_TIME->setText(QString::number(mUser->time()));
 }
 
 void ProfileUser::updateUsers(){
@@ -138,5 +140,3 @@ void ProfileUser::setObjectsValues(const QMap<string, double> &objectsValues)
 {
     mObjectsValues = objectsValues;
 }
-
-

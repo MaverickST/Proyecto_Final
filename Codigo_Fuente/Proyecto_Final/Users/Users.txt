@@ -1,5 +1,5 @@
-Miguel.Gil   1001249237   5   0   750
-s   s   4   61   500
+Miguel.Gil   1001249237   5   0   2400
+s   s   3   0   500
 Jeronimo.Rivera   1001249238   5   0   0
 Diana.Rodriguez   42687692   5   0   0
 Katerine.Arango   1001249239   5   0   0
