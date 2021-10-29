@@ -5,6 +5,8 @@ Character::Character() {}
 Character::Character(double _posx, double _posy, double _width, double
                    _height, double _velObst, std::string &_nameSpObst){
 
+    /** Inicializacion de atributos del character **/
+
     posx = _posx;
     posy = _posy;
     width = _width;
@@ -44,14 +46,10 @@ void Character::moveCharacter(int keyEventChar){
         setPosition();
         lastKey = Qt::Key_W;
     }
-
-    /*if(jump){
-        lastPosy = posy;
-        calculateSpeed();
-    }*/
 }
 
 void Character::setPosition(){
+    //Se actualiza la posion del Personaje
     setPos(posx , posy);
     setPixmap(pixMapObj);
 }
@@ -70,6 +68,8 @@ void Character::calculateInitialVelocity(){
 
 void Character::parabolicMovement(double dt){
     if(posy <= lastPosy){
+        //Si el personaje todavia no a alcanzado su maximo alcance horizontal
+        //Se calcula nuvemente la posicion en ambos ejes
         Vy += G * dt;
 
         //Se halla la posicion en ambos ejes
@@ -79,9 +79,12 @@ void Character::parabolicMovement(double dt){
 
         setPos(posx , posy);
         setPixmap(pixMapObj);
-//        cout << "[ " << posx << " , " << posy << " ]" << endl;
+        //cout << "[ " << posx << " , " << posy << " ]" << endl;
     }else{
-//        cout << "Maximo alcance" << endl;
+        //cout << "Maximo alcance" << endl;
+        //Si ele personaje ya alacanzo su maximo alcance
+        //Se le envia al atributo jump un false
+        //Para indicar que y ano hay un salto activo
         jump = false;
     }
 }
