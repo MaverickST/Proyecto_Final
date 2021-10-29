@@ -23,7 +23,6 @@ FinalBoss::FinalBoss(double _R, double _masa, double _L,
 
     // Son tres fases las del boss, cada una de igual tiempo
     timeToNextPhase = tFinal/3;
-    timeToChangePos = 2000;
     contTimeToChangeP = 0;
     randPosx = 0;
     randPosy = 0;
@@ -36,7 +35,7 @@ FinalBoss::FinalBoss(double _R, double _masa, double _L,
     double g = 9.81;
     double Wo = sqrt(g/L); // Frecuencia angular para pendulo fisico
     double Wc = Lamb/(2*masa); // Frecuencia angular critica
-    W = sqrt(Wo*Wo - Wc*Wc); // Frecuencia ang. amortiguada
+    W = sqrt(Wo*Wo - Wc*Wc); // Frecuencia angular amortiguada
 
     Tau = masa/Lamb;
     tFinal = _tFinal;
@@ -53,7 +52,6 @@ QRectF FinalBoss::boundingRect() const
 void FinalBoss::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     painter->drawPixmap(-R, -R, pixMapObj, 0, 0, R*2, R*2);
-//    setPos(posx, posy);
 }
 
 void FinalBoss::moveBoss(int numToTimer)
@@ -97,8 +95,8 @@ void FinalBoss::moveBoss(int numToTimer)
         }
     }
 
-
     setPos(randPosx + L*qCos(rads + M_PI_2) - L*qSin(Phi), randPosy + L*qSin(rads + M_PI_2) - L*qCos(Phi));
+
     setPixmap(pixMapObj);
 }
 

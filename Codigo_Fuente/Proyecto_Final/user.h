@@ -27,12 +27,16 @@ public:
     int scoreLevel() const;
     void setScoreLevel(int scoreLevel);
 
+    int timeLevel() const;
+    void setTimeLevel(int timeLevel);
+
 private:
     //Declaracion de atributos de usuarios
     string mUsername         = "";
     string mPassword         = "";
     int    mLives            =  0;
     int    mTime             =  0;
+    int    mTimeLevel        =  0;
     int    mScore            =  0;
     int    mScoreLevel       =  0;
 };
