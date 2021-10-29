@@ -132,5 +132,3 @@ void ProfileUser::setObjectsValues(const QMap<string, double> &objectsValues)
 {
     mObjectsValues = objectsValues;
 }
-
-

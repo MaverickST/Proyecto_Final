@@ -66,7 +66,7 @@ ui->setupUi(this);
     puWindow = new PopUpWindow(this);
 
     // Timer, cada 20ms
-    numToTimer = 30;
+    numToTimer = 20;
     mTimer = new QTimer;
     srand(time(NULL));
 
