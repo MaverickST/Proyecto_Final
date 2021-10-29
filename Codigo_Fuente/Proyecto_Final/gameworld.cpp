@@ -202,7 +202,7 @@ void GameWorld::collisionEvaluator(){
 }
 
 bool GameWorld::collisionWithEnemy(){
-
+    //Evaluacion de colisones con autos enemigos
     for(auto i = mEnemiesWorld.begin(); i != mEnemiesWorld.end(); i++){
         if(PJ->collidesWithItem(*i)){
             return true;
@@ -212,7 +212,7 @@ bool GameWorld::collisionWithEnemy(){
 }
 
 bool GameWorld::collisionWithObstacle(){
-
+    //Evaluacion de colisones con obstaculos
     for(auto it = mObstaclesWorld.begin(); it != mObstaclesWorld.end(); it++){
         if(PJ->collidesWithItem(*it)){
             return true;
@@ -222,7 +222,7 @@ bool GameWorld::collisionWithObstacle(){
 }
 
 bool GameWorld::collisionWithLimits(){
-
+    //Evaluacion de colicion con los limites de la escena
     for(auto i = mRectsInvisibles.begin(); i != mRectsInvisibles.end(); i++){       
         if(PJ->collidesWithItem(*i)){
             return true;

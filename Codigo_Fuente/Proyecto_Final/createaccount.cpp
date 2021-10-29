@@ -19,6 +19,7 @@ bool createAccount::CheckingExistence(){
     while(!usersFile.eof()){
         usersFile >> Username >> Password >> Lives >> Time >> Score;
         if(ui->Username->text().toStdString() == Username){
+            //Si el username ingresado existe en el archivo, se retorna un true
             return true;
         }
     }
@@ -27,6 +28,7 @@ bool createAccount::CheckingExistence(){
 }
 
 void createAccount::signUp(){
+    //Se crea el usuario
     ofstream usersFile;
     string User = "\n";
     User += ui->Username->text().toStdString();
@@ -49,13 +51,17 @@ void createAccount::on_PB_Create_clicked(){
         ui->Password->clear();
         ui->ConfirmPassword->clear();
     }else{
+        //Se obtiene la existencia
         bool Existance = CheckingExistence();
         if(Existance == true){
+            //Si el usuario existe se procede a informalo
             ui->Label_Status->setText("The user entered already exists.");
             ui->Username->clear();
             ui->Password->clear();
             ui->ConfirmPassword->clear();
         }else if(Existance == false){
+            //Si el usario no existe se procede a verificar que la verificacion
+            //de password se halla hecho bien
             if(ui->Password->text() == ui->ConfirmPassword->text()){
                 signUp();
                 ui->Label_Status->setText("User created successfully.");
