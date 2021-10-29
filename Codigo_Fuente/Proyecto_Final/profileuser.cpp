@@ -84,8 +84,8 @@ void ProfileUser::startGame(){
     // Se crea y muestra la partida, el mundo, y a jugar se ha dicho
 
     // Hay un cambio de mundo cada 3 minutos (180s)
-    // Pero hay un aumento en la dificultad cada 10s
-    int timeToChangeWorld = 90; // 90s -> tiempo para cambiar de mundo
+    // Pero hay un aumento en la dificultad cada 5s
+    int timeToChangeWorld = 60; // 60s -> tiempo para cambiar de mundo
     // Para indicar si es multijugador o no
     bool multiPlayer = false;
     User *mUser2 = nullptr;
@@ -111,11 +111,16 @@ void ProfileUser::endGame(){
     if(mUser->scoreLevel() > mUser->score()){
         mUser->setScore(mUser->scoreLevel());
     }
+    
+    // Se actualiza el mejor tiempo
+    if (mUser->time() < mUser->timeLevel()) {
+        mUser->setTime(mUser->timeLevel());
+    }
+    
     //Si la vida del usuario es igual a 0:
     //Se resetea atributo que se encarga de guardar info del nivel jugado
     //Se resetea atributo que almacena variable del tiempo de juego
     mUser->setScoreLevel(0);
-
     showInformation();
 }
 

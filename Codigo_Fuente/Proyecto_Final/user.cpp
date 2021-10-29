@@ -59,3 +59,13 @@ int User::scoreLevel() const{
 void User::setScoreLevel(int scoreLevel){
     mScoreLevel = scoreLevel;
 }
+
+int User::timeLevel() const
+{
+    return mTimeLevel;
+}
+
+void User::setTimeLevel(int timeLevel)
+{
+    mTimeLevel = timeLevel;
+}

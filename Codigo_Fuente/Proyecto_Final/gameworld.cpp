@@ -41,6 +41,7 @@ ui->setupUi(this);
     contTimeToSpawn = 0;
     timeToSpawn = 200; // son milisegundos
     posxSpwanAny = widthScene + 60;
+    contTimeToShot = 0; // Para que dispare cada cierto tiempo
 
     // Para controlar el tiempo del juego
     timeToGame = 1, contTimeToGame = 0;
@@ -55,11 +56,11 @@ ui->setupUi(this);
     PJ->setZValue(1000);
     mUserOn = true;
 
+
     contCollisionsWithObstacle = 0;
     invisibilityTime = 0;
 
-    // Creacion de un boss para pruebas
-    // (double _R, double _masa, double _L, double _tFinal, bool _level1)
+    // Creacion del boss
     Boss = nullptr;
 
     // Ventana emergente
@@ -80,7 +81,7 @@ ui->setupUi(this);
     connect(ui->pB_ExitGame, &QPushButton::clicked, this, &GameWorld::endGame);
     connect(ui->pB_StartGame, &QPushButton::clicked, this, &GameWorld::startQTimer);
     connect(mTimer, &QTimer::timeout, this, &GameWorld::onUptade);
-    connect(puWindow, &PopUpWindow::pressButtosPopUpW, this, &GameWorld::pressButtonContinue);
+    connect(puWindow, &PopUpWindow::pressButtonPopUpW, this, &GameWorld::pressButtonContinue);
 }
 
 void GameWorld::collisionEvaluator(){
@@ -250,7 +251,9 @@ void GameWorld::onUptade(){
         if(PJ->getJump() == true){
             PJ->parabolicMovement(0.1f);
         }
-        contTimeToGame++;
+        // Contadores
+        contTimeToShot++; // Para controlar la cantidad de balas
+        contTimeToGame++; // Para manejar el tiempo del juego
 
         //MANEJO DEL TIEMPO DE INVENSIBILIDAD
         if(invisibilityTime > 0 && contTimeToGame*numToTimer >= 1000){
@@ -265,8 +268,8 @@ void GameWorld::onUptade(){
             contTimeToGame = 0;//Se reseta la variable contTimeEndG
         }
 
-        // TIEMPO PARA EL CAMBIO DE MUNDO Y AUMENTO EN LA DIFICULTAD (cada 10s)
-        if ((timeToGame%10 == 0) && (contTimeToGame == 0)) { // Pruebas
+        // TIEMPO PARA EL CAMBIO DE MUNDO Y AUMENTO EN LA DIFICULTAD (cada 5s)
+        if ((timeToGame%5 == 0) && (contTimeToGame == 0)) { // Pruebas
             if (timeToGame%timeToChangeWorld == 0) {
                 // Cambio de mundo y mayor aumento de la dificultad
                 increasedDifficulty(true);
@@ -418,8 +421,14 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(Boss);
             delete Boss;
             Boss = nullptr;
-            mUser->setScoreLevel(mUser->scoreLevel() + 200);
-            ui->LCD_SCORE->display(mUser->scoreLevel());
+            // Se suma score al usuario que esté en el momento
+            if (mUserOn) {
+                mUser->setScoreLevel(mUser->scoreLevel() + 50);
+                ui->LCD_SCORE->display(mUser->scoreLevel());
+            }else {
+                mUser2->setScoreLevel(mUser2->scoreLevel() + 50);
+                ui->LCD_SCORE->display(mUser2->scoreLevel());
+            }
         }
     }
 
@@ -463,8 +472,13 @@ void GameWorld::deleteWorldObject()
             delete mEnemiesWorld.at(i);
             mEnemiesWorld.erase(mEnemiesWorld.begin() + i);
             //Se actualiza el Score
-            mUser->setScoreLevel(mUser->scoreLevel() + 50);
-            ui->LCD_SCORE->display(mUser->scoreLevel());
+            if (mUserOn) {
+                mUser->setScoreLevel(mUser->scoreLevel() + 50);
+                ui->LCD_SCORE->display(mUser->scoreLevel());
+            }else {
+                mUser2->setScoreLevel(mUser2->scoreLevel() + 50);
+                ui->LCD_SCORE->display(mUser2->scoreLevel());
+            }
         }
     }
     // Eliminacion de los obstaculos que ya estan fuera de la escena
@@ -500,7 +514,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mExplosionsWorld.at(i));
             delete mExplosionsWorld.at(i);
             mExplosionsWorld.erase(mExplosionsWorld.begin() + i);
-//            break; // Que solo se elimine uno en cada ejecucion.
+            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
     // Eliminacion de las balas
@@ -513,7 +527,7 @@ void GameWorld::deleteWorldObject()
             mScene->removeItem(mGunShotsWorld.at(i));
             delete mGunShotsWorld.at(i);
             mGunShotsWorld.erase(mGunShotsWorld.begin() + i);
-//            break; // Que solo se elimine uno en cada ejecucion.
+            break; // Que solo se elimine uno en cada ejecucion.
         }
     }
 }
@@ -525,6 +539,7 @@ void GameWorld::moveWorldObjects(){
     if (Boss != nullptr) {
         Boss->moveBoss(numToTimer);
     }
+
 
     // Se mueven las decoraciones
     for (int i = 0; i < mDecorsWorld.size(); i++) {
@@ -552,11 +567,15 @@ void GameWorld::keyPressEvent(QKeyEvent *event){
 
     if(event->key() == Qt::Key_B){
         ///**************EL PERSONAJE PRINCIPAL DISPARA***************///
-        GunShot *bullet;
 
-        bullet = new GunShot(PJ->getPosx()+5,PJ->getPosy(),wShot,hShot,velShot,masaShot,nameSpShot);
-        mScene->addItem(bullet);
-        mGunShotsWorld.push_back(bullet);
+        if (contTimeToShot*numToTimer >= timeToShot) {
+            GunShot *bullet;
+
+            bullet = new GunShot(PJ->getPosx()+5,PJ->getPosy(),wShot,hShot,velShot,masaShot,nameSpShot);
+            mScene->addItem(bullet);
+            mGunShotsWorld.push_back(bullet);
+            contTimeToShot = 0;
+        }
 
     }else if(event->key() == Qt::Key_J && (PJ->getJump() == false)){
         ///**********************SALTO DEL PERSONAJE**********************///
@@ -775,6 +794,7 @@ void GameWorld::changeInUsers()
             // Si perdió la vidas, se muestra la ventana emergente y
             // se cambio de jugador
             if (mUser->lives() == 0) {
+                mUser->setTimeLevel(timeToGame);
                 // Se muestra la ventane emergente
                 popUpWindowOn = true; // Ahora está activa la ventana emergente
                 puWindow->showInfoUser(mUser);
@@ -782,6 +802,8 @@ void GameWorld::changeInUsers()
 
                 mUser->setLives(2); // Que vuelva a tener dos vidas
                 mUserOn = false; // Ahora juega el usuario 2
+                // Ahora se muestra el score del jugador 2
+                ui->LCD_SCORE->display(mUser2->scoreLevel());
             }
             ui->LCD_LIVES->display(mUser->lives());
 
@@ -792,6 +814,7 @@ void GameWorld::changeInUsers()
             // Si perdió la vidas, se muestra la ventana emergente y
             // se cambio de jugador
             if (mUser2->lives() == 0) {
+                mUser2->setTimeLevel(timeToGame);
                 // Se muestra la ventane emergente
                 popUpWindowOn = true; // Ahora está activa la ventana emergente
                 puWindow->showInfoUser(mUser2);
@@ -799,7 +822,10 @@ void GameWorld::changeInUsers()
 
                 mUser2->setLives(2); // Que vuelva a tener dos vidas
                 mUserOn = true; // Ahora juega el usuario 1
+                // Ahora se muestra el score del jugador 1
+                ui->LCD_SCORE->display(mUser->scoreLevel());
             }
+            // Se muestra las vidas y el escore hasta el momento
             ui->LCD_LIVES->display(mUser2->lives());
         }
     }else {
@@ -808,6 +834,7 @@ void GameWorld::changeInUsers()
         ui->LCD_LIVES->display(mUser->lives());
 
         if (mUser->lives() == 0) { // Perdió todas las vidas
+            mUser->setTimeLevel(timeToGame);
             // Se muestra ventana emergente
             popUpWindowOn = true;
             puWindow->showInfoUser(mUser);
@@ -827,6 +854,7 @@ void GameWorld::pressButtonContinue()
     // las vidas. Entonces pierde y vulve a ventana de ProfileUser
     if (multiPlayer == false) {
         if (mUser->lives() == 0) {
+
             // Se emite una señal, para terminar el juego, el usuario perdió
             GameWorld::endGame();
         }

@@ -20,12 +20,12 @@ IDCATC::IDCATC(QWidget *parent): QMainWindow(parent), ui(new Ui::IDCATC){
     // Serían: dimensiones, probabilidades, velocidades, masas,...
     mObjectsValues = QMap<string, double>{
         // Decoraciones
-        {"wDecor1" , 50}, {"hDecor1", 57},
+        {"wDecor1" , 50}, {"hDecor1", 56},
         {"wDecor2", 30}, {"hDecor2", 30},
         {"velDecor", -3}, {"probSpawnDecor", 200},
         // Enemigos
         {"wEnemy", 50}, {"hEnemy", 30},
-        {"velEnemy", -8}, {"probSpawnEnemy", 300}, {"masaEnemy", 140},
+        {"velEnemy", -8}, {"probSpawnEnemy", 200}, {"masaEnemy", 140},
         // Obstáculos
         {"wObstacle", 20}, {"hObstacle", 20},
         {"velObstacle", -3}, {"probSpawnObst", 400},
@@ -36,7 +36,7 @@ IDCATC::IDCATC(QWidget *parent): QMainWindow(parent), ui(new Ui::IDCATC){
         {"wExplosion", 80}, {"hExplosion", 80},
         // Boss
         {"RBoss", 40}, {"masaBoss", 3}, {"LBoss", 102},
-        {"tFinalBoss", 30000}, {"tToChangePosBoss", 2000}
+        {"tFinalBoss", 20000}, {"tToChangePosBoss", 2000}
     };
 
     // El contenedor almacena todos los sprites de todos los objetos del juego
@@ -184,7 +184,7 @@ void IDCATC::on_pB_Multi_clicked(){
 
     // Hay un cambio de mundo cada 3 minutos (180s)
     // Pero hay un aumento en la dificultad cada 10s
-    int timeToChangeWorld = 90; // 90s -> tiempo para cambiar de mundo
+    int timeToChangeWorld = 60; // 60s -> tiempo para cambiar de mundo
     // Para indicar si es multijugador o no
     bool multiPlayer = true;
 

@@ -19,7 +19,7 @@ public:
     void showInfoUser(User *&User);
 
 signals:
-    void pressButtosPopUpW();
+    void pressButtonPopUpW();
 
 private:
     Ui::PopUpWindow *ui;
