@@ -8,7 +8,7 @@ PopUpWindow::PopUpWindow( QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->pB_Continue, &QPushButton::clicked, this, &PopUpWindow::close);
-    connect(ui->pB_Continue, &QPushButton::clicked, this, &PopUpWindow::pressButtosPopUpW);
+    connect(ui->pB_Continue, &QPushButton::clicked, this, &PopUpWindow::pressButtonPopUpW);
 
 }
 
@@ -21,6 +21,6 @@ void PopUpWindow::showInfoUser(User *&User)
 {
 
     ui->lb_numPJ->setText((User->username()).c_str());
-    ui->lcd_scorePJ->display(User->score());
-    ui->lcd_timePJ->display(User->time());
+    ui->lcd_scorePJ->display(User->scoreLevel());
+    ui->lcd_timePJ->display(User->timeLevel());
 }

@@ -3,7 +3,6 @@
 
 #define Lamb 0.000018
 
-
 #include <time.h>
 #include "worldobject.h"
 
