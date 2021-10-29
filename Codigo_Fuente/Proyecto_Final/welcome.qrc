@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>Sprites/welcome1.png</file>
         <file>Sprites/carretera5.1.jpg</file>
+        <file>Sprites/profile1.jpg</file>
     </qresource>
 </RCC>
